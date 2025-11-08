@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>🍸 Cocktail Management</title>
+
+    <!-- ag-Grid -->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css" />-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css" />-->
+    <!-- Common CSS -->
+    <link rel="stylesheet" th:href="@{/admin/css/ag-theme-alpine.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/ag-grid.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/common.css}" />
+
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
+    <script th:src="@{/admin/js/axios.min.js}"></script>
+    <script th:src="@{/admin/js/ag-grid-community.min.js}"></script>
+    <script th:src="@{/admin/js/common.js}"></script>
+
+
+</head>
+
+<body>
+<fieldset>
+    <div class="page_top">
+        <div class="conBtn">
+            <a href="#" id="btnBack" class="btn_sty01 bg01">대시보드</a>
+        </div>
+        <p class="location">
+            <span>칵테일 관리</span> <strong>조회/등록</strong>
+        </p>
+        <p class="conBtn">
+            <a href="#" id="btnSearch" class="btn_sty01 bg01">조회</a>
+            <a href="#" id="btnReg" class="btn_sty01 bg05">등록</a>
+        </p>
+    </div>
+
+    <div class="fold">
+        <div class="foldCon">
+            <table class="tbl_sty01">
+                <colgroup>
+                    <col width="20%" />
+                    <col width="80%" />
+                </colgroup>
+                <tr>
+                    <th>이름(KR)</th>
+                    <td><input type="text" id="searchKr" style="width: 200px" /></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</fieldset>
+
+<div class="gridArea">
+    <div id="cocktailGrid" class="ag-theme-alpine"></div>
+</div>
+
+<script>
+    /*************************************
+     * ag-Grid 설정
+     *************************************/
+    const columnDefs = [
+        { headerName: "ID", field: "id", width: 80, cellStyle: { textAlign: "center" } },
+        { headerName: "이름(KR)", field: "cocktail_kr", flex: 1 },
+        { headerName: "이름(EN)", field: "cocktail_en", flex: 1 },
+        { headerName: "도수", field: "abv_band", width: 120, cellStyle: { textAlign: "center" } },
+        { headerName: "맛 단계", field: "taste_level", width: 140, cellStyle: { textAlign: "center" } },
+        {
+            headerName: "등록일",
+            field: "createdAt",
+            width: 150,
+            cellStyle: { textAlign: "center" },
+        },
+        {
+            headerName: "관리",
+            field: "id",
+            width: 200,
+            cellStyle: { textAlign: "center" },
+            cellRenderer: function (params) {
+                return `
+            <button onclick="openDetail(${params.value})" class="bg01" style="color:white;padding:3px 8px;border:none;border-radius:4px;">상세</button>
+            <button onclick="deleteCocktail(${params.value})" class="bgDanger" style="color:white;padding:3px 8px;border:none;border-radius:4px;">삭제</button>
+          `;
+            },
+        },
+    ];
+
+    const gridOptions = {
+        columnDefs,
+        defaultColDef: {
+            resizable: true,
+            sortable: true,
+            filter: true,
+        },
+        pagination: true,
+        paginationPageSize: 10,
+        localeText: { noRowsToShow: "조회 결과가 없습니다." },
+        rowData: [],
+    };
+
+    /*************************************
+     * 이벤트 핸들러
+     *************************************/
+     document.getElementById("btnBack").addEventListener("click", () => {
+        window.location.href = "/admin/dashboard";
+    });
+    
+    document.getElementById("btnSearch").addEventListener("click", (e) => {
+        e.preventDefault();
+        loadCocktails();
+    });
+    document.getElementById("btnReg").addEventListener("click", () => {
+        window.location.href = "/admin/cocktail/detail";
+    });
+
+    async function loadCocktails() {
+        // 그리드 인스턴스가 아직 없다면 초기화 (v31+와 구버전 모두 지원)
+        if (!window.gridApi && !gridOptions.api) {
+            const gridDiv = document.querySelector("#cocktailGrid");
+            if (agGrid.createGrid) {
+                window.gridApi = agGrid.createGrid(gridDiv, gridOptions); // v31+
+            } else {
+                new agGrid.Grid(gridDiv, gridOptions); // 이전 방식 → gridOptions.api 설정됨
+            }
+        }
+        try {
+            const page = 0;
+            const size = 100;
+            const name = document.getElementById("searchKr").value;
+            const res = await axios.get("/admin/search/cocktail", { params: { page, size, cocktailName: name } });
+            const rows = (res.data && res.data.code === 1 && Array.isArray(res.data.data)) ? res.data.data : [];
+            // v31+ 방식
+            if (window.gridApi && typeof window.gridApi.setGridOption === 'function') {
+                window.gridApi.setGridOption('rowData', rows);
+            // 구버전 방식
+            } else if (gridOptions.api && typeof gridOptions.api.setRowData === 'function') {
+                gridOptions.api.setRowData(rows);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("조회 실패");
+        }
+    }
+
+    function openDetail(id) {
+        window.location.href = `/admin/cocktail/detail?cocktailId=${id}`;
+    }
+
+    async function deleteCocktail(id) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+        try {
+            const res = await axios.get(`/admin/cocktails/delete?cocktailId=${id}`);
+            if (res.data.code === 1) {
+                alert("삭제되었습니다.");
+                loadCocktails();
+            } else {
+                alert("삭제 실패");
+            }
+        } catch (e) {
+            alert("에러 발생");
+        }
+    }
+
+    /*************************************
+     * 초기화
+     *************************************/
+    document.addEventListener("DOMContentLoaded", function () {
+        // 최초 1회만 초기화되도록 loadCocktails 내부 로직 사용
+        loadCocktails();
+    });
+</script>
+</body>
+</html>

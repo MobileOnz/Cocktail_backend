@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>🏷️ Tag Management</title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" th:href="@{/admin/css/common.css}" />
+    
+<!--    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
+    <script th:src="@{/admin/js/axios.min.js}"></script>
+    <script th:src="@{/admin/js/common.js}"></script>
+</head>
+
+<body>
+<fieldset>
+    <legend>태그 관리</legend>
+    <div class="page_top">
+        <div class="conBtn">
+            <a href="#" id="btnBack" class="btn_sty01 bg01">대시보드</a>
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">새 태그 추가</div>
+        <div>
+            <label>태그 타입</label>
+            <select id="tagType" style="width: 200px; margin-right: 10px;">
+                <option value="FLAVOR">맛 (FLAVOR)</option>
+                <option value="MOOD">분위기 (MOOD)</option>
+                <option value="GLASS">잔 종류 (GLASS)</option>
+                <option value="BASE">베이스 술 (BASE)</option>
+            </select>
+            
+            <label>태그 이름</label>
+            <input type="text" id="tagName" placeholder="태그 이름을 입력하세요" style="width: 200px; margin-right: 10px;" />
+            
+            <button onclick="addTag()" style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px;">태그 추가</button>
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">기존 태그 목록</div>
+        <div id="tagsList">
+            <!-- 태그 목록이 여기에 동적으로 추가됩니다 -->
+        </div>
+    </div>
+
+</fieldset>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        await loadTags();
+    });
+    document.getElementById("btnBack").addEventListener("click", () => {
+        window.location.href = "/admin/dashboard";
+    });
+
+    async function loadTags() {
+        try {
+            const response = await api.get("/admin/cocktail/tags");
+            if (response.code === 1) {
+                displayTags(response.data);
+            } else {
+                showToast("태그 목록을 불러오지 못했습니다.");
+            }
+        } catch (e) {
+            console.error(e);
+            showToast("태그 목록을 불러오지 못했습니다.");
+        }
+    }
+
+    function displayTags(allTags) {
+        const container = document.getElementById("tagsList");
+        container.innerHTML = "";
+        
+        Object.entries(allTags).forEach(([type, tags]) => {
+            if (Array.isArray(tags) && tags.length > 0) {
+                const typeDiv = document.createElement("div");
+                typeDiv.className = 'section-box';
+                typeDiv.style.marginBottom = '15px';
+                
+                const typeName = getTypeName(type);
+                typeDiv.innerHTML = `
+                    <div class="section-title">${typeName} (${type})</div>
+                    <div id="tags-${type}" style="margin-top: 10px;"></div>
+                `;
+                
+                const tagsContainer = typeDiv.querySelector(`#tags-${type}`);
+                tags.forEach(tag => {
+                    const tagDiv = document.createElement("div");
+                    tagDiv.style.cssText = "display: inline-block; margin: 5px; padding: 5px 10px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px;";
+                    tagDiv.innerHTML = `
+                        <span>${tag.name}</span>
+                        <button onclick="deleteTag(${tag.id})" style="margin-left: 8px; background-color: #dc3545; color: white; border: none; padding: 2px 6px; border-radius: 3px; font-size: 12px;">삭제</button>
+                    `;
+                    tagsContainer.appendChild(tagDiv);
+                });
+                
+                container.appendChild(typeDiv);
+            }
+        });
+    }
+
+    function getTypeName(type) {
+        const typeNames = {
+            'FLAVOR': '맛',
+            'MOOD': '분위기', 
+            'GLASS': '잔 종류',
+            'BASE': '베이스 술'
+        };
+        return typeNames[type] || type;
+    }
+
+    async function addTag() {
+        const type = document.getElementById("tagType").value;
+        const name = document.getElementById("tagName").value.trim();
+        
+        if (!name) {
+            showToast("태그 이름을 입력해주세요.");
+            return;
+        }
+        
+        try {
+            const dto = {
+                type: type,
+                name: name
+            };
+            
+            const response = await api.post("/admin/manage/tag", dto);
+            if (response.code === 1) {
+                showToast("태그가 추가되었습니다.");
+                document.getElementById("tagName").value = "";
+                await loadTags(); // 목록 새로고침
+            } else {
+                showToast("태그 추가에 실패했습니다.");
+            }
+        } catch (e) {
+            showToast("오류가 발생했습니다.");
+        }
+    }
+
+    async function deleteTag(tagId) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+        
+        try {
+            // 삭제 API가 있다면 호출, 없다면 목록에서만 제거
+            const response = await api.get("/admin/manage/tag", { id: tagId });
+            if (response.code === 1) {
+                showToast("삭제되었습니다");
+                await loadTags(); // 목록 새로고침
+            } else {
+                showToast("삭제 중 오류가 발생했습니다.");
+            }
+        } catch (e) {
+            showToast("삭제 중 오류가 발생했습니다.");
+        }
+    }
+
+    function goBack() {
+        window.location.href = "/admin/dashboard";
+    }
+</script>
+</body>
+</html>

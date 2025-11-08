@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>🍸 Cocktail Detail</title>
+
+    <!-- Common CSS -->
+    <link rel="stylesheet" th:href="@{/admin/css/common.css}" />
+    <!-- Detail CSS -->
+    <link rel="stylesheet" th:href="@{/admin/css/detail.css}" />  
+
+
+<!--    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>-->
+    <script th:src="@{/admin/js/axios.min.js}"></script>
+    <script th:src="@{/admin/js/common.js}"></script>
+</head>
+
+<body>
+<fieldset>
+    <legend id="pageTitle">칵테일 등록</legend>
+
+    <input type="hidden" id="cocktailId" th:value="${param.cocktailId}" />
+
+    <div class="section-box">
+        <label>이름 (Korea)</label>
+        <input type="text" id="cocktailKR" />
+    </div>
+
+    <div class="section-box">
+        <label>이름 (English)</label>
+        <input type="text" id="cocktailEN" />
+    </div>
+
+    <div class="section-box">
+        <label>최대 도수</label>
+        <input type="number" id="maxAlcohol" />
+    </div>
+
+    <div class="section-box">
+        <label>최소 도수</label>
+        <input type="number" id="minAlcohol" />
+    </div>
+
+    <div class="section-box">
+        <label>도수 단계</label>
+        <select id="abvBand">
+            <option value="WEAK">약함</option>
+            <option value="NORMAL" selected>보통</option>
+            <option value="STRONG">강함</option>
+        </select>
+    </div>
+
+    <div class="section-box">
+        <label>칵테일 단계</label>
+        <select id="tasteLevel">
+            <option value="BEGINNER">입문</option>
+            <option value="NORMAL">보통</option>
+            <option value="INTERMEDIATE">중급</option>
+            <option value="ADVANCED">고급</option>
+        </select>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">계절</div>
+        <div class="scroll-x" id="seasonsChips">
+            <label class="tag-chip"><input type="checkbox" name="seasons" value="SPRING"><span>봄</span></label>
+            <label class="tag-chip"><input type="checkbox" name="seasons" value="SUMMER"><span>여름</span></label>
+            <label class="tag-chip"><input type="checkbox" name="seasons" value="FALL"><span>가을</span></label>
+            <label class="tag-chip"><input type="checkbox" name="seasons" value="WINTER"><span>겨울</span></label>
+        </div>
+        <div id="seasonsSummary" class="summary-text"></div>
+    </div>
+
+    <div class="section-box">
+        <label style="display:flex;align-items:center;justify-content:center;">원산지 설명</label>
+        <textarea id="originText"></textarea>
+    </div>
+
+    <!-- ############# 이미지 업로드 ############## -->
+    <div class="section-box">
+        <label>이미지 업로드</label>
+        <input type="file" id="imageFile" accept="image/*" />
+        <button id="uploadBtn" style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px;">업로드</button>
+    </div>
+
+    <div class="section-box">
+        <label>이미지 URL</label>
+        <input type="text" id="imageUrl" placeholder="https://example.com/image.jpg" />
+        <input type="text" id="oldImageUrl" style="display: none">
+    </div>
+
+    <div class="section-box" id="preview_div" style="display: none">
+        <img id="preview" style="max-width:200px; display:none;">
+    </div>
+
+    <!-- ##################################################### -->
+
+    <div class="section-box">
+        <div class="section-title">재료</div>
+        <div id="ingredientsContainer">
+            <div class="ingredient-row" style="margin-bottom: 10px;">
+                <input type="text" placeholder="재료명" class="ingredient-name" style="width: 200px; margin-right: 10px;" />
+                <input type="text" placeholder="용량" class="ingredient-amount" style="width: 150px; margin-right: 10px;" />
+                <button type="button" onclick="removeIngredient(this)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">삭제</button>
+            </div>
+        </div>
+        <button type="button" onclick="addIngredient()" style="background-color: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px;">재료 추가</button>
+    </div>
+
+    <div class="section-box">
+        <div class="section-title">태그</div>
+        <div id="tagsContainer" class="scroll-x" style="margin-top: 5px;"></div>
+        <div id="tagsSummary" class="summary-text"></div>
+    </div>
+
+    <div class="btnArea">
+        <button class="btnSave" onclick="saveCocktail()">💾 저장</button>
+        <button class="btnDel" onclick="deleteCocktail()">🗑️ 삭제</button>
+        <button class="btnBack" onclick="goBack()">↩ 목록</button>
+    </div>
+</fieldset>
+
+<script>
+    const cocktailId = new URLSearchParams(window.location.search).get("cocktailId");
+
+    document.getElementById("uploadBtn").addEventListener("click", async () => {
+
+        // 기존 image 제거
+        const oldUrl = document.getElementById("imageUrl").value;
+        if (oldUrl) {
+            document.getElementById("oldImageUrl").value = oldUrl;
+        }
+
+
+        const file = document.getElementById("imageFile").files[0];
+        if (!file) return alert("파일을 선택하세요.");
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try{
+            const response = await api.post("/admin/cocktail/image/upload", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            const url = response.data;
+            document.getElementById("imageUrl").value = url;
+            document.getElementById("preview").src = url;
+            document.getElementById("preview_div").style.display = "block";
+            document.getElementById("preview").style.display = "block";
+
+            const oldImage = document.getElementById("oldImageUrl").value;
+            if(oldImage){
+                await api.post("/admin/cocktail/image/delete", {url : oldImage});
+            }
+        }catch(error){
+            console.log("이미지 업로드 실패:", error);
+            showToast("이미지 업로드 실패");
+        }
+    });
+
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        // 태그 목록 초기화
+        await initTags();
+        
+        if (cocktailId) {
+            document.getElementById("pageTitle").innerText = "칵테일 수정";
+            await loadCocktailDetail(cocktailId);
+        } else {
+            document.getElementById("btnDel")?.setAttribute("disabled", true);
+        }
+    });
+
+    async function loadCocktailDetail(id) {
+        try {
+            const response = await api.get("/admin/cocktail/info", { cocktailId: id });
+            if (response.code === 1) {
+                fillForm(response.data);
+            } else {
+                showToast("칵테일 정보를 불러오지 못했습니다.");
+            }
+        } catch (e) {
+            console.error(e);
+            showToast("데이터를 불러오지 못했습니다.");
+        }
+    }
+
+    function fillForm(c) {
+        document.getElementById("cocktailKR").value = c.cocktail_kr || "";
+        document.getElementById("cocktailEN").value = c.cocktail_en || "";
+        document.getElementById("maxAlcohol").value = c.max_alcohol || "";
+        document.getElementById("minAlcohol").value = c.min_alcohol || "";
+        document.getElementById("abvBand").value = c.abv_band || "NORMAL";
+        document.getElementById("tasteLevel").value = c.taste_level || "BEGINNER";
+        document.getElementById("originText").value = c.origin_text || "";
+
+        if(c.image_url){
+            document.getElementById("imageUrl").value = c.image_url || "";
+            document.getElementById("preview").src = c.image_url;
+            document.getElementById("preview_div").style.display = "block";
+            document.getElementById("preview").style.display = "block";
+        }else{
+            document.getElementById("imageUrl").value = "업로드된 이미지가 없습니다.";
+        }
+
+        if (Array.isArray(c.seasons)) {
+            document.querySelectorAll('#seasonsChips input[name="seasons"]').forEach(cb => {
+                cb.checked = c.seasons.includes(cb.value);
+            });
+            updateSeasonsSummary();
+        }
+        
+        // 재료 데이터 설정
+        if (Array.isArray(c.ingredients)) {
+            const container = document.getElementById("ingredientsContainer");
+            container.innerHTML = "";
+            c.ingredients.forEach(ingredient => {
+                addIngredient(ingredient.name, ingredient.amount);
+            });
+        }
+
+        const container = document.getElementById("tagsContainer");
+
+        if (Array.isArray(c.tags)) {
+            c.tags.forEach(group => {
+                if (Array.isArray(group.tags)) {
+                    group.tags.forEach(tag => {
+                        const inputs = container.querySelectorAll('input[name="tag"]');
+                        inputs.forEach(cb => {
+                            if (Number(cb.value.trim()) === Number(tag.id)) {
+                                cb.checked = true;
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+    }
+
+    async function saveCocktail() {
+        const dto = {
+            cocktailId: cocktailId ? parseInt(cocktailId) : null,
+            cocktailKR: document.getElementById("cocktailKR").value,
+            cocktailEN: document.getElementById("cocktailEN").value,
+            maxAlcohol: parseInt(document.getElementById("maxAlcohol").value || 0),
+            minAlcohol: parseInt(document.getElementById("minAlcohol").value || 0),
+            originText: document.getElementById("originText").value,
+            imageUrl: document.getElementById("imageUrl").value,
+            abvBand: document.getElementById("abvBand").value,
+            tasteLevel: document.getElementById("tasteLevel").value,
+            seasons: [...document.querySelectorAll('#seasonsChips input[name="seasons"]:checked')].map(cb => cb.value),
+            ingredients: getIngredients(),
+            tags: getSelectedTags()
+        };
+
+        try {
+            const url = cocktailId ? "/admin/cocktails/update" : "/admin/cocktails/save";
+            const response = await api.post(url, dto, {headers: {"Content-Type": "application/json"},});
+            if (response.code === 1) {
+                showToast("✅ 저장되었습니다.", "/admin/cocktails?page=0&size=10");
+            } else {
+                showToast("❌ 저장 실패");
+            }
+        } catch (e) {
+            showToast("오류가 발생했습니다.");
+        }
+    }
+
+    async function deleteCocktail() {
+        if (!cocktailId) {
+            showToast("저장되지 않은 칵테일입니다.");
+            return;
+        }
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+        try {
+            const response = await api.get("/admin/cocktails/delete", { cocktailId: cocktailId });
+            if (response.code === 1) {
+                showToast("삭제되었습니다.", "/admin/cocktails?page=0&size=10");
+            } else {
+                showToast("삭제 실패");
+            }
+        } catch (e) {
+            showToast("에러 발생");
+        }
+    }
+
+    function goBack() {
+        window.location.href = "/admin/cocktails?page=0&size=10";
+    }
+
+    // 태그 목록 초기화
+    async function initTags() {
+        try {
+            const response = await api.get("/admin/cocktail/tags");
+            if (response.code === 1) {
+                const allTags = response.data;
+                const container = document.getElementById("tagsContainer");
+                
+                Object.entries(allTags).forEach(([type, tags]) => {
+                    if (Array.isArray(tags) && tags.length > 0) {
+                        const typeDiv = document.createElement("div");
+                        typeDiv.className = 'section-tag-box';
+                        typeDiv.innerHTML = `<div class=\"section-title\">${type}</div>`;
+
+                        const row = document.createElement('div');
+                        row.className = 'scroll-x';
+
+                        tags.forEach(tag => {
+                            const label = document.createElement('label');
+                            label.className = 'tag-chip';
+                            label.innerHTML = `<input type=\"checkbox\" name=\"tag\" value=\"${tag.id}\"><span>${tag.name}</span>`;
+                            row.appendChild(label);
+                        });
+
+                        row.addEventListener('change', updateTagsSummary);
+                        typeDiv.appendChild(row);
+
+                        container.appendChild(typeDiv);
+                    }
+                });
+                updateTagsSummary();
+            } else {
+                showToast("태그 목록을 불러오지 못했습니다.");
+            }
+        } catch (e) {
+            console.error(e);
+            showToast("태그 목록을 불러오지 못했습니다.");
+        }
+    }
+
+    // 재료 추가
+    function addIngredient(name = "", amount = "") {
+        const container = document.getElementById("ingredientsContainer");
+        const div = document.createElement("div");
+        div.className = "ingredient-row";
+        div.style.cssText = "margin-bottom: 10px;";
+        div.innerHTML = `
+            <input type="text" placeholder="재료명" class="ingredient-name" value="${name}" style="width: 200px; margin-right: 10px;" />
+            <input type="text" placeholder="용량" class="ingredient-amount" value="${amount}" style="width: 150px; margin-right: 10px;" />
+            <button type="button" onclick="removeIngredient(this)" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px;">삭제</button>
+        `;
+        container.appendChild(div);
+    }
+
+    // 재료 삭제
+    function removeIngredient(button) {
+        button.parentElement.remove();
+    }
+
+    // 재료 데이터 수집
+    function getIngredients() {
+        const ingredients = [];
+        document.querySelectorAll('.ingredient-row').forEach(row => {
+            const name = row.querySelector('.ingredient-name').value;
+            const amount = row.querySelector('.ingredient-amount').value;
+            if (name.trim()) {
+                ingredients.push({ name: name.trim(), amount: amount.trim() });
+            }
+        });
+        return ingredients;
+    }
+
+    // 선택된 태그 데이터 수집
+    function getSelectedTags() {
+        const tags = [];
+        document.querySelectorAll('#tagsContainer input[name="tag"]:checked').forEach(cb => {
+            tags.push({ tagId: parseInt(cb.value) });
+        });
+        return tags;
+    }
+
+    // 태그 요약 텍스트 갱신
+    function updateTagsSummary() {
+        const names = [];
+        document.querySelectorAll('#tagsContainer input[name="tag"]:checked').forEach(cb => {
+            const label = cb.parentElement;
+            const text = label.textContent.trim();
+            if (text) names.push(text);
+        });
+        document.getElementById('tagsSummary').textContent = names.length ? `선택된 태그: ${names.join(', ')}` : '';
+    }
+
+    // 시즌 요약 텍스트 갱신
+    function updateSeasonsSummary() {
+        const names = [...document.querySelectorAll('#seasonsChips input[name="seasons"]:checked')]
+            .map(cb => cb.parentElement.querySelector('span')?.textContent?.trim() || cb.value);
+        document.getElementById('seasonsSummary').textContent = names.length ? `선택된 시즌: ${names.join(', ')}` : '';
+    }
+
+    // 시즌 선택 변경 이벤트 바인딩
+    document.addEventListener('change', function(e){
+        if (e.target && e.target.name === 'seasons') {
+            updateSeasonsSummary();
+        }
+    });
+</script>
+</body>
+</html>

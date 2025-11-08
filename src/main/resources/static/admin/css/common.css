@@ -1,0 +1,151 @@
+/* ===========================================
+   🍸 Common Admin Styles (for all admin pages)
+   =========================================== */
+
+/* ========== 기본 레이아웃 ========== */
+body {
+    font-family: "Segoe UI", sans-serif;
+    background-color: #fafafa;
+    padding: 20px;
+    margin: 0;
+}
+
+/* ========== 페이지 상단 제목 및 버튼 영역 ========== */
+.page_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.page_top .location {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.page_top .conBtn a {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-left: 5px;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+/* 버튼 색상 (조회/등록/삭제) */
+.bg01 { background-color: #007bff; }   /* 조회 */
+.bg05 { background-color: #28a745; }   /* 등록 */
+.bgDanger { background-color: #dc3545; } /* 삭제 */
+.bg01:hover, .bg05:hover, .bgDanger:hover {
+    opacity: 0.85;
+}
+
+/* ========== 접히는 컨테이너 영역 (필터, 상세보기 등) ========== */
+.foldCon {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* ========== ag-Grid 영역 ========== */
+.gridArea {
+    margin-top: 20px;
+}
+
+/* ag-Grid 테마 기본 크기 (페이지별로 height 조정 가능) */
+.ag-theme-alpine {
+    height: 600px;
+    width: 100%;
+}
+
+/* ========== 공통 섹션 박스 ========== */
+.section-box {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px;
+    background-color: #fff;
+    margin-bottom: 16px;
+    width:80%;
+}
+
+.section-tag-box {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 14px;
+    background-color: #fff;
+    margin-bottom: 16px;
+    width:90%;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.summary-text {
+    margin-top: 8px;
+    color: #555;
+    font-size: 13px;
+}
+
+/* ========== 가로 스크롤 유틸 ========== */
+.scroll-x {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+}
+
+.scroll-x::-webkit-scrollbar {
+    height: 6px;
+}
+.scroll-x::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.scroll-x::-webkit-scrollbar-track {
+    background: #f2f2f2;
+}
+
+.tag-chip {
+    display: inline-flex;              /* 가운데 정렬을 위한 플렉스 컨테이너 */
+    align-items: center;               /* 수직 가운데 */
+    justify-content: center;           /* 수평 가운데 */
+    gap: 6px;                          /* 체크박스와 텍스트 간격 */
+    margin: 6px 8px 0 0;
+    padding: 6px 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
+
+
+.tag-chip input[type="checkbox"] {
+    margin-right: 6px;
+    accent-color: #007bff;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.tag-chip span {
+    display: inline-block;
+    text-align: center;                /* 텍스트 가운데 정렬 */
+}
+
+/* hover 시 색상 변경 */
+.tag-chip:hover {
+    background-color: #e9ecef;
+}
+
+/* 선택된 상태 강조 */
+.tag-chip input[type="checkbox"]:checked + span {
+    color: #007bff;
+    font-weight: bold;
+}
