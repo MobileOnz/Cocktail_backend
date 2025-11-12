@@ -3,3 +3,6 @@
 /.gradle
 /.idea
 /out
+
+*.properties
+.env

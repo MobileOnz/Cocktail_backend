@@ -13,14 +13,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Slf4j
 public class S3Service {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
+//    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
 

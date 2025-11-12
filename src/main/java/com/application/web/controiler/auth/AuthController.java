@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
-@RestController
+//@RestController
 @RequiredArgsConstructor
 public class AuthController {
 

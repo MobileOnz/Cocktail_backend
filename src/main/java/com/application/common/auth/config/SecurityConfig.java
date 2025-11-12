@@ -22,11 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JWTUtil jwtUtil;
+    // private final JWTUtil jwtUtil; // 1. jwtUtil 필드 주석 처리
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
-    public SecurityConfig(JWTUtil jwtUtil, JWTAccessTokenBlackListService jwtAccessTokenBlackListService){
-        this.jwtUtil = jwtUtil;
+    public SecurityConfig(/*JWTUtil jwtUtil,*/ JWTAccessTokenBlackListService jwtAccessTokenBlackListService){ // 2. 생성자에서 jwtUtil 파라미터 주석 처리
+        // this.jwtUtil = jwtUtil; // 3. 생성자에서 jwtUtil 주입 로직 주석 처리
         this.jwtAccessTokenBlackListService = jwtAccessTokenBlackListService;
     }
 
@@ -66,8 +66,9 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
+        // 4. JWTFilter를 추가하는 라인 주석 처리 (jwtUtil을 사용하기 때문)
+        // http
+        //        .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
 
 
         http

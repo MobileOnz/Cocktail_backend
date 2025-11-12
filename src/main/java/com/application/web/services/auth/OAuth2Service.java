@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @RequiredArgsConstructor
-@Service
+//@Service
 @Slf4j
 public class OAuth2Service {
 

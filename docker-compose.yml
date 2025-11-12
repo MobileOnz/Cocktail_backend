@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # 1. API 서버 (Spring Boot) 서비스
+  api-server:
+    build: . # 현재 디렉토리의 Dockerfile을 사용해 이미지를 빌드
+    container_name: cocktail-api
+    ports:
+      - "8080:8080" # VM(호스트)의 8080 포트를 컨테이너 8080으로 연결
+    environment:
+      # 🚨 API 서버가 도커 내부의 'db' 서비스에 접속하도록 설정
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
+    depends_on:
+      - db # 'db' 서비스가 먼저 실행된 후에 실행됨
+
+  # 2. PostgreSQL 서비스
+  db:
+    image: postgres
+    container_name: postgres-cocktail
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=Asia/Seoul
