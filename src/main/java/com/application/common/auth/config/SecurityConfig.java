@@ -22,6 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String[] SWAGGER_URLS = {
+            "/swagger-ui.html", // 메인 UI 페이지
+            "/swagger-ui/**",   // UI 리소스 (js, css)
+            "/v3/api-docs",
+            "/v3/api-docs/**"   // API 설계도(JSON)
+    };
+
     // private final JWTUtil jwtUtil; // 1. jwtUtil 필드 주석 처리
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
@@ -79,6 +86,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
                         .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
+                        .requestMatchers(SWAGGER_URLS).permitAll() // swagger
+                        .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
         http
