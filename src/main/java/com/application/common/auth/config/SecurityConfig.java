@@ -22,11 +22,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JWTUtil jwtUtil;
+    private static final String[] SWAGGER_URLS = {
+            "/swagger-ui.html", // 메인 UI 페이지
+            "/swagger-ui/**",   // UI 리소스 (js, css)
+            "/v3/api-docs",
+            "/v3/api-docs/**"   // API 설계도(JSON)
+    };
+
+    // private final JWTUtil jwtUtil; // 1. jwtUtil 필드 주석 처리
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
-    public SecurityConfig(JWTUtil jwtUtil, JWTAccessTokenBlackListService jwtAccessTokenBlackListService){
-        this.jwtUtil = jwtUtil;
+    public SecurityConfig(/*JWTUtil jwtUtil,*/ JWTAccessTokenBlackListService jwtAccessTokenBlackListService){ // 2. 생성자에서 jwtUtil 파라미터 주석 처리
+        // this.jwtUtil = jwtUtil; // 3. 생성자에서 jwtUtil 주입 로직 주석 처리
         this.jwtAccessTokenBlackListService = jwtAccessTokenBlackListService;
     }
 
@@ -66,8 +73,9 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
+        // 4. JWTFilter를 추가하는 라인 주석 처리 (jwtUtil을 사용하기 때문)
+        // http
+        //        .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
 
 
         http
@@ -78,6 +86,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
                         .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
+                        .requestMatchers(SWAGGER_URLS).permitAll() // swagger
+                        .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated());
 
         http
