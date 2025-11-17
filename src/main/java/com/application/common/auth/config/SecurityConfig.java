@@ -86,8 +86,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
                         .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
-                        .requestMatchers(SWAGGER_URLS).permitAll() // swagger
+                        // swagger
+                        .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
+                        // onz_v2
+                        .requestMatchers("/api/v2/**").permitAll()
                         .anyRequest().authenticated());
 
         http
