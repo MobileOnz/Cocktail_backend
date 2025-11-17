@@ -1,10 +1,11 @@
-package com.application.web.controiler.cocktail;
+package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.enums.Season;
 import com.application.domain.cocktail.enums.TasteLevel;
-import com.application.web.services.cocktail.CocktailService;
+
+import com.application.domain.cocktail.service.CocktailService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,20 +13,21 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/api/v2/cocktails")
 @RequiredArgsConstructor
-public class CocktailController {
+public class CocktailV2Controller {
     private final CocktailService cocktailService;
 
-    @GetMapping("/cocktail")
+    @GetMapping("/{cocktailId}")
     public ResponseEntity<?> getCocktail(@RequestParam Long cocktailId){
         return new ResponseEntity<>(new ResponseDto<>(1, "cocktail info", cocktailService.getCocktailInfo(cocktailId)),HttpStatus.OK);
     }
 
-    @GetMapping("/cocktails")
+    @GetMapping("")
     public ResponseEntity<?> getCocktails(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size){
         return new ResponseEntity<>(new ResponseDto<>(1, "cocktails info", cocktailService.getCocktailFindAll(page, size)), HttpStatus.OK);
     }
@@ -63,13 +65,10 @@ public class CocktailController {
                 , HttpStatus.OK);
     }
 
-
     @GetMapping("/cocktail/pre-search")
     public ResponseEntity<?> getRelatedCocktail(@RequestParam String searchText){
         return new ResponseEntity<>(new ResponseDto<>(1, "related Search result", cocktailService.getRelatedCocktail(searchText)), HttpStatus.OK);
     }
-
-
 
     @Getter
     @Setter

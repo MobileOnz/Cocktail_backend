@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /cocktail
+    context-path: /onz
 
 spring:
   # (DB 접속 정보는 docker-compose.yml에서 주입되므로 여기엔 불필요)
