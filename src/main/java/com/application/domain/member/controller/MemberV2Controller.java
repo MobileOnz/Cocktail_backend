@@ -9,6 +9,8 @@ import com.application.domain.member.dto.MemberUpdateDto;
 import com.application.domain.member.entity.Member;
 
 import com.application.domain.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -32,6 +34,7 @@ public class MemberV2Controller {
 
     private final MemberService memberService;
 
+    @Operation(summary = "회원 조회")
     @GetMapping("/get/member")
     public ResponseEntity<?> getMember(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         Member member = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId());
@@ -39,6 +42,7 @@ public class MemberV2Controller {
         return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Get Member Info", memberDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "회원 업데이트")
     @PostMapping("/update/member")
     public ResponseEntity<?> updateMember(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
                                           @Valid @RequestBody MemberUpdateDto updateMemberDto,
@@ -49,6 +53,7 @@ public class MemberV2Controller {
         return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Update member", updateMemberDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "회원 탈퇴")
     @DeleteMapping("/delete/member")
     public ResponseEntity<?> deleteMember(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
@@ -57,6 +62,7 @@ public class MemberV2Controller {
     }
 
 
+    @Operation(summary = "회원 프로필사진 업로드")
     @PostMapping("/upload/profile")
     public ResponseEntity<?> saveProfileImage(@AuthenticationPrincipal CustomOAuth2User customOAuth2User , MultipartFile file){
         if ( memberService.saveProfile(customOAuth2User.getCredentialId(), file) ){
@@ -66,6 +72,7 @@ public class MemberV2Controller {
         }
     }
 
+    @Operation(summary = "회원 프로필사진 조회")
     @GetMapping("/profile")
     public ResponseEntity<Resource> getProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
         Map<String,Object> map = memberService.getProfile(customOAuth2User.getCredentialId());
@@ -77,5 +84,4 @@ public class MemberV2Controller {
             throw new RuntimeException("no find file");
         }
     }
-
 }

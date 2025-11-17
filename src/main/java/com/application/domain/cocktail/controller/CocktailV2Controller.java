@@ -7,6 +7,8 @@ import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailService;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -49,6 +51,7 @@ public class CocktailV2Controller {
         private List<Long> tagIds;
     }
 
+    @Operation(summary = "칵테일 검색")
     @PostMapping("/cocktail/search")
     public ResponseEntity<?> getCocktailSearch(@RequestBody CocktailSearchRequest request){
         return new ResponseEntity<>(new ResponseDto<>(1, "serach result",
@@ -65,6 +68,7 @@ public class CocktailV2Controller {
                 , HttpStatus.OK);
     }
 
+    @Operation(summary = "칵테일 연관 검색어")
     @GetMapping("/cocktail/pre-search")
     public ResponseEntity<?> getRelatedCocktail(@RequestParam String searchText){
         return new ResponseEntity<>(new ResponseDto<>(1, "related Search result", cocktailService.getRelatedCocktail(searchText)), HttpStatus.OK);
@@ -83,7 +87,7 @@ public class CocktailV2Controller {
         private List<Long> tagIds;
     }
 
-
+    @Operation(summary = "칵테일 맞춤 조회")
     @PostMapping("/cocktail/personalize")
     public ResponseEntity<?> getPersonalCocktail(@RequestBody CocktailFilter cocktailFilter){
         return new ResponseEntity<>(new ResponseDto<>(1, "personalize cocktail result", cocktailService.getPersonalCocktail(cocktailFilter)), HttpStatus.OK);
@@ -96,9 +100,9 @@ public class CocktailV2Controller {
         @JsonProperty("tagType")
         private List<String> tagType;
     }
+    @Operation(description = "칵테일 태그 조회")
     @PostMapping("/cocktail/tags")
     public ResponseEntity<?> getCocktailTags(@RequestBody RequestTagType requestTagType){
         return new ResponseEntity<>(new ResponseDto<>(1, "tags", cocktailService.getCocktailTags(requestTagType)), HttpStatus.OK);
     }
-
 }
