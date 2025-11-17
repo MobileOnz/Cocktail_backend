@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 @RequiredArgsConstructor
-@Service
+//@Service
 @Slf4j
 public class MemberService {
 
