@@ -2,9 +2,9 @@ package com.application.common.auth.jwt;
 
 
 import com.application.common.Constant;
+import com.application.common.auth.JWTAccessTokenBlackListService;
 import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.common.auth.dto.oauth2Dto.UserDTO;
-import com.application.web.services.auth.JWTAccessTokenBlackListService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

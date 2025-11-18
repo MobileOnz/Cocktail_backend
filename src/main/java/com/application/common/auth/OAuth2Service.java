@@ -1,23 +1,23 @@
-package com.application.web.services.auth;
+package com.application.common.auth;
 
 import com.application.common.auth.dto.login.*;
+import com.application.common.auth.factory.SocialLoginFactory;
 import com.application.common.auth.jwt.JWTUtil;
+import com.application.common.auth.strategy.SocialLoginStrategy;
 import com.application.common.cache.CacheType;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.common.exception.custom.TokenInvalidException;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
-import com.application.web.services.auth.factory.SocialLoginFactory;
-import com.application.web.services.auth.strategy.SocialLoginStrategy;
-import com.application.web.services.member.MemberService;
+import com.application.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 //@Service
@@ -34,7 +34,7 @@ public class OAuth2Service {
 
 
     public ResSocialLoginDto socialLogin(ReqSocialLoginDto reqSocialLoginDto) {
-        SocialLoginStrategy strategy = factory.getLoginStrategy(reqSocialLoginDto.getProvider());
+        SocialLoginStrategy strategy = (SocialLoginStrategy) factory.getLoginStrategy(reqSocialLoginDto.getProvider());
         Map<String, Object> userInfo = extractUserInfo(reqSocialLoginDto, strategy);
 
         if (userInfo == null || userInfo.isEmpty()) {

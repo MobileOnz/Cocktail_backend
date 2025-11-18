@@ -46,7 +46,6 @@ tasks.withType(JavaCompile) {
 }
 
 
-
 dependencies {
 
 	//queryDSL
@@ -54,7 +53,6 @@ dependencies {
 	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
 	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
@@ -81,7 +79,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-
 
 	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

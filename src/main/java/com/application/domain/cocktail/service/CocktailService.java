@@ -13,7 +13,6 @@ import com.application.domain.cocktail.enums.TasteLevel;
 import com.application.domain.cocktail.repository.CocktailRepository;
 import com.application.domain.cocktail.repository.CocktailTagRepository;
 import com.application.domain.cocktail.repository.TagRepository;
-import com.application.web.controiler.cocktail.CocktailController;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
