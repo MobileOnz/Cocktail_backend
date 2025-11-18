@@ -9,6 +9,7 @@ import com.application.domain.cocktail.service.CocktailService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/cocktails")
 @RequiredArgsConstructor
+@Tag(name = "칵테일 관련 API", description = "칵테일 정보 조회, 수정, 삭제 및 검색 등")
 public class CocktailV2Controller implements CocktailV2ControllerDocs{
     private final CocktailService cocktailService;
 
