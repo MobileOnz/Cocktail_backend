@@ -1,6 +1,5 @@
-package com.application.web.services.auth.strategy;
+package com.application.common.auth.strategy;
 
-import com.application.domain.member.entity.Member;
 import com.application.domain.member.entity.ParsedMember;
 
 import java.util.Map;

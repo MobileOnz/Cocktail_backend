@@ -1,4 +1,4 @@
-package com.application.web.services.auth.strategy;
+package com.application.common.auth.strategy;
 
 import com.application.common.auth.config.OAuth2PropertiesValue;
 import com.application.common.exception.custom.CustomApiException;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;

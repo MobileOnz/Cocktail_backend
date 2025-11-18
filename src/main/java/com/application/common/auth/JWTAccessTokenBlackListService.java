@@ -1,4 +1,4 @@
-package com.application.web.services.auth;
+package com.application.common.auth;
 
 import com.application.common.Constant;
 import com.application.common.auth.dto.jwt.JWTAccessBlackListDto;

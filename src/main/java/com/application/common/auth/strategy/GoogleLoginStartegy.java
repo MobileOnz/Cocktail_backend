@@ -1,11 +1,10 @@
-package com.application.web.services.auth.strategy;
+package com.application.common.auth.strategy;
 
 import com.application.common.auth.config.OAuth2PropertiesValue;
 import com.application.common.exception.custom.CustomApiException;
-import com.application.domain.member.entity.Member;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
-import com.application.web.services.member.MemberService;
+import com.application.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -14,7 +13,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j

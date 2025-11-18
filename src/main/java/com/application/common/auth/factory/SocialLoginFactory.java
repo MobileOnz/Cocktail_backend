@@ -1,7 +1,7 @@
-package com.application.web.services.auth.factory;
+package com.application.common.auth.factory;
 
+import com.application.common.auth.strategy.*;
 import com.application.common.exception.custom.CustomApiException;
-import com.application.web.services.auth.strategy.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
