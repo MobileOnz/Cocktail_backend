@@ -17,4 +17,20 @@ public class ResponseDto<T> {
 
     @Schema(description = "응답 데이터 (결과가 없으면 null)")
     private final T data; // json data
+
+    public static <T> ResponseDto<T> onSuccess(T data) {
+        return new ResponseDto<>(1, "성공", data);
+    }
+
+    public static <T> ResponseDto<T> onSuccess() {
+        return new ResponseDto<>(1, "성공", null);
+    }
+
+    public static <T> ResponseDto<T> onSuccess(String msg, T data) {
+        return new ResponseDto<>(1, msg, data);
+    }
+
+    public static <T> ResponseDto<T> onFail(int errorCode, String message) {
+        return new ResponseDto<>(errorCode, message, null);
+    }
 }
