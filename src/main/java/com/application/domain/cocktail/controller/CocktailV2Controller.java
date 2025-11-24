@@ -1,11 +1,14 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
+import com.application.domain.cocktail.dto.ReactionDto;
 import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.enums.Season;
 import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailService;
+import com.application.domain.member.entity.ParsedMember;
+import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -112,4 +116,32 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     public ResponseEntity<?> getCocktailTags(@RequestBody RequestTagType requestTagType){
         return new ResponseEntity<>(new ResponseDto<>(1, "tags", cocktailService.getCocktailTags(requestTagType)), HttpStatus.OK);
     }
+
+    @Override
+    @GetMapping("/{cocktailId}/reactions")
+    public ResponseEntity<ReactionDto.Response> getMyReaction( // todo ReactionDto.Response 뭐임?
+           @PathVariable Long cocktailId,
+           @AuthenticationPrincipal ParsedMember user
+    ) {
+        Long memberId = Long.valueOf(user.getCredentialId());
+
+        ReactionDto.Response response = cocktailService.getReactionStatus(memberId, cocktailId);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override // todo swagger
+    @PostMapping("/{cocktailId}/reactions")
+    public ResponseEntity<ReactionDto.Response> toggleReaction(
+            @PathVariable Long cocktailId,
+            @RequestBody ReactionDto.Request request,
+            @AuthenticationPrincipal ParsedMember user // JWT Filter에서 넣어준 유저 정보
+    ) {
+        // ParsedMember에 id가 없다면 credentialId로 조회하는 로직이 필요할 수 있음
+        // 여기서는 user 객체에 식별자가 있다고 가정합니다.
+        Long memberId = Long.valueOf(user.getCredentialId()); // 예시: credentialId가 숫자형 ID라면
+
+        ReactionDto.Response response = cocktailService.toggleReaction(memberId, cocktailId, request.getReactionType());
+        return ResponseEntity.ok(response);
+    }
+
 }

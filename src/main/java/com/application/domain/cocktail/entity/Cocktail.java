@@ -7,7 +7,10 @@ import com.application.domain.cocktail.enums.TasteLevel;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Table(name = "cocktail")
-
 public class Cocktail {
 
     @Id
@@ -66,6 +68,22 @@ public class Cocktail {
     @Comment("Tags : 분위기, 맛 종류")
     @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CocktailTag> tags = new ArrayList<>();
+
+    @Builder.Default
+    @Column(name = "recommend_count", nullable = false)
+    private Integer recommendCount = 0;
+
+    @Builder.Default
+    @Column(name = "hard_count", nullable = false)
+    private Integer hardCount = 0;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "update_at")
+    private LocalDateTime updatedAt;
 
     /**
      * 비즈니스 로직 (setter 대신)
