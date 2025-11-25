@@ -4,8 +4,8 @@ import com.application.common.exception.custom.CustomApiException;
 import com.application.common.mapper.CocktailMapper;
 import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
-import com.application.domain.cocktail.dto.ReactionDto;
 import com.application.domain.cocktail.dto.TagDto;
+import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.entity.*;
 import com.application.domain.cocktail.enums.*;
 import com.application.domain.cocktail.repository.CocktailReactionRepository;
@@ -248,7 +248,7 @@ public class CocktailService {
     }
 
     @Transactional
-    public ReactionDto.Response toggleReaction(Long memberId, Long cocktailId, ReactionType targetType) {
+    public ReactionRes toggleReaction(Long memberId, Long cocktailId, ReactionType targetType) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Cocktail cocktail = cocktailRepository.findById(cocktailId)
@@ -284,7 +284,7 @@ public class CocktailService {
                 .map(CocktailReaction::getReactionType)
                 .orElse(null);
 
-        return ReactionDto.Response.builder()
+        return ReactionRes.builder()
                 .cocktailId(cocktailId)
                 .myReaction(myFinalReaction)
                 .recommendCount(updatedCocktail.getRecommendCount())
@@ -293,7 +293,7 @@ public class CocktailService {
     }
 
     @Transactional(readOnly = true)
-    public ReactionDto.Response getReactionStatus(Long memberId, Long cocktailId) {
+    public ReactionRes getReactionStatus(Long memberId, Long cocktailId) {
         Cocktail cocktail = cocktailRepository.findById(cocktailId)
                 .orElseThrow(() -> new IllegalArgumentException("Cocktail not found"));
 
@@ -301,7 +301,7 @@ public class CocktailService {
                 .map(CocktailReaction::getReactionType)
                 .orElse(null);
 
-        return ReactionDto.Response.builder()
+        return ReactionRes.builder()
                 .cocktailId(cocktailId)
                 .myReaction(myReaction)
                 .recommendCount(cocktail.getRecommendCount())

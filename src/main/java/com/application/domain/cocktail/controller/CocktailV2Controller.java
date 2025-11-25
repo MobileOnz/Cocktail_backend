@@ -1,17 +1,15 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
-import com.application.domain.cocktail.dto.ReactionDto;
+import com.application.domain.cocktail.dto.request.ReactionReq;
+import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.enums.Season;
 import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailService;
 import com.application.domain.member.entity.ParsedMember;
-import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -119,29 +117,28 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 
     @Override
     @GetMapping("/{cocktailId}/reactions")
-    public ResponseEntity<ReactionDto.Response> getMyReaction( // todo ReactionDto.Response 뭐임?
-           @PathVariable Long cocktailId,
-           @AuthenticationPrincipal ParsedMember user
+    public ResponseEntity<ReactionRes> getMyReaction( // todo ReactionDto.Response 뭐임?
+                                                      @PathVariable Long cocktailId,
+                                                      @AuthenticationPrincipal ParsedMember user
     ) {
         Long memberId = Long.valueOf(user.getCredentialId());
 
-        ReactionDto.Response response = cocktailService.getReactionStatus(memberId, cocktailId);
+        ReactionRes response = cocktailService.getReactionStatus(memberId, cocktailId);
         return ResponseEntity.ok(response);
     }
 
     @Override // todo swagger
     @PostMapping("/{cocktailId}/reactions")
-    public ResponseEntity<ReactionDto.Response> toggleReaction(
+    public ResponseEntity<ReactionRes> toggleReaction(
             @PathVariable Long cocktailId,
-            @RequestBody ReactionDto.Request request,
+            @RequestBody ReactionReq request,
             @AuthenticationPrincipal ParsedMember user // JWT Filter에서 넣어준 유저 정보
     ) {
         // ParsedMember에 id가 없다면 credentialId로 조회하는 로직이 필요할 수 있음
-        // 여기서는 user 객체에 식별자가 있다고 가정합니다.
-        Long memberId = Long.valueOf(user.getCredentialId()); // 예시: credentialId가 숫자형 ID라면
+        // 여기서는 user 객체에 식별자가 있다고 가정
+        Long memberId = Long.valueOf(user.getCredentialId());
 
-        ReactionDto.Response response = cocktailService.toggleReaction(memberId, cocktailId, request.getReactionType());
+        ReactionRes response = cocktailService.toggleReaction(memberId, cocktailId, request.getReactionType());
         return ResponseEntity.ok(response);
     }
-
 }
