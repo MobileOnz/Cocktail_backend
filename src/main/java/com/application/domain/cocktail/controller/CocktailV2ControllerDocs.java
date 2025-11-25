@@ -71,7 +71,7 @@ public interface CocktailV2ControllerDocs {
     })
     ResponseEntity<?> getCocktail(@RequestParam Long cocktailId);
 
-    @Operation(summary = "칵테일 전체 조회", description = "칵테일 백과")
+    @Operation(summary = "칵테일 전체 조회 (v1, deprecated)", description = "칵테일 백과")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(
@@ -214,7 +214,7 @@ public interface CocktailV2ControllerDocs {
             """)))
 
     })
-    ResponseEntity<?> getCocktails(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size);
+    ResponseEntity<?> getCocktailsUnused(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size);
 
     @Operation(summary = "칵테일 검색", description = "칵테일 백과")
     @ApiResponses(value = {
