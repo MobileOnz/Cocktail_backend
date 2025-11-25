@@ -63,7 +63,7 @@ dependencies {
 
 	//db
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     // Postgresql
     runtimeOnly 'org.postgresql:postgresql'

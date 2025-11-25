@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: ${POSTGRE_url}
+    username: ${POSTGRE_USERNAME}
+    password: ${POSTGRE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # 개발 단계 추천, 운영 시 validate 또는 none
+    properties:
+      hibernate:
+        format_sql: true
+
+  jwt:
+    secret: ${JWT_SECRET}
