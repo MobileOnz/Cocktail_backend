@@ -5,16 +5,17 @@ import com.application.common.mapper.CocktailMapper;
 import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.TagDto;
+import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
 import com.application.domain.cocktail.entity.*;
-import com.application.domain.cocktail.enums.AbvLevel;
-import com.application.domain.cocktail.enums.Season;
-import com.application.domain.cocktail.enums.TagType;
-import com.application.domain.cocktail.enums.TasteLevel;
+import com.application.domain.cocktail.enums.*;
+import com.application.domain.cocktail.repository.CocktailReactionRepository;
 import com.application.domain.cocktail.repository.CocktailRepository;
 import com.application.domain.cocktail.repository.CocktailTagRepository;
 import com.application.domain.cocktail.repository.TagRepository;
+import com.application.domain.member.entity.Member;
+import com.application.domain.member.repository.MemberRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -39,7 +38,8 @@ public class CocktailService {
     private final CocktailTagRepository cocktailTagRepository;
     private final TagRepository tagRepository;
     private final JPAQueryFactory queryFactory;
-
+    private final CocktailReactionRepository reactionRepository;
+    private final MemberRepository memberRepository;
 
     /* ----------------------- 조회 ------------------------- */
 
@@ -280,8 +280,84 @@ public class CocktailService {
 
     }
 
+    @Transactional
+    public ReactionRes toggleReaction(Long memberId, Long cocktailId, ReactionType targetType) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        Cocktail cocktail = cocktailRepository.findById(cocktailId)
+                .orElseThrow(() -> new IllegalArgumentException("Cocktail not found"));
 
-    /* ----------------------- 삽입, 수정, 삭제 ------------------------- */
+        Optional<CocktailReaction> existingOpt = reactionRepository.findByMemberIdAndCocktailId(memberId, cocktailId);
 
+        if (existingOpt.isEmpty()) {
+            // [CASE 1] 아무것도 안 누른 상태 -> 생성
+            createReaction(member, cocktail, targetType);
+        } else {
+            CocktailReaction existing = existingOpt.get();
 
+            if (existing.getReactionType() == targetType) {
+                // [CASE 2] 같은거 또 누름 -> 취소 (삭제)
+                removeReaction(existing, cocktailId, targetType);
+            } else {
+                // [CASE 3] 다른거 누름 (추천 -> 어려워요) -> 스위칭
+                // 1. 기존 것 삭제 및 카운트 감소
+                removeReaction(existing, cocktailId, existing.getReactionType());
+                // 2. 새로운 것 생성 및 카운트 증가
+                createReaction(member, cocktail, targetType);
+            }
+        }
+
+        // 최신 카운트 값을 포함하여 응답 반환
+        // (영속성 컨텍스트가 갱신되지 않았을 수 있으므로 다시 조회하거나, 계산된 값을 리턴)
+        // 안전하게 다시 조회해서 리턴
+        Cocktail updatedCocktail = cocktailRepository.findById(cocktailId).get();
+
+        // 현재 유저의 최종 상태 확인
+        ReactionType myFinalReaction = reactionRepository.findByMemberIdAndCocktailId(memberId, cocktailId)
+                .map(CocktailReaction::getReactionType)
+                .orElse(null);
+
+        return ReactionRes.builder()
+                .cocktailId(cocktailId)
+                .myReaction(myFinalReaction)
+                .recommendCount(updatedCocktail.getRecommendCount())
+                .hardCount(updatedCocktail.getHardCount())
+                .build();
+    }
+
+    @Transactional(readOnly = true)
+    public ReactionRes getReactionStatus(Long memberId, Long cocktailId) {
+        Cocktail cocktail = cocktailRepository.findById(cocktailId)
+                .orElseThrow(() -> new IllegalArgumentException("Cocktail not found"));
+
+        ReactionType myReaction = reactionRepository.findByMemberIdAndCocktailId(memberId, cocktailId)
+                .map(CocktailReaction::getReactionType)
+                .orElse(null);
+
+        return ReactionRes.builder()
+                .cocktailId(cocktailId)
+                .myReaction(myReaction)
+                .recommendCount(cocktail.getRecommendCount())
+                .hardCount(cocktail.getHardCount())
+                .build();
+    }
+
+    private void createReaction(Member member, Cocktail cocktail, ReactionType type) {
+        CocktailReaction reaction = CocktailReaction.builder()
+                .member(member)
+                .cocktail(cocktail)
+                .reactionType(type)
+                .build();
+        reactionRepository.save(reaction);
+
+        if (type == ReactionType.RECOMMEND) cocktailRepository.incrementRecommend(cocktail.getId());
+        else cocktailRepository.incrementHard(cocktail.getId());
+    }
+
+    private void removeReaction(CocktailReaction reaction, Long cocktailId, ReactionType type) {
+        reactionRepository.delete(reaction);
+
+        if (type == ReactionType.RECOMMEND) cocktailRepository.decrementRecommend(cocktailId);
+        else cocktailRepository.decrementHard(cocktailId);
+    }
 }
