@@ -79,6 +79,7 @@ public class MemberDto {
                 .name(member.getName())
                 .nickname(member.getNickname())
                 .email(member.getEmail())
+                .socialLogin(SocialLogin.valueOf(member.getSocialLogin()))
                 .gender(
                         member.getGender() != null ? member.getGender().getEnglish() : null
                 )
