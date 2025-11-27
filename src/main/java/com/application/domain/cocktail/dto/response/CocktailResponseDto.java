@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.dto.response;
 
 import com.application.domain.cocktail.entity.Cocktail;
+import com.application.domain.cocktail.enums.AbvLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -13,14 +14,36 @@ public record CocktailResponseDto(
         Long id,
 
         @Schema(description = "칵테일 이름", example = "마티니")
-        String cocktailKR
+        String korName,
+
+        String engName,
+
+        AbvLevel abvBand,
+        Integer maxAlcohol,
+        Integer minAlcohol,
+        String originText,
+        String season,
+        String ingredientsText,
+        String style,
+        String glassType,
+        String base
 
 ) {
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
     public static CocktailResponseDto from(Cocktail cocktail) {
         return new CocktailResponseDto(
                 cocktail.getId(),
-                cocktail.getCocktailKR()
+                cocktail.getKorName(),
+                cocktail.getEngName(),
+                cocktail.getAbvBand(),         // Enum 필드
+                cocktail.getMaxAlcohol(),
+                cocktail.getMinAlcohol(),
+                cocktail.getOriginText(),
+                cocktail.getSeason(),
+                cocktail.getIngredientsText(),
+                cocktail.getStyle(),
+                cocktail.getGlassType(),
+                cocktail.getBase()
         );
     }
 }

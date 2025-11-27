@@ -1,5 +1,6 @@
 package com.application.domain.cocktail.dto.request;
 
+import com.application.domain.cocktail.enums.AbvLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
@@ -9,7 +10,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "칵테일 검색 및 필터링 조건")
 public record CocktailSearchConditionDto(
         @Schema(description = "칵테일 이름 검색어 (부분 일치)", example = "마티니")
-        String name,
+        String korName,
+
+        String engName,
+
+        AbvLevel abvBand,
+
+        String style,
+
+        // TODO flavor
+
+        String base,
 
         @Schema(description = "최소 알코올 도수", example = "10")
         Integer minAbv

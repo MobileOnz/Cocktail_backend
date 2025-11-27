@@ -4,18 +4,25 @@ package com.application.domain.cocktail.repository.Impl;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.entity.Cocktail;
 import com.application.domain.cocktail.entity.QCocktail;
+import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.repository.custom.CocktailRepositoryCustom;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.application.domain.cocktail.entity.QCocktail.cocktail;
 
 @RequiredArgsConstructor
 public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
@@ -26,23 +33,34 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
     public Page<Cocktail> getCocktails(CocktailSearchConditionDto condition, Pageable pageable) {
         QCocktail cocktail = QCocktail.cocktail;
 
+        System.out.println("condition = " + condition);
+
+        // --- WHERE 절 조립 ---
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(korNameContains(condition.korName()));
+        builder.and(engNameContains(condition.engName()));
+        builder.and(abvBandEq(condition.abvBand()));
+        builder.and(styleEq(condition.style()));
+        builder.and(baseEq(condition.base()));
+
+        // 정렬 조건 리스트 생성
+        List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable.getSort());
+
         // 1. 컨텐츠 조회 쿼리 (페이징 적용)
         List<Cocktail> content = queryFactory
                 .selectFrom(cocktail)
-                .where(
-                        nameContains(condition.name())       // 이름 검색
-                )
+                .where(builder) // 조립된 WHERE 절 사용
+                .orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new)) // 정렬 적용
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        // 2. 카운트 쿼리 (최적화: 조건에 맞는 전체 개수)
+        // 2. 카운트 쿼리
         Long total = queryFactory
-                .select(Wildcard.count) // count(*)
+                .select(Wildcard.count)
                 .from(cocktail)
-                .where(
-                        nameContains(condition.name())
-                )
+                .where(builder) // 동일한 WHERE 절 사용
                 .fetchOne();
 
         if (total == null) total = 0L;
@@ -50,11 +68,68 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    // Pageable의 Sort 정보를 QueryDSL OrderSpecifier 리스트로 변환하는 메서드
+    private List<OrderSpecifier<?>> getOrderSpecifiers(Sort sort) {
+        List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+
+        // Sort 객체에 있는 모든 정렬 기준을 순회합니다.
+        for (Sort.Order order : sort) {
+            Order direction = order.isAscending() ? Order.ASC : Order.DESC;
+            String property = order.getProperty(); // 정렬 기준 필드명 (e.g., "korName", "id")
+
+            // 필드명에 따라 해당 Q클래스 컬럼을 OrderSpecifier로 변환
+            // (주의: Case 문에서 Q클래스의 필드명을 정확히 매핑해야 합니다.)
+            switch (property) {
+                case "id":
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.id));
+                    break;
+                case "korName":
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.korName));
+                    break;
+                case "engName":
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.engName));
+                    break;
+                case "minAlcohol":
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.minAlcohol));
+                    break;
+                // case "style": ...
+                default:
+                    // 기본 정렬 (ID) 또는 아무 정렬도 적용하지 않음
+                    orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));
+                    break;
+            }
+        }
+        // 정렬 조건이 없으면 기본적으로 ID 오름차순 정렬을 추가
+        if (orderSpecifiers.isEmpty()) {
+            orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));
+        }
+        return orderSpecifiers;
+    }
+
     // --- 💡 동적 쿼리 조각들 (BooleanExpression) ---
     // null이 반환되면 QueryDSL이 알아서 해당 조건을 무시(제거)합니다.
 
-    private BooleanExpression nameContains(String cocktailKR) {
-        return StringUtils.hasText(cocktailKR) ? QCocktail.cocktail.cocktailKR.contains(cocktailKR) : null;
+    private BooleanExpression korNameContains(String korName) {
+        return StringUtils.hasText(korName) ? cocktail.korName.contains(korName) : null;
+    }
+
+    private BooleanExpression engNameContains(String engName) {
+        return StringUtils.hasText(engName) ? cocktail.engName.contains(engName) : null;
+    }
+
+    // [추가] 도수 레벨 (예: "약함", "보통", "강함") 정확히 일치
+    private BooleanExpression abvBandEq(AbvLevel abvBand) {
+        return abvBand != null ? cocktail.abvBand.stringValue().eq(abvBand.getAbvLevel()) : null;
+    }
+
+    // [추가] 스타일 (예: "클래식", "스트롱", "라이트") 정확히 일치
+    private BooleanExpression styleEq(String style) {
+        return StringUtils.hasText(style) ? cocktail.style.eq(style) : null;
+    }
+
+    // [추가] 베이스 주류 (예: "진", "보드카", "리큐르") 정확히 일치
+    private BooleanExpression baseEq(String base) {
+        return StringUtils.hasText(base) ? cocktail.base.eq(base) : null;
     }
 
 //    private BooleanExpression categoryEq(String category) {

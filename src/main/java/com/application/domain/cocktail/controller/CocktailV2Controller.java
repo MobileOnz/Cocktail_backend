@@ -52,6 +52,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Operation(summary = "칵테일 목록 조회", description = "검색, 필터링, 페이징을 적용하여 칵테일 목록을 조회합니다.")
     @RequestMapping(path = "", method = RequestMethod.GET)
     public ResponseEntity<ResponseDto<Page<CocktailResponseDto>>> getCocktails(
+            @Parameter(description = "검색 및 필터링 정보 (korName=아&abvBand=WEAK)")
             @ModelAttribute CocktailSearchConditionDto condition,
             @Parameter(description = "페이징 및 정렬 정보 (page=0&size=10&sort=name,asc)")
             @PageableDefault(size = 10, sort = "id") Pageable pageable
