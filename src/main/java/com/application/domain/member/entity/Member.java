@@ -3,6 +3,7 @@ package com.application.domain.member.entity;
 import com.application.common.time.BaseTimeEntity;
 import com.application.domain.member.enums.Gender;
 import com.application.domain.member.enums.Role;
+import com.application.domain.member.enums.SocialLogin;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,6 +30,9 @@ public class Member extends BaseTimeEntity {
 
     @Column(name="email")
     private String email;
+
+    @Column(name="social_login")
+    private String socialLogin;
 
     @Column(name="gender")
     private Gender gender;
@@ -61,12 +65,13 @@ public class Member extends BaseTimeEntity {
     private Boolean adTerm;
 
     @Builder
-    public Member(String credentialId, String name, String nickname, String email, String profile, Role role
+    public Member(String credentialId, String name, String nickname, String email, SocialLogin socialLogin, String profile, Role role
     ,Boolean ageTerm, Boolean serviceTerm, Boolean marketingTerm, Boolean adTerm){
         this.credentialId = credentialId;
         this.name = name;
         this.nickname = nickname;
         this.email = email;
+        this.socialLogin = socialLogin.toString();
         this.profile = profile;
         this.role = role;
         this.ageTerm = ageTerm;
