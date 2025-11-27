@@ -63,7 +63,6 @@ public class MemberV2Controller implements MemberV2ControllerDocs {
         return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Delete Member", null), HttpStatus.OK);
     }
 
-
 //    @Operation(summary = "회원 프로필사진 업로드")
     @Override
     @PostMapping("/upload/profile")
