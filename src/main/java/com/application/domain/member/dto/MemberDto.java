@@ -1,7 +1,10 @@
 package com.application.domain.member.dto;
 
 import com.application.domain.member.entity.Member;
+import com.application.domain.member.enums.SocialLogin;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +31,10 @@ public class MemberDto {
 
     @Schema(description = "회원 이메일", example = "gildong@example.com")
     private String email;
+
+    @Schema(description = "회원 소셜 로그인 종류", example = "KAKAO")
+    @Enumerated(EnumType.STRING)
+    private SocialLogin socialLogin;
 
     @Schema(description = "성별", example = "MALE") // Gender Enum의 English 값을 따른다고 가정
     private String gender;
@@ -64,7 +71,7 @@ public class MemberDto {
 
     @Schema(description = "최종 수정 일시", example = "2023-10-26T10:00:00")
     private LocalDateTime updatedAt;
-    
+
     public static MemberDto from(Member member) {
         return MemberDto.builder()
                 .id(member.getId())

@@ -4,6 +4,7 @@ import com.application.common.auth.config.OAuth2PropertiesValue;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
+import com.application.domain.member.enums.SocialLogin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -114,6 +115,7 @@ public class AppleLoginStrategy implements SocialLoginStrategy{
                 .name(displayName)
                 .email(email)
                 .role(Role.USER)
+                .socialLogin(SocialLogin.APPLE)
                 .build();
     }
 
