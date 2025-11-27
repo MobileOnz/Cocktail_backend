@@ -26,7 +26,6 @@ public class Cocktail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
     @Comment("한글 이름")
     private String korName;
@@ -89,11 +88,13 @@ public class Cocktail {
     // FIXME ENUM으로 하면 좋을듯
     private String base;
 
-    // TODO 분위기 entity 추가 필요
-//    private List<Mood> = new ArrayList<>();
+    @Comment("Tags: 분위기 태그 리스트 (Mood 이름 직접 저장)")
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CocktailMood> moods = new ArrayList<>();
 
-    // TODO 맛 entity 추가 필요
-//    private List<Flavor> = new ArrayList<>();
+    @Comment("Tags: 맛 태그 리스트 (Flavor 이름 직접 저장)")
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CocktailFlavor> flavors = new ArrayList<>();
 
     // 태그 사용 x (세분화)
     @Comment("Tags : 분위기, 맛 종류")

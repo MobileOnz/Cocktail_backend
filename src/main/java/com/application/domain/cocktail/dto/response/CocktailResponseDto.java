@@ -1,8 +1,12 @@
 package com.application.domain.cocktail.dto.response;
 
 import com.application.domain.cocktail.entity.Cocktail;
+import com.application.domain.cocktail.entity.CocktailFlavor;
+import com.application.domain.cocktail.entity.CocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.List;
 
 /**
  * 클라이언트에게 반환될 칵테일 정보 DTO (record)
@@ -26,7 +30,15 @@ public record CocktailResponseDto(
         String ingredientsText,
         String style,
         String glassType,
-        String base
+        String base,
+
+        // 맛 태그 리스트
+        @Schema(description = "맛 태그 목록", example = "[\"상큼한\", \"달콤한\"]")
+        List<String> flavors,
+
+        // 분위기 태그 리스트
+        @Schema(description = "분위기 태그 목록", example = "[\"파티\", \"데이트\"]")
+        List<String> moods
 
 ) {
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
@@ -43,7 +55,17 @@ public record CocktailResponseDto(
                 cocktail.getIngredientsText(),
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
-                cocktail.getBase()
+                cocktail.getBase(),
+
+                // [매핑 로직] Entity List -> String List 변환
+                // application.properties의 batch_fetch_size 덕분에 여기서 성능 저하 없이 조회됨
+                cocktail.getFlavors().stream()
+                        .map(CocktailFlavor::getFlavorName)
+                        .toList(),
+
+                cocktail.getMoods().stream()
+                        .map(CocktailMood::getMoodName)
+                        .toList()
         );
     }
 }
