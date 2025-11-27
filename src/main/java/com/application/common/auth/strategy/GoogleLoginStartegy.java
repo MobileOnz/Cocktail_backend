@@ -4,6 +4,7 @@ import com.application.common.auth.config.OAuth2PropertiesValue;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
+import com.application.domain.member.enums.SocialLogin;
 import com.application.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +99,7 @@ public class GoogleLoginStartegy implements SocialLoginStrategy{
                 .name(displayName)
                 .email(email)
                 .role(Role.USER)
+                .socialLogin(SocialLogin.GOOGLE)
                 .build();
     }
 

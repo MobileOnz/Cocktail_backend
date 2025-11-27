@@ -37,6 +37,7 @@ public interface MemberV2ControllerDocs {
                                     "name": "박우영",
                                     "nickname": "박우영",
                                     "email": "wooyeong1998@gmail.com",
+                                    "social_login" : "KAKAO",
                                     "gender": null,
                                     "addr": null,
                                     "age": null,

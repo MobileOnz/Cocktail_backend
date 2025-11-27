@@ -77,6 +77,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth)->auth
+//                        .requestMatchers("/test/**").permitAll() // 로그인 무시하고 api 요청 테스트 하기 위한
                         .requestMatchers("/api/auth/refresh", "/api/auth/social-login", "/api/auth/**").permitAll()
                         .requestMatchers("/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao").permitAll()
                         .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token").permitAll()
