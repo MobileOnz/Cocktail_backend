@@ -47,7 +47,7 @@ public class OAuth2Service {
 
     public ResSocialLoginDto signup(ReqSignupDto reqSignupDto){
         Cache cache =  cacheManager.getCache(CacheType.PARSED_MEMBER.getName());
-        if( cache == null){
+        if(cache == null){
             throw new CustomApiException("소셜 로그인 정보를 찾을 수 없습니다.");
         }
 
@@ -62,6 +62,7 @@ public class OAuth2Service {
                 .credentialId(parsedMember.getCredentialId())
                 .email(parsedMember.getEmail())
                 .role(parsedMember.getRole())
+                .socialLogin(parsedMember.getSocialLogin())
                 .ageTerm(reqSignupDto.getAgeTerm())
                 .serviceTerm(reqSignupDto.getServiceTerm())
                 .marketingTerm(reqSignupDto.getMarketingTerm())
