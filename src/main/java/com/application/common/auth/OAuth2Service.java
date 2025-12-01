@@ -15,12 +15,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-//@Service
+@Service
 @Slf4j
 public class OAuth2Service {
 
