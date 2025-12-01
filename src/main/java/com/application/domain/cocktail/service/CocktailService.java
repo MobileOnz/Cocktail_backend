@@ -6,6 +6,8 @@ import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.TagDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
+import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
+import com.application.domain.cocktail.dto.response.CocktailResponseDto;
 import com.application.domain.cocktail.entity.*;
 import com.application.domain.cocktail.enums.*;
 import com.application.domain.cocktail.repository.CocktailReactionRepository;
@@ -85,6 +87,14 @@ public class CocktailService {
 
     /* 칵테일 조회 */
 
+    /**
+     * <pre>
+     *     [v1]칵테일 조회
+     * </pre>
+     * @param page
+     * @param size
+     * @return
+     */
     public List<CocktailDto> getCocktailFindAll(int page, int size){
 
         //TODO: page 처리 : sorting 은 따로 하지 않음 ( PageRequest.of(page, size, Sort.by("?").descending()) )
@@ -97,6 +107,29 @@ public class CocktailService {
             cocktailDtos.add(CocktailMapper.toDto(cocktail));
         }
         return cocktailDtos;
+    }
+
+
+    /**
+     * <pre>
+     * 칵테일 전체 조회: 페이징, 검색, 필터링을 적용합니다.
+     * </pre>
+     * @param condition 검색 및 필터링 조건
+     * @param pageable 페이징 정보 (페이지 번호, 크기, 정렬)
+     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
+     */
+    public Page<CocktailResponseDto> getCocktailsV2(
+            CocktailSearchConditionDto condition,
+            Pageable pageable
+    ) {
+        // [주의] 실제 구현 시, 여기서는 QueryDSL 또는 JPA Specification을 사용하여
+        //       condition에 따라 동적으로 쿼리를 생성해야 합니다.
+
+        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
+        Page<Cocktail> cocktailPage = cocktailRepository.getCocktails(condition, pageable);
+
+        // Page<Entity>를 Page<DTO>로 변환
+        return cocktailPage.map(CocktailResponseDto::from);
     }
 
 

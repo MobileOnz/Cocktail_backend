@@ -26,75 +26,110 @@ public class Cocktail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "cocktail_kr_name", nullable = false)
-    private String cocktailKR;
+    @Column(nullable = false)
+    @Comment("한글 이름")
+    private String korName;
 
-    @Column(name = "cocktail_en_name", nullable = false)
-    private String cocktailEN;
-
-    @Column(name = "max_alcohol")
-    private Integer maxAlcohol;
-
-    @Column(name = "min_alcohol")
-    private Integer minAlcohol;
-
-    @Column(name = "origin_text", columnDefinition = "TEXT")
-    private String originText;
-
-    @Column(name = "image_url", length = 1000)
-    private String imageUrl;
+    @Column(nullable = false)
+    @Comment("영어 이름")
+    private String engName;
 
     @Convert(converter = AbvLevelConverter.class)
     @Comment("도수 Level : enum 관리")
     private AbvLevel abvBand; // WEEK, NORMAL, STRONG
 
+    @Comment("최대 도수")
+    private Integer maxAlcohol;
+
+    @Comment("최소 도수")
+    private Integer minAlcohol;
+
+    // 맛 레벨 사용x
     @Convert(converter= TasteLevelConverter.class)
     @Comment("taste Level : enum 관리")
     private TasteLevel tasteLevel; // BEGINNER, INTERMEDIATE, ADVANCED
 
+    @Column(columnDefinition = "TEXT")
+    @Comment("origin text")
+    private String originText;
+
+    @Column(length = 1000)
+    @Comment("이미지 URL")
+    private String imageUrl;
+
+    // FIXME enum으로 변경
+    private String season;
+
+    // season은 굳이 테이블로 만들 필요 없어보임
+    // v1에서만 사용
     @ElementCollection(targetClass = Season.class)
     @CollectionTable(
             name = "cocktail_season",
             joinColumns = @JoinColumn(name = "cocktail_id")
     )
     @Enumerated(EnumType.STRING) // Enum 이름으로 저장
-    @Column(name = "season")
+    @Column
     private List<Season> seasons = new ArrayList<>();
 
+    // 사용 x -> 검색 등에 사용되지 않는 것 같고, 재료는 보여주기만 하면 되는 것 같아서 문자열로 사용
     @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
     @Comment("ingredients")
     private List<Ingredient> ingredients = new ArrayList<>();
 
+    // 재료 text
+    private String ingredientsText;
+
+    // FIXME ENUM으로 하면 좋을듯
+    private String style;
+
+    // FIXME ENUM으로 하면 좋을듯
+    private String glassType;
+
+    // FIXME ENUM으로 하면 좋을듯
+    private String base;
+
+    @Comment("Tags: 분위기 태그 리스트 (Mood 이름 직접 저장)")
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CocktailMood> moods = new ArrayList<>();
+
+    @Comment("Tags: 맛 태그 리스트 (Flavor 이름 직접 저장)")
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CocktailFlavor> flavors = new ArrayList<>();
+
+    // 태그 사용 x (세분화)
     @Comment("Tags : 분위기, 맛 종류")
     @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CocktailTag> tags = new ArrayList<>();
 
     @Builder.Default
-    @Column(name = "recommend_count", nullable = false)
+    @Column(nullable = false, columnDefinition = "integer default 0")
     private Integer recommendCount = 0;
 
     @Builder.Default
-    @Column(name = "hard_count", nullable = false)
+    @Column(nullable = false, columnDefinition = "integer default 0")
     private Integer hardCount = 0;
 
     @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "update_at")
     private LocalDateTime updatedAt;
+
+    // v1에서 사용
+    private String cocktailEN;
+    private String cocktailKR;
 
     /**
      * 비즈니스 로직 (setter 대신)
      */
 
-    public void update(String cocktailEN, String cocktailKR
+    public void update(String engName, String korName
             , AbvLevel abvBand, Integer maxAlcohol, Integer minAlcohol
             , TasteLevel tasteLevel, String originText, String imageUrl){
 
-        this.cocktailEN  = cocktailEN;
-        this.cocktailKR  = cocktailKR;
+        this.engName  = engName;
+        this.korName  = korName;
         this.abvBand     = abvBand;
         this.maxAlcohol  = maxAlcohol;
         this.minAlcohol  = minAlcohol;

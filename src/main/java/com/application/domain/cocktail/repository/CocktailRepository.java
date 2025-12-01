@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.repository;
 
 import com.application.domain.cocktail.entity.Cocktail;
+import com.application.domain.cocktail.repository.custom.CocktailRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface CocktailRepository extends JpaRepository<Cocktail, Long> {
+public interface CocktailRepository extends JpaRepository<Cocktail, Long>, CocktailRepositoryCustom {
 
     // 동시성을 고려한 Atomic 증가
 
