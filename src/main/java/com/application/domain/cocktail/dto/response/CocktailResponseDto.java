@@ -32,6 +32,8 @@ public record CocktailResponseDto(
         String glassType,
         String base,
 
+        String imageUrl,
+
         // 맛 태그 리스트
         @Schema(description = "맛 태그 목록", example = "[\"상큼한\", \"달콤한\"]")
         List<String> flavors,
@@ -56,6 +58,8 @@ public record CocktailResponseDto(
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
                 cocktail.getBase(),
+
+                cocktail.getImageUrl(),
 
                 // [매핑 로직] Entity List -> String List 변환
                 // application.properties의 batch_fetch_size 덕분에 여기서 성능 저하 없이 조회됨
