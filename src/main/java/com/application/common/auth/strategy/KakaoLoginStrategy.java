@@ -5,7 +5,6 @@ import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
 import com.application.domain.member.enums.SocialLogin;
-import com.application.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -18,13 +17,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service("KAKAO") // 팩토리에서 이름을 찾기 쉽게 Bean 이름 지정
 @Slf4j
 @RequiredArgsConstructor
 public class KakaoLoginStrategy implements SocialLoginStrategy{
     private final RestTemplate restTemplate;
     private final OAuth2PropertiesValue oAuth2PropertiesValue;
-    private final MemberService memberService;
 
     @Override
     public Map<String, Object> getUserInfo(String accessToken) {
