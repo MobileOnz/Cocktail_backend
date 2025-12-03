@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -30,16 +31,16 @@ public class OAuth2LoginUrlService {
 //    @Value("${spring.security.oauth2.client.provider.google.authorization-uri}")
     private String googleAuthUri;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
     private String kakaoRedirectUri;
 
-//    @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
+    @Value("${spring.security.oauth2.client.provider.kakao.authorization-uri}")
     private String kakaoAuthUri;
 
-//    @Value("${spring.security.oauth2.client.registration.kakao.scope}")
+    @Value("${spring.security.oauth2.client.registration.kakao.scope}")
     private String kakaoScope;
 
     // 네이버 로그인 URL 생성
@@ -59,11 +60,23 @@ public class OAuth2LoginUrlService {
         }
     }
 
+    // 카카오 로그인 url 생성
     public String getKakaoLoginUrl() {
         try{
-            return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s",
-                    kakaoAuthUri, kakaoClientId, kakaoRedirectUri, kakaoScope);
+            // 파라미터 인코딩 적용 (줄바꿈, 공백 등 특수문자 제거 효과)
+            String encodedRedirectUri = URLEncoder.encode(kakaoRedirectUri, StandardCharsets.UTF_8);
+            String encodedScope = URLEncoder.encode(kakaoScope, StandardCharsets.UTF_8);
+
+            // 로그로 생성된 URL 확인
+            String finalUrl = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s",
+                    kakaoAuthUri, kakaoClientId, encodedRedirectUri, encodedScope);
+
+            log.info("Generated Kakao Login URL: {}", finalUrl); // 서버 로그에서 확인 가능
+            return finalUrl;
+//            return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=%s",
+//                    kakaoAuthUri, kakaoClientId, kakaoRedirectUri, kakaoScope);
         }catch(Exception e){
+            log.error("URL 생성 중 오류 발생", e);
             throw new CustomApiException("error");
         }
     }
