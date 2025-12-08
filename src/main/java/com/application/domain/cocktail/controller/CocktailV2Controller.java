@@ -14,7 +14,6 @@ import com.application.domain.member.entity.ParsedMember;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -65,6 +65,75 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         // 이를 ResponseDto의 data에 담아 반환합니다.
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktailPage),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     상큼한 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/refresh", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails() {
+
+        List<String> korNameList = List.of(
+            "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     입문자용 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/beginner", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails() {
+
+        List<String> korNameList = List.of(
+            "아페롤 스프리츠", "메리 픽포드", "다크 앤 스토미", "파라다이스", "사이드카", "샴페인 칵테일", "홀시스 넥"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     중급자 이상 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/intermediate", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails() {
+
+        List<String> korNameList = List.of(
+            "스팅어", "페이퍼 플레인", "진 바질 스매시", "네이키드 앤 페이머스", "알렉산더", "일레갈", "IBA 티키"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
                 HttpStatus.OK
         );
     }

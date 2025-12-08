@@ -132,6 +132,23 @@ public class CocktailService {
         return cocktailPage.map(CocktailResponseDto::from);
     }
 
+    /**
+     * <pre>
+     * 특정 칵테일 조회 FIXME 주석
+     * </pre>
+     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
+     */
+    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
+
+        List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
+
+        return cocktails.stream()
+                // ⭐️ Cocktail 엔티티 하나당 CocktailResponseDto::from 메서드를 호출하여 DTO로 매핑합니다.
+                .map(CocktailResponseDto::from)
+                // ⭐️ 결과를 List로 수집합니다.
+                .toList();
+    }
+
 
     public CocktailDto getCocktailInfo(Long cocktailId){
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
