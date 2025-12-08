@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -68,6 +69,36 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
+    @Override
+    public List<Cocktail> getSpecificCocktails(List<String> korNameList) {
+        QCocktail cocktail = QCocktail.cocktail;
+
+        // --- WHERE 절 조립 ---
+        BooleanBuilder builder = new BooleanBuilder();
+
+        builder.and(korNameIn(korNameList));
+
+        // 정렬 조건 리스트 생성
+//        List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable.getSort());
+
+        // 1. 컨텐츠 조회 쿼리 (페이징 적용)
+        List<Cocktail> content = queryFactory
+                .selectFrom(cocktail)
+                .where(builder) // 조립된 WHERE 절 사용
+                .fetch();
+
+        // 2. 카운트 쿼리
+//        Long total = queryFactory
+//                .select(Wildcard.count)
+//                .from(cocktail)
+//                .where(builder) // 동일한 WHERE 절 사용
+//                .fetchOne();
+//
+//        if (total == null) total = 0L;
+
+        return content;
+    }
+
     // Pageable의 Sort 정보를 QueryDSL OrderSpecifier 리스트로 변환하는 메서드
     private List<OrderSpecifier<?>> getOrderSpecifiers(Sort sort) {
         List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
@@ -108,6 +139,14 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
 
     // --- 💡 동적 쿼리 조각들 (BooleanExpression) ---
     // null이 반환되면 QueryDSL이 알아서 해당 조건을 무시(제거)합니다.
+
+    // ⭐️ 한글 이름 목록 검색 (IN 쿼리)
+    private BooleanExpression korNameIn(List<String> korNameList) {
+        if (CollectionUtils.isEmpty(korNameList)) {
+            return null;
+        }
+        return cocktail.korName.in(korNameList);
+    }
 
     private BooleanExpression korNameContains(String korName) {
         return StringUtils.hasText(korName) ? cocktail.korName.contains(korName) : null;
