@@ -34,7 +34,7 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
     public Page<Cocktail> getCocktails(CocktailSearchConditionDto condition, Pageable pageable) {
         QCocktail cocktail = QCocktail.cocktail;
 
-        System.out.println("condition = " + condition);
+//        System.out.println("condition = " + condition);
 
         // --- WHERE 절 조립 ---
         BooleanBuilder builder = new BooleanBuilder();
@@ -120,10 +120,6 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
                 case "engName":
                     orderSpecifiers.add(new OrderSpecifier(direction, cocktail.engName));
                     break;
-                case "minAlcohol":
-                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.minAlcohol));
-                    break;
-                // case "style": ...
                 default:
                     // 기본 정렬 (ID) 또는 아무 정렬도 적용하지 않음
                     orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));

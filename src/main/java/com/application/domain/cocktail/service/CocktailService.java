@@ -149,6 +149,17 @@ public class CocktailService {
                 .toList();
     }
 
+    public CocktailResponseDto getCocktailV2(Long cocktailId) {
+
+        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
+        Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
+                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+        );
+
+        return CocktailResponseDto.from(cocktail);
+    }
+
+    // ======================================================================================
 
     public CocktailDto getCocktailInfo(Long cocktailId){
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(

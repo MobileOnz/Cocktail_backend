@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
+import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -49,12 +50,31 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * @param pageable 페이징 및 정렬 정보 (Spring이 자동 생성)
      * @return
      */
-    @Operation(summary = "칵테일 목록 조회", description = "검색, 필터링, 페이징을 적용하여 칵테일 목록을 조회합니다.")
+    @Operation(
+            summary = "칵테일 목록 조회",
+            description =
+                    "**[칵테일 목록 조회 및 필터링]**\n\n" + // \n\n 으로 단락 구분
+                            "이 API는 다양한 검색 조건과 페이징을 지원합니다.<br/>" +
+                            "모든 옵션은 nullable이며, 결과는 Page<CocktailResponseDto> 형태로 반환됩니다.\n\n" +
+                            "**필터링 옵션:**\n" +
+                            "- 이름 (korName/engName): 부분 일치 검색\n" +
+                            "- 도수 (abvBand): 레벨 필터링 [WEAK | NORMAL | STRONG]\n" +
+                            "- 스타일 (style): [스트롱 | 스탠다드 | 스페셜 | 라이트 | 클래식]\n" +
+                            "- 베이스 (base): 보드카, 리큐르, 메즈칼, 코냑, 진, 럼 등\n\n" +
+                            "**페이징 및 정렬:**\n" +
+                            "- page와 size 파라미터로 페이지네이션을 제어합니다. (기본값 - page: 0, size: 10)\n" +
+                            "- sort는 \"기준,오름/내림차순\" 형식으로 지정 가능합니다. (기본값 - id,asc)\n" +
+                            "  - 기준 - [id | korName | engName] , 오름/내림차순 - [asc | desc]"
+    )
     @RequestMapping(path = "", method = RequestMethod.GET)
     public ResponseEntity<ResponseDto<Page<CocktailResponseDto>>> getCocktails(
             @Parameter(description = "검색 및 필터링 정보 (korName=아&abvBand=WEAK)")
             @ModelAttribute CocktailSearchConditionDto condition,
-            @Parameter(description = "페이징 및 정렬 정보 (page=0&size=10&sort=name,asc)")
+            @Parameter(description = "페이징 및 정렬 정보 (page=0&size=10&sort=name,asc)", example = "{\n" +
+                    "  \"page\": 0,\n" +
+                    "  \"size\": 10,\n" +
+                    "  \"sort\": \"korName,asc\"" +
+                    "}")
             @PageableDefault(size = 10, sort = "id") Pageable pageable
     ) {
         // 1. Service 호출
@@ -138,12 +158,31 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
     }
 
+    /**
+     * <pre>
+     *     칵테일 상세 조회
+     * </pre>
+     * @param cocktailId
+     * @return
+     */
+    @Operation(summary = "칵테일 상세 조회", description = "칵테일 상세 정보를 조회합니다.")
+    @GetMapping("/{cocktailId}")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(@PathVariable Long cocktailId){
+
+        CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
     // -----------------------
     // ↓ 기존 기능
 
     @Override
-    @GetMapping("/{cocktailId}")
-    public ResponseEntity<?> getCocktail(@RequestParam Long cocktailId){
+    @GetMapping("/{cocktailId}/unused")
+    public ResponseEntity<?> getCocktailUnused(@RequestParam Long cocktailId){
 
         var result = cocktailService.getCocktailInfo(cocktailId);
         return ResponseEntity.ok(ResponseDto.onSuccess("cocktail info", result));
