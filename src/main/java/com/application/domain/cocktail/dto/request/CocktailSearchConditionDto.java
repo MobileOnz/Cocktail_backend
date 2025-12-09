@@ -12,17 +12,21 @@ public record CocktailSearchConditionDto(
         @Schema(description = "칵테일 이름 검색어 (부분 일치)", example = "마티니")
         String korName,
 
+        @Schema(description = "칵테일 이름 검색어 (부분 일치)", example = "Martini")
         String engName,
 
+        @Schema(description = "도수 레벨", example = "STRONG")
         AbvLevel abvBand,
 
+        @Schema(description = "스타일", example = "스트롱")
         String style,
 
         // TODO flavor
 
+        @Schema(description = "베이스", example = "보드카")
         String base,
 
-        @Schema(description = "최소 알코올 도수", example = "10")
+        @Schema(description = "최소 알코올 도수", example = "0")
         Integer minAbv
 ) {
     // record는 별도의 생성자나 setter/getter 없이 이대로 바로 사용 가능합니다.
