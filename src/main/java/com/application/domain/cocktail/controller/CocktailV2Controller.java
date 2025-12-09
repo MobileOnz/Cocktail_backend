@@ -62,7 +62,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                             "- 스타일 (style): [스트롱 | 스탠다드 | 스페셜 | 라이트 | 클래식]\n" +
                             "- 베이스 (base): 보드카, 리큐르, 메즈칼, 코냑, 진, 럼 등\n\n" +
                             "**페이징 및 정렬:**\n" +
-                            "- page와 size 파라미터로 페이지네이션을 제어합니다. (기본값 - page: 1, size: 10)\n" +
+                            "- page와 size 파라미터로 페이지네이션을 제어합니다. (기본값 - page: 0, size: 10)\n" +
                             "- sort는 \"기준,오름/내림차순\" 형식으로 지정 가능합니다. (기본값 - id,asc)\n" +
                             "  - 기준 - [id | korName | engName] , 오름/내림차순 - [asc | desc]"
     )
