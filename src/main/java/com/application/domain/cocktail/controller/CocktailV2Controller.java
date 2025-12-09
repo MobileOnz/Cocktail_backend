@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
+import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -138,12 +139,31 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
     }
 
+    /**
+     * <pre>
+     *     칵테일 상세 조회
+     * </pre>
+     * @param cocktailId
+     * @return
+     */
+    @Operation(summary = "칵테일 상세 조회", description = "칵테일 상세 정보를 조회합니다.")
+    @GetMapping("/{cocktailId}")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(@PathVariable Long cocktailId){
+
+        CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
     // -----------------------
     // ↓ 기존 기능
 
     @Override
-    @GetMapping("/{cocktailId}")
-    public ResponseEntity<?> getCocktail(@RequestParam Long cocktailId){
+    @GetMapping("/{cocktailId}/unused")
+    public ResponseEntity<?> getCocktailUnused(@RequestParam Long cocktailId){
 
         var result = cocktailService.getCocktailInfo(cocktailId);
         return ResponseEntity.ok(ResponseDto.onSuccess("cocktail info", result));

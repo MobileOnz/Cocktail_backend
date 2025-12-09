@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface CocktailV2ControllerDocs {
 
-    @Operation(summary = "칵테일 상세 조회", description = "칵테일 ID(PK)를 이용하여 특정 칵테일의 상세 정보를 조회합니다.")
+    @Operation(summary = "칵테일 상세 조회 (v1, deprecated)", description = "칵테일 ID(PK)를 이용하여 특정 칵테일의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(
@@ -73,7 +73,7 @@ public interface CocktailV2ControllerDocs {
             """)))
 
     })
-    ResponseEntity<?> getCocktail(@RequestParam Long cocktailId);
+    ResponseEntity<?> getCocktailUnused(@RequestParam Long cocktailId);
 
     @Operation(summary = "칵테일 전체 조회 (v1, deprecated)", description = "칵테일 백과")
     @ApiResponses(value = {
@@ -220,7 +220,7 @@ public interface CocktailV2ControllerDocs {
     })
     ResponseEntity<?> getCocktailsUnused(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size);
 
-    @Operation(summary = "칵테일 검색", description = "칵테일 백과")
+    @Operation(summary = "칵테일 검색 (v1, deprecated)", description = "칵테일 백과")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(
@@ -315,7 +315,7 @@ public interface CocktailV2ControllerDocs {
     })
     ResponseEntity<?> getCocktailSearch(@RequestBody CocktailV2Controller.CocktailSearchRequest request);
 
-    @Operation(summary = "칵테일 연관검색어", description = "칵테일 백과")
+    @Operation(summary = "칵테일 연관검색어 (v1, deprecated)", description = "칵테일 백과")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(
@@ -344,7 +344,7 @@ public interface CocktailV2ControllerDocs {
     })
     ResponseEntity<?> getRelatedCocktail(@RequestParam String searchText);
 
-    @Operation(summary = "칵테일 맞춤 조회", description = "칵테일 맞춤조회")
+    @Operation(summary = "칵테일 맞춤 조회 (v1, deprecated)", description = "칵테일 맞춤조회")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(
@@ -439,7 +439,7 @@ public interface CocktailV2ControllerDocs {
     })
     ResponseEntity<?> getPersonalCocktail(@RequestBody CocktailV2Controller.CocktailFilter cocktailFilter);
 
-    @Operation(summary = "칵테일 태그 조회", description = "칵테일 조건")
+    @Operation(summary = "칵테일 태그 조회 (v1, deprecated)", description = "칵테일 조건")
     @ApiResponses(value = {
             // 1. 조회 성공
             @ApiResponse(

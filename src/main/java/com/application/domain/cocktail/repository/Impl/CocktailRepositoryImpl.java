@@ -34,7 +34,7 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
     public Page<Cocktail> getCocktails(CocktailSearchConditionDto condition, Pageable pageable) {
         QCocktail cocktail = QCocktail.cocktail;
 
-        System.out.println("condition = " + condition);
+//        System.out.println("condition = " + condition);
 
         // --- WHERE 절 조립 ---
         BooleanBuilder builder = new BooleanBuilder();
