@@ -7,16 +7,16 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class OAuth2PropertiesValue {
-//    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String naverClientId;
 
-//    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
     private String naverClientSecret;
 
-//    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
     private String naverRedirectUri;
 
-//    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
+    @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
     private String naverTokenUri;
 
 //    @Value("${spring.security.oauth2.client.registration.google.client-id}")
