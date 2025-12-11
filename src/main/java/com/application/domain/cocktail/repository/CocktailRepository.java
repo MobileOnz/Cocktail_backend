@@ -8,9 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface CocktailRepository extends JpaRepository<Cocktail, Long>, CocktailRepositoryCustom {
+
+    /**
+     * <pre>
+     *     [JpaRepository 메서드 쿼리]
+     *     특정 문자열로 시작하는 칵테일 최대 5개 조회
+     * </pre>
+     * @param searchText 검색어
+     */
+    List<CocktailNameProjection> findTop5ByKorNameStartingWith(String searchText);
 
     // 동시성을 고려한 Atomic 증가
 
@@ -33,4 +44,12 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Cocktail c SET c.hardCount = c.hardCount - 1 WHERE c.id = :id")
     void decrementHard(@Param("id") Long id);
+
+    /**
+     * 칵테일 이름(korName)만 가져오기 위한 Projection Interface
+     * get필드명() 메서드를 정의하면 JPA가 해당 필드만 SELECT하여 채워줍니다.
+     */
+    interface CocktailNameProjection {
+        String getKorName();
+    }
 }
