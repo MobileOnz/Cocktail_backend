@@ -159,6 +159,17 @@ public class CocktailService {
         return CocktailResponseDto.from(cocktail);
     }
 
+    public List<String> getCocktailSuggestions(String searchText){
+
+        List<CocktailRepository.CocktailNameProjection> projections =
+                cocktailRepository.findTop5ByKorNameStartingWith(searchText);
+
+        return projections.stream()
+                // CocktailNameProjection 객체에서 getKorName()을 호출하여 String을 얻음
+                .map(CocktailRepository.CocktailNameProjection::getKorName)
+                .toList();
+    }
+
     // ======================================================================================
 
     public CocktailDto getCocktailInfo(Long cocktailId){

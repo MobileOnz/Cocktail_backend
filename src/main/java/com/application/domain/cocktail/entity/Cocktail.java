@@ -85,6 +85,8 @@ public class Cocktail {
     // FIXME ENUM으로 하면 좋을듯
     private String glassType;
 
+    private String glassImageUrl;
+
     // FIXME ENUM으로 하면 좋을듯
     private String base;
 

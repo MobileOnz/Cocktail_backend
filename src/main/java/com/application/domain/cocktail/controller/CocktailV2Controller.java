@@ -166,13 +166,31 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * @return
      */
     @Operation(summary = "칵테일 상세 조회", description = "칵테일 상세 정보를 조회합니다.")
-    @GetMapping("/{cocktailId}")
-    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(@PathVariable Long cocktailId){
+    @GetMapping("/detail")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(
+            @Parameter(example = "1")
+            @RequestParam Long cocktailId
+    ){
 
         CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
+    @Operation(summary = "칵테일 연관검색어 v2", description = "searchText에 따라 칵테일 이름을 조회합니다.")
+    @GetMapping("/suggestions")
+    public ResponseEntity<ResponseDto<List<String>>> getCocktailSuggestions(
+            @Parameter(example = "아")
+            @RequestParam String searchText
+    ){
+
+        List<String> cocktailSuggestions = cocktailService.getCocktailSuggestions(searchText);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 연관검색어 조회 성공 (v2)", cocktailSuggestions),
                 HttpStatus.OK
         );
     }
