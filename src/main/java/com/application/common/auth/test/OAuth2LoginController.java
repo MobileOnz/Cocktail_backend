@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v2/auth")
 public class OAuth2LoginController {
     private final OAuth2LoginUrlService loginUrlService;
 
@@ -28,6 +28,7 @@ public class OAuth2LoginController {
         return ResponseEntity.ok(Map.of("loginUrl", loginUrlService.getGoogleLoginUrl()));
     }
 
+    // 카카오 로그인 URL 반환
     @GetMapping("/kakao/login-url")
     public ResponseEntity<Map<String, String>> getKakaoLoginUrl() {
         return ResponseEntity.ok(Map.of("loginUrl", loginUrlService.getKakaoLoginUrl()));

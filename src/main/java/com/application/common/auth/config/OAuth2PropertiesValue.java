@@ -19,16 +19,16 @@ public class OAuth2PropertiesValue {
     @Value("${spring.security.oauth2.client.provider.naver.token-uri}")
     private String naverTokenUri;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String googleClientSecret;
 
-//    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String googleRedirectUri;
 
-//    @Value("${spring.security.oauth2.client.provider.google.token-uri}")
+    @Value("${spring.security.oauth2.client.provider.google.token-uri}")
     private String googleTokenUri;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
@@ -43,24 +43,24 @@ public class OAuth2PropertiesValue {
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String kakaoTokenUri;
 
-//    @Value("${spring.security.oauth2.client.secret.key}")
+    @Value("${spring.security.oauth2.client.secret.key}")
     private String appleKey;
 
-//    @Value("${spring.security.oauth2.client.id}")
+    @Value("${spring.security.oauth2.client.id}")
     private String appleClientId;
 
-//    @Value("${spring.security.oauth2.client.key.id}")
+    @Value("${spring.security.oauth2.client.key.id}")
     private String appleKeyId;
 
-//    @Value("${spring.security.oauth2.client.team.id}")
+    @Value("${spring.security.oauth2.client.team.id}")
     private String appleTeamId;
 
-//    @Value("${spring.security.oauth2.client.audience}")
+    @Value("${spring.security.oauth2.client.audience}")
     private String appleAudience;
 
-//    @Value("${spring.security.oauth2.client.auth.public.key}")
+    @Value("${spring.security.oauth2.client.auth.public.key}")
     private String applePublicKeyUrl;
 
-//    @Value("${spring.security.oauth2.client.auth.token}")
+    @Value("${spring.security.oauth2.client.auth.token}")
     private String appleTokenUrl;
 }

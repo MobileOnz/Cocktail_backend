@@ -13,22 +13,22 @@ import java.util.UUID;
 @Service
 public class OAuth2LoginUrlService {
 
-//    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
     private String naverClientId;
 
-//    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
     private String naverRedirectUri;
 
-//    @Value("${spring.security.oauth2.client.provider.naver.authorization-uri}")
+    @Value("${spring.security.oauth2.client.provider.naver.authorization-uri}")
     private String naverAuthUri;
 
-//    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String googleClientId;
 
-//    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
     private String googleRedirectUri;
 
-//    @Value("${spring.security.oauth2.client.provider.google.authorization-uri}")
+    @Value("${spring.security.oauth2.client.provider.google.authorization-uri}")
     private String googleAuthUri;
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
