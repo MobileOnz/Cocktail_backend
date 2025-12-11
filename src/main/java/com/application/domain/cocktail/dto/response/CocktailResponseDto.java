@@ -6,6 +6,7 @@ import com.application.domain.cocktail.entity.CocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,9 +28,19 @@ public record CocktailResponseDto(
         Integer minAlcohol,
         String originText,
         String season,
-        String ingredientsText,
+
+        // 프론트 요구사항에 맞게 배열로 응답하도록 수정
+//        String ingredientsText,
+        List<String> ingredients,
+
         String style,
+
+        // glassType이 여러 개가 있는 칵테일이 있어 수정 -> 다시 원복
         String glassType,
+//        @Schema(description = "사용되는 글라스 타입 목록", example = "[\"칵테일 글라스\", \"마티니 글라스\"]")
+//        List<String> glassTypes,
+
+        String glassImageUrl,
         String base,
 
         String imageUrl,
@@ -45,6 +56,23 @@ public record CocktailResponseDto(
 ) {
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
     public static CocktailResponseDto from(Cocktail cocktail) {
+
+//        String rawGlassType = cocktail.getGlassType();
+//        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
+//        List<String> splitGlassTypes = (rawGlassType != null && !rawGlassType.isEmpty())
+//                ? Arrays.stream(rawGlassType.split("/"))
+//                .map(String::trim) // 공백 제거
+//                .toList()
+//                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        // 재료 리스트로 전달하도록 수정
+        String rawIngredientsText = cocktail.getIngredientsText();
+        List<String> ingredients = (rawIngredientsText != null && !rawIngredientsText.isEmpty())
+                ? Arrays.stream(rawIngredientsText.split(","))
+                .map(String::trim) // 공백 제거
+                .toList()
+                : List.of(); // 값이 없으면 빈 리스트 반환
+
         return new CocktailResponseDto(
                 cocktail.getId(),
                 cocktail.getKorName(),
@@ -54,9 +82,17 @@ public record CocktailResponseDto(
                 cocktail.getMinAlcohol(),
                 cocktail.getOriginText(),
                 cocktail.getSeason(),
-                cocktail.getIngredientsText(),
+
+                // 재료 list로 변경에 따른 수정
+                ingredients,
+//                cocktail.getIngredientsText(),
+
                 cocktail.getStyle(),
-                cocktail.getGlassType(),
+
+                cocktail.getGlassType(), // 잔 list로 변경에 따른 수정 -> 원복
+//                splitGlassTypes,
+
+                cocktail.getGlassImageUrl(),
                 cocktail.getBase(),
 
                 cocktail.getImageUrl(),
