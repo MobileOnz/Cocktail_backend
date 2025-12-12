@@ -46,6 +46,9 @@ public class OAuth2Service {
         return handleMemberLoginFlow(parsedMember);
     }
 
+    /**
+     * 회원가입 : 프론트엔드에서 약관 동의 후, /signup api 호출 시, 사용자 정보 DB 저장
+     */
     public ResSocialLoginDto signup(ReqSignupDto reqSignupDto){
         Cache cache =  cacheManager.getCache(CacheType.PARSED_MEMBER.getName());
         if(cache == null){
@@ -116,21 +119,32 @@ public class OAuth2Service {
     }
 
 
+    /**
+     * 로그인을 시도한 회원이 기존 회원인지 확인
+     */
     private ResSocialLoginDto handleMemberLoginFlow(ParsedMember parsedMember) {
         Member member = memberService.getMemberByCredentialId(parsedMember.getCredentialId());
         if(member == null){
+            // [신규 회원] DB에 없으면 -> '회원가입 대기 상태'
             return createCode(parsedMember);
         }else{
+            // [기존 회원] DB에 있으면 -> 바로 로그인 성공 (JWT 토큰 발급)
             return createJWTToken(member);
         }
     }
 
+    /**
+     * 신규 회원 시, 임시 저장
+     * - 캐시에 정보를 잠깐 넣어두고, 임시 코드만 프론트에 전달
+     */
     private ResSignupDto createCode(ParsedMember parsedMember){
-        String code = UUID.randomUUID().toString();
+        String code = UUID.randomUUID().toString(); // 임시 코드 생성
 
+        // 캐시 메모리에 저장
         Cache cache = cacheManager.getCache(CacheType.PARSED_MEMBER.getName());
         cache.put(code, parsedMember);
 
+        // 프론트에 신규 회원임을 알림 : 사용자 임시코드 생성 및 전달 -> 사용자 약관 >> sign-up
         return ResSignupDto.builder()
                 .code(code)
                 .build();
