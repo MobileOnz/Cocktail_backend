@@ -5,6 +5,7 @@ import com.application.common.auth.dto.login.ReqSignupDto;
 import com.application.common.auth.dto.login.ReqSocialLoginDto;
 import com.application.common.auth.dto.login.ResSocialLoginDto;
 import com.application.common.auth.dto.login.ResTokenDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,11 @@ public class AuthController {
     /**
      * 소셜 로그인 요청 : (OAuth2CodeController가 여기로 요청을 보냄)
      */
+    @Operation(
+            summary = "소셜 로그인 요청",
+            description = "소셜 플랫폼(네이버, 카카오 등)에서 받은 인증 코드나 토큰을 이용해 로그인합니다. " +
+                    "기존 회원이면 **JWT 토큰**을 반환하고, 신규 회원이면 가입 대기 코드(Code)를 반환합니다."
+    )
     @PostMapping("/social-login")
     public ResponseEntity<ResSocialLoginDto> socialLogin(@RequestBody ReqSocialLoginDto dto) {
         // Service의 socialLogin 호출 -> DB 조회 -> 로그인 또는 가입대기 코드 반환
@@ -28,6 +34,10 @@ public class AuthController {
     /**
      * 회원가입 : 약관 동의 후 최종 가입
      */
+    @Operation(
+            summary = "회원가입 완료 (약관 동의)",
+            description = "소셜 로그인 시 신규 회원으로 판별되어 받은 가입 대기 코드와 약관 동의 정보를 제출하여 최종 가입합니다."
+    )
     @PostMapping("/signup")
     public ResponseEntity<ResSocialLoginDto> signup(@RequestBody ReqSignupDto dto) {
         // Service의 signup 호출 -> DB 저장 -> 토큰 발급
@@ -37,6 +47,10 @@ public class AuthController {
     /**
      * 로그아웃
      */
+    @Operation(
+            summary = "로그아웃",
+            description = "현재 사용 중인 Access Token을 블랙리스트에 등록하고, 서버의 Refresh Token을 삭제합니다."
+    )
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String token) {
         // Service의 logout 호출 -> 토큰 블랙리스트 처리
@@ -47,6 +61,10 @@ public class AuthController {
     /**
      * 토큰 재발급 (Refresh Token)
      */
+    @Operation(
+            summary = "토큰 재발급 (Reissue)",
+            description = "만료된 Access Token 대신 Refresh Token을 사용하여 새로운 토큰 쌍을 발급받습니다."
+    )
     @PostMapping("/reissue")
     public ResponseEntity<ResTokenDto> reissue(@RequestHeader("RefreshToken") String refreshToken){
         return ResponseEntity.ok(oAuth2Service.reissueRefreshToken(refreshToken));
