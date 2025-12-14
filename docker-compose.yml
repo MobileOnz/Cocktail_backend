@@ -36,8 +36,6 @@ services:
       - APPLE_KEY_ID=${APPLE_KEY_ID}
       - APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY}
 
-      - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
-
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
 
