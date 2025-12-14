@@ -13,6 +13,29 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
+
+      # --- JWT 설정 ---
+      - JWT_SECRET=여기에_JWT_시크릿키_입력
+
+      # --- 네이버 ---
+      - NAVER_ID=여기에_네이버_Client_ID
+      - NAVER_SECRET=여기에_네이버_Client_Secret
+
+      # --- 카카오 ---
+      - KAKAO_ID=여기에_카카오_Client_ID
+      - KAKAO_SECRET=여기에_카카오_Client_Secret
+
+      # --- 구글 ---
+      - GOOGLE_ID=여기에_구글_Client_ID
+      - GOOGLE_SECRET=여기에_구글_Client_Secret
+
+      # --- 애플 ---
+      - APPLE_SERVICE_ID=여기에_Service_ID
+      - APPLE_SECRET_KEY=여기에_Secret_Key
+      - APPLE_TEAM_ID=여기에_Team_ID
+      - APPLE_KEY_ID=여기에_Key_ID
+      - APPLE_PRIVATE_KEY=여기에_Private_Key_내용
+
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
 
