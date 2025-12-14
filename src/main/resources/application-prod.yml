@@ -56,7 +56,7 @@ spring:
           # --- 4. 애플 (Apple) ---
           apple:
             client-id: ${APPLE_SERVICE_ID}
-            client-secret: ${APPLE_SECRET_KEY}
+            client-secret: ${APPLE_KEY_SECRET}
             redirect-uri: "https://www.onzbackend.shop/login/oauth2/code/apple"
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
@@ -81,7 +81,6 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
-
           apple:
             authorization-uri: https://appleid.apple.com/auth/authorize
             token-uri: https://appleid.apple.com/auth/token

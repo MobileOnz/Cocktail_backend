@@ -15,22 +15,14 @@ services:
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
 
       # --- JWT 설정 ---
-      - JWT_SECRET=${JWT_SECRET}
-
-      # --- 카카오 ---
+      - JWT_SECRET=${JWT_SECRET}# --- OAuth 설정 ---
       - KAKAO_ID=${KAKAO_ID}
       - KAKAO_SECRET=${KAKAO_SECRET}
       - KAKAO_URI=${KAKAO_URI}
-
-      # --- 네이버 ---
       - NAVER_ID=${NAVER_ID}
       - NAVER_SECRET=${NAVER_SECRET}
-
-      # --- 구글 ---
       - GOOGLE_ID=${GOOGLE_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
-
-      # --- 애플 ---
       - APPLE_SERVICE_ID=${APPLE_SERVICE_ID}
       - APPLE_TEAM_ID=${APPLE_TEAM_ID}
       - APPLE_KEY_ID=${APPLE_KEY_ID}
