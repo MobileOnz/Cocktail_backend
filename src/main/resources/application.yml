@@ -93,6 +93,7 @@ spring:
 custom:
   oauth2:
     apple:
+      client-id: ${APPLE_CLIENT_ID}
       team-id: ${APPLE_TEAM_ID}       # Apple Developer Team ID
       key-id: ${APPLE_KEY_ID}
       private-key: ${APPLE_PRIVATE_KEY}     # Key ID (P8 파일 발급 시 확인)
