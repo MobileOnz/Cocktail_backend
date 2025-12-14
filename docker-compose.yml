@@ -12,14 +12,12 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - JWT_SECRET=${JWT_SECRET}
-      - KAKAO_ID=${KAKAO_ID}
-      - KAKAO_SECRET=${KAKAO_SECRET}
-      - KAKAO_URI=${KAKAO_URI}
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
 
       # --- JWT 설정 ---
-      - JWT_SECRET=${JWT_SECRET}# --- OAuth 설정 ---
+      - JWT_SECRET=${JWT_SECRET}
+
+      # --- OAuth 설정 ---
       - KAKAO_ID=${KAKAO_ID}
       - KAKAO_SECRET=${KAKAO_SECRET}
       - KAKAO_URI=${KAKAO_URI}
