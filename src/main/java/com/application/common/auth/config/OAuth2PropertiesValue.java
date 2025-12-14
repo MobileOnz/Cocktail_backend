@@ -43,24 +43,28 @@ public class OAuth2PropertiesValue {
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String kakaoTokenUri;
 
-    @Value("${spring.security.oauth2.client.secret.key}")
+//    @Value("${spring.security.oauth2.client.secret.key}")
+    @Value("${APPLE_PRIVATE_KEY}")
     private String appleKey;
 
-    @Value("${spring.security.oauth2.client.id}")
+//    @Value("${spring.security.oauth2.client.id}")
+    @Value("${APPLE_CLIENT_ID}")
     private String appleClientId;
 
-    @Value("${spring.security.oauth2.client.key.id}")
+//    @Value("${spring.security.oauth2.client.key.id}")
+    @Value("${APPLE_KEY_ID}")
     private String appleKeyId;
 
-    @Value("${spring.security.oauth2.client.team.id}")
+//    @Value("${spring.security.oauth2.client.team.id}")
+    @Value("${APPLE_TEAM_ID}")
     private String appleTeamId;
 
-    @Value("${spring.security.oauth2.client.audience}")
+//    @Value("${spring.security.oauth2.client.audience}")
     private String appleAudience;
 
-    @Value("${spring.security.oauth2.client.auth.public.key}")
+//    @Value("${spring.security.oauth2.client.auth.public.key}")
     private String applePublicKeyUrl;
 
-    @Value("${spring.security.oauth2.client.auth.token}")
+//    @Value("${spring.security.oauth2.client.auth.token}")
     private String appleTokenUrl;
 }
