@@ -110,6 +110,9 @@ public class CocktailService {
         return cocktailDtos;
     }
 
+    // ==========================================================
+    // v2
+    // ==========================================================
 
     /**
      * <pre>
@@ -133,23 +136,6 @@ public class CocktailService {
         return cocktailPage.map(CocktailResponseDto::from);
     }
 
-    /**
-     * <pre>
-     * 특정 칵테일 조회 FIXME 주석
-     * </pre>
-     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
-     */
-    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
-
-        List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
-
-        return cocktails.stream()
-                // ⭐️ Cocktail 엔티티 하나당 CocktailResponseDto::from 메서드를 호출하여 DTO로 매핑합니다.
-                .map(CocktailResponseDto::from)
-                // ⭐️ 결과를 List로 수집합니다.
-                .toList();
-    }
-
     public CocktailResponseDto getCocktailV2(Long cocktailId) {
 
         // 랜덤 ID 생성 (1부터 105까지 포함)
@@ -169,6 +155,39 @@ public class CocktailService {
         return CocktailResponseDto.from(cocktail);
     }
 
+    /**
+     * <pre>
+     *     best 10 칵테일 조회
+     * </pre>
+     * @return
+     */
+    public List<CocktailResponseDto> getBestCocktails() {
+
+        List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByRecommendCountDesc();
+
+        return cocktails.stream().map(CocktailResponseDto::from).toList();
+    }
+
+    /**
+     * <pre>
+     *     최근 업데이트된 칵테일 10개 조회
+     * </pre>
+     * @return
+     */
+    public List<CocktailResponseDto> getRecentCocktails() {
+
+        List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByUpdatedAtDesc();
+
+        return cocktails.stream().map(CocktailResponseDto::from).toList();
+    }
+
+    /**
+     * <pre>
+     *     칵테일 연관검색어 조회
+     * </pre>
+     * @param searchText
+     * @return
+     */
     public List<String> getCocktailSuggestions(String searchText){
 
         List<CocktailRepository.CocktailNameProjection> projections =
@@ -179,6 +198,24 @@ public class CocktailService {
                 .map(CocktailRepository.CocktailNameProjection::getKorName)
                 .toList();
     }
+
+    /**
+     * <pre>
+     * 특정 칵테일 조회 FIXME 주석
+     * </pre>
+     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
+     */
+    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
+
+        List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
+
+        return cocktails.stream()
+                // ⭐️ Cocktail 엔티티 하나당 CocktailResponseDto::from 메서드를 호출하여 DTO로 매핑합니다.
+                .map(CocktailResponseDto::from)
+                // ⭐️ 결과를 List로 수집합니다.
+                .toList();
+    }
+
 
     // ======================================================================================
 

@@ -23,6 +23,23 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
      */
     List<CocktailNameProjection> findTop5ByKorNameStartingWith(String searchText);
 
+    /**
+     * <pre>
+     *     recommendCount 기준으로 내림차순 정렬하여 상위 10개의 칵테일 엔티티를 조회합니다.
+     *     findTop10By : 상위 10개 제한 (LIMIT 10)
+     *     OrderByRecommendCountDesc : recommendCount 기준 내림차순 정렬 (ORDER BY recommend_count DESC)
+     * </pre>
+     */
+    List<Cocktail> findTop10ByOrderByRecommendCountDesc();
+
+    /**
+     * <pre>
+     *     최신순 limit 10
+     * </pre>
+     * @return
+     */
+    List<Cocktail> findTop10ByOrderByUpdatedAtDesc();
+
     // 동시성을 고려한 Atomic 증가
 
     // 추천해요 증가 (DB 직접 연산)
