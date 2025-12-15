@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
@@ -109,6 +110,9 @@ public class CocktailService {
         return cocktailDtos;
     }
 
+    // ==========================================================
+    // v2
+    // ==========================================================
 
     /**
      * <pre>
@@ -132,6 +136,69 @@ public class CocktailService {
         return cocktailPage.map(CocktailResponseDto::from);
     }
 
+    public CocktailResponseDto getCocktailV2(Long cocktailId) {
+
+        // 랜덤 ID 생성 (1부터 105까지 포함)
+        final long MIN_ID = 1;
+        final long MAX_ID = 105;
+
+        // 랜덤 조회 api 호출 시 사용됨
+        if(cocktailId == null) {
+            cocktailId = ThreadLocalRandom.current().nextLong(MIN_ID, MAX_ID + 1);
+        }
+
+        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
+        Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
+                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+        );
+
+        return CocktailResponseDto.from(cocktail);
+    }
+
+    /**
+     * <pre>
+     *     best 10 칵테일 조회
+     * </pre>
+     * @return
+     */
+    public List<CocktailResponseDto> getBestCocktails() {
+
+        List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByRecommendCountDesc();
+
+        return cocktails.stream().map(CocktailResponseDto::from).toList();
+    }
+
+    /**
+     * <pre>
+     *     최근 업데이트된 칵테일 10개 조회
+     * </pre>
+     * @return
+     */
+    public List<CocktailResponseDto> getRecentCocktails() {
+
+        List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByUpdatedAtDesc();
+
+        return cocktails.stream().map(CocktailResponseDto::from).toList();
+    }
+
+    /**
+     * <pre>
+     *     칵테일 연관검색어 조회
+     * </pre>
+     * @param searchText
+     * @return
+     */
+    public List<String> getCocktailSuggestions(String searchText){
+
+        List<CocktailRepository.CocktailNameProjection> projections =
+                cocktailRepository.findTop5ByKorNameStartingWith(searchText);
+
+        return projections.stream()
+                // CocktailNameProjection 객체에서 getKorName()을 호출하여 String을 얻음
+                .map(CocktailRepository.CocktailNameProjection::getKorName)
+                .toList();
+    }
+
     /**
      * <pre>
      * 특정 칵테일 조회 FIXME 주석
@@ -149,26 +216,6 @@ public class CocktailService {
                 .toList();
     }
 
-    public CocktailResponseDto getCocktailV2(Long cocktailId) {
-
-        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
-        Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
-                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
-        );
-
-        return CocktailResponseDto.from(cocktail);
-    }
-
-    public List<String> getCocktailSuggestions(String searchText){
-
-        List<CocktailRepository.CocktailNameProjection> projections =
-                cocktailRepository.findTop5ByKorNameStartingWith(searchText);
-
-        return projections.stream()
-                // CocktailNameProjection 객체에서 getKorName()을 호출하여 String을 얻음
-                .map(CocktailRepository.CocktailNameProjection::getKorName)
-                .toList();
-    }
 
     // ======================================================================================
 
