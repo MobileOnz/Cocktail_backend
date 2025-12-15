@@ -180,6 +180,25 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
     }
 
+    /**
+     * <pre>
+     *     칵테일 랜덤 조회
+     * </pre>
+     * @return
+     */
+    @Operation(summary = "칵테일 랜덤 조회", description = "ID 1부터 105 사이에서 무작위 칵테일 1개의 상세 정보를 조회합니다.")
+    @GetMapping("/random")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktailRandom(
+    ){
+
+        CocktailResponseDto cocktail = cocktailService.getCocktailV2(null);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
     @Operation(summary = "칵테일 연관검색어 v2", description = "searchText에 따라 칵테일 이름을 조회합니다.")
     @GetMapping("/suggestions")
     public ResponseEntity<ResponseDto<List<String>>> getCocktailSuggestions(

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 @Service
@@ -150,6 +151,15 @@ public class CocktailService {
     }
 
     public CocktailResponseDto getCocktailV2(Long cocktailId) {
+
+        // 랜덤 ID 생성 (1부터 105까지 포함)
+        final long MIN_ID = 1;
+        final long MAX_ID = 105;
+
+        // 랜덤 조회 api 호출 시 사용됨
+        if(cocktailId == null) {
+            cocktailId = ThreadLocalRandom.current().nextLong(MIN_ID, MAX_ID + 1);
+        }
 
         // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
