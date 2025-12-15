@@ -110,11 +110,11 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 
     /**
      * <pre>
-     *     칵테일 Best 10 조회
+     *     최근 업데이트된 칵테일 조회
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 Best 10 조회", description = "추천을 많이 받은 칵테일의 정보를 조회합니다.")
+    @Operation(summary = "칵테일 최신순 top 10 조회", description = "최근 업데이트된 칵테일의 정보를 조회합니다.")
     @GetMapping("/recent")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRecentCocktails(
     ){
