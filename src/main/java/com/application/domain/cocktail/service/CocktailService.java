@@ -5,6 +5,7 @@ import com.application.common.mapper.CocktailMapper;
 import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.TagDto;
+import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
@@ -136,25 +137,6 @@ public class CocktailService {
         return cocktailPage.map(CocktailResponseDto::from);
     }
 
-    public CocktailResponseDto getCocktailV2(Long cocktailId) {
-
-        // 랜덤 ID 생성 (1부터 105까지 포함)
-        final long MIN_ID = 1;
-        final long MAX_ID = 105;
-
-        // 랜덤 조회 api 호출 시 사용됨
-        if(cocktailId == null) {
-            cocktailId = ThreadLocalRandom.current().nextLong(MIN_ID, MAX_ID + 1);
-        }
-
-        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
-        Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
-                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
-        );
-
-        return CocktailResponseDto.from(cocktail);
-    }
-
     /**
      * <pre>
      *     best 10 칵테일 조회
@@ -183,6 +165,60 @@ public class CocktailService {
 
     /**
      * <pre>
+     * 특정 칵테일 조회 FIXME 주석
+     * </pre>
+     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
+     */
+    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
+
+        List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
+
+        return cocktails.stream()
+                .map(CocktailResponseDto::from)
+                .toList();
+    }
+
+    public CocktailResponseDto getCocktailV2(Long cocktailId) {
+
+        // 랜덤 ID 생성 (1부터 105까지 포함)
+        final long MIN_ID = 1;
+        final long MAX_ID = 105;
+
+        // 랜덤 조회 api 호출 시 사용됨
+        if(cocktailId == null) {
+            cocktailId = ThreadLocalRandom.current().nextLong(MIN_ID, MAX_ID + 1);
+        }
+
+        // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
+        Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
+                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+        );
+
+        return CocktailResponseDto.from(cocktail);
+    }
+
+    public CocktailResponseDto getRecommendation(CocktailRecommendationDto dto) {
+
+        // 1. 조건에 맞는 모든 후보 칵테일 조회
+        List<Cocktail> candidates = cocktailRepository.findRecommendedCocktails(dto);
+
+        // 2. 결과가 없으면 예외 처리 또는 기본 추천 (예: 랜덤)
+        if (candidates.isEmpty()) {
+            throw new CustomApiException("조건에 맞는 칵테일을 찾을 수 없습니다.");
+            // 또는 return getCocktailRandom(); // 랜덤 반환
+        }
+
+        // 3. 후보군 중에서 랜덤으로 1개 선택
+        int randomIndex = ThreadLocalRandom.current().nextInt(candidates.size());
+        Cocktail recommendedCocktail = candidates.get(randomIndex);
+
+        // 4. DTO 변환 및 반환
+        return CocktailResponseDto.from(recommendedCocktail);
+
+    }
+
+    /**
+     * <pre>
      *     칵테일 연관검색어 조회
      * </pre>
      * @param searchText
@@ -196,23 +232,6 @@ public class CocktailService {
         return projections.stream()
                 // CocktailNameProjection 객체에서 getKorName()을 호출하여 String을 얻음
                 .map(CocktailRepository.CocktailNameProjection::getKorName)
-                .toList();
-    }
-
-    /**
-     * <pre>
-     * 특정 칵테일 조회 FIXME 주석
-     * </pre>
-     * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
-     */
-    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
-
-        List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
-
-        return cocktails.stream()
-                // ⭐️ Cocktail 엔티티 하나당 CocktailResponseDto::from 메서드를 호출하여 DTO로 매핑합니다.
-                .map(CocktailResponseDto::from)
-                // ⭐️ 결과를 List로 수집합니다.
                 .toList();
     }
 

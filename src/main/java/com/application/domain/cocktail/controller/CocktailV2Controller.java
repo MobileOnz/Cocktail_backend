@@ -2,6 +2,7 @@ package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
+import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -161,6 +162,28 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     ){
 
         CocktailResponseDto cocktail = cocktailService.getCocktailV2(null);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
+
+    /**
+     * <pre>
+     *     칵테일 맞춤추천
+     * </pre>
+     * @return
+     */
+    @Operation(summary = "칵테일 맞춤추천", description = "조건에 부합하는 칵테일을 조회합니다.")
+    @GetMapping("/recommendation")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getRecommendation(
+            @Parameter(description = "질문에 대한 응답")
+            @ModelAttribute CocktailRecommendationDto dto
+    ){
+
+        CocktailResponseDto cocktail = cocktailService.getRecommendation(dto);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
