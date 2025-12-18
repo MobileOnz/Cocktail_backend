@@ -1,8 +1,19 @@
-#server:
-#  servlet:
-#    context-path: /onz
-#
-#spring:
+server:
+  servlet:
+    context-path: /onz
+
+spring:
+  # (DB 접속 정보는 docker-compose.yml에서 주입되므로 여기엔 불필요)
+
+  jpa:
+    hibernate:
+      # (주의!) EC2 운영 환경에서는 'validate' 또는 'none'을 권장
+      # 'update'는 개발 중에만 사용
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
 #  datasource:
 #    url: ${POSTGRE_url}
 #    username: ${POSTGRE_USERNAME}
