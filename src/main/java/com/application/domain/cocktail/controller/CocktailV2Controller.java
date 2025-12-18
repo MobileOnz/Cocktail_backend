@@ -208,6 +208,24 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 
     /**
      * <pre>
+     *     모든 칵테일의 이름 조회 (한글, 영어)
+     * </pre>
+     * @return
+     */
+    @Operation(summary = "모든 칵테일 이름 조회", description = "DB에 저장된 모든 칵테일의 한글 이름과 영어 이름을 순번과 함께 순서대로 조회. 형식: [{id: 1, name: \"한글1\"}, {id: 2, name: \"영어1\"}, ...]")
+    @GetMapping("/names")
+    public ResponseEntity<ResponseDto<List<CocktailNameDto>>> getAllCocktailNames(){
+
+        List<CocktailNameDto> allCocktailNames = cocktailService.getAllCocktailNames();
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 이름 조회 성공 (v2)", allCocktailNames),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
      *     상큼한 칵테일 조회
      * </pre>
      *
@@ -292,6 +310,18 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 //    public ResponseEntity<?> getCocktailsUnused(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size){
 //        return new ResponseEntity<>(new ResponseDto<>(1, "cocktails info", cocktailService.getCocktailFindAll(page, size)), HttpStatus.OK);
 //    }
+
+    @Getter
+    @Setter
+    public static class CocktailNameDto {
+        private int id;
+        private String name;
+
+        public CocktailNameDto(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
 
     @Getter
     @Setter

@@ -235,6 +235,28 @@ public class CocktailService {
                 .toList();
     }
 
+    /**
+     * <pre>
+     *     모든 칵테일의 한글 이름과 영어 이름을 순서대로 조회
+     *     반환 형식: [{id: 1, name: "한글1"}, {id: 2, name: "영어1"}, ...]
+     * </pre>
+     * @return
+     */
+    public List<CocktailV2Controller.CocktailNameDto> getAllCocktailNames() {
+
+        List<CocktailRepository.CocktailNamesProjection> projections =
+                cocktailRepository.findAllProjectedBy();
+
+        List<CocktailV2Controller.CocktailNameDto> allNames = new ArrayList<>();
+        int index = 1;
+        for (CocktailRepository.CocktailNamesProjection projection : projections) {
+            allNames.add(new CocktailV2Controller.CocktailNameDto(index++, projection.getKorName()));
+            allNames.add(new CocktailV2Controller.CocktailNameDto(index++, projection.getEngName()));
+        }
+
+        return allNames;
+    }
+
 
     // ======================================================================================
 
