@@ -11,6 +11,7 @@ import com.application.domain.member.entity.Member;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
 import com.application.domain.member.service.MemberService;
+import com.application.domain.monitoring.service.MonitoringService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -31,6 +32,7 @@ public class OAuth2Service {
 
     private final SocialLoginFactory factory;
     private final MemberService memberService;
+    private final MonitoringService monitoringService;
     private final CacheManager cacheManager;
 
 
@@ -71,10 +73,13 @@ public class OAuth2Service {
                 .serviceTerm(reqSignupDto.getServiceTerm())
                 .marketingTerm(reqSignupDto.getMarketingTerm())
                 .adTerm(reqSignupDto.getAdTerm())
-                .deviceNumber(reqSignupDto.getDeviceNumber())
                 .build();
 
         memberService.saveMember(newMember);
+
+        // 모니터링 데이터와 회원 매핑
+        monitoringService.mapToMember(reqSignupDto.getDeviceNumber(), newMember);
+
         cache.evict(reqSignupDto.getCode());
 
         return createJWTToken(newMember);
