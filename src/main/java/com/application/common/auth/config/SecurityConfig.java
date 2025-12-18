@@ -79,9 +79,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth)->auth
 //                        .requestMatchers("/test/**").permitAll() // 로그인 무시하고 api 요청 테스트 하기 위한
                         .requestMatchers("/api/auth/refresh", "/api/auth/social-login", "/api/auth/**").permitAll()
-                        .requestMatchers("/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao").permitAll()
-                        .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token").permitAll()
-                        .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url").permitAll()
+                        .requestMatchers("/onz/api/auth/refresh", "/onz/api/auth/social-login", "/onz/api/auth/**").permitAll()
+                        .requestMatchers("/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao", "/login/oauth2/code/apple").permitAll()
+                        .requestMatchers("/onz/login/oauth2/code/google", "/onz/login/oauth2/code/naver", "/onz/login/oauth2/code/kakao", "/onz/login/oauth2/code/apple").permitAll()
+                        .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token", "/api/auth/apple/token").permitAll()
+                        .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url", "/api/auth/apple/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
                         .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
                         // swagger
@@ -89,6 +91,7 @@ public class SecurityConfig {
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
                         // onz_v2
                         .requestMatchers("/api/v2/**").permitAll()
+                        .requestMatchers("/onz/api/v2/**").permitAll()
                         .anyRequest().authenticated());
 
         http
