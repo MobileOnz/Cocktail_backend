@@ -69,4 +69,21 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
     interface CocktailNameProjection {
         String getKorName();
     }
+
+    /**
+     * <pre>
+     *     모든 칵테일의 한글 이름과 영어 이름을 조회하기 위한 Projection Interface
+     * </pre>
+     */
+    interface CocktailNamesProjection {
+        String getKorName();
+        String getEngName();
+    }
+
+    /**
+     * <pre>
+     *     모든 칵테일의 한글 이름과 영어 이름을 조회
+     * </pre>
+     */
+    List<CocktailNamesProjection> findAllProjectedBy();
 }
