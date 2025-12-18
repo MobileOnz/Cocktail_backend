@@ -71,6 +71,7 @@ public class OAuth2Service {
                 .serviceTerm(reqSignupDto.getServiceTerm())
                 .marketingTerm(reqSignupDto.getMarketingTerm())
                 .adTerm(reqSignupDto.getAdTerm())
+                .deviceNumber(reqSignupDto.getDeviceNumber())
                 .build();
 
         memberService.saveMember(newMember);

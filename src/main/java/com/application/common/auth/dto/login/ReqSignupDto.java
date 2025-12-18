@@ -19,6 +19,10 @@ public class ReqSignupDto {
     @Schema(description = "사용자 닉네임", example = "칵테일러버")
     private String nickName;
 
+    @JsonProperty("deviceNumber")
+    @Schema(description = "사용자 기기 번호 (사용자의 로그인/비로그인 상태를 포괄할 수 있는 디바이스 고유 ID) -> 모니터링에 사용", example = "device_unique_identifier_12345")
+    private String deviceNumber;
+
     @NotNull
     @JsonProperty("ageTerm")
     @Schema(description = "만 14세 이상 약관 동의 여부 (필수)", example = "true")

@@ -49,6 +49,9 @@ public class Member extends BaseTimeEntity {
     @Column(name="phone")
     private String phone;
 
+    @Column(name="device_number")
+    private String deviceNumber;
+
     @Column(name="role", nullable = false)
     private Role role;// Admin, User, Other
 
@@ -66,7 +69,7 @@ public class Member extends BaseTimeEntity {
 
     @Builder
     public Member(String credentialId, String name, String nickname, String email, SocialLogin socialLogin, String profile, Role role
-    ,Boolean ageTerm, Boolean serviceTerm, Boolean marketingTerm, Boolean adTerm){
+    ,Boolean ageTerm, Boolean serviceTerm, Boolean marketingTerm, Boolean adTerm, String deviceNumber){
         this.credentialId = credentialId;
         this.name = name;
         this.nickname = nickname;
@@ -78,6 +81,7 @@ public class Member extends BaseTimeEntity {
         this.serviceTerm = serviceTerm;
         this.marketingTerm = marketingTerm;
         this.adTerm = adTerm;
+        this.deviceNumber = deviceNumber;
     }
 
     public String getRole(){
