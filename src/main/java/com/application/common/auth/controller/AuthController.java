@@ -22,8 +22,9 @@ public class AuthController {
      */
     @Operation(
             summary = "소셜 로그인 요청",
-            description = "소셜 플랫폼(네이버, 카카오 등)에서 받은 인증 코드나 토큰을 이용해 로그인합니다. " +
-                    "기존 회원이면 **JWT 토큰**을 반환하고, 신규 회원이면 가입 대기 코드(Code)를 반환합니다."
+            description = "소셜 플랫폼(카카오, 네이버, 애플 등)에서 받은 인증 코드 또는 액세스 토큰을 이용해 로그인합니다. " +
+                    "**기존 회원**이면 JWT 토큰 쌍(accessToken, refreshToken)을 반환하고, " +
+                    "**신규 회원**이면 회원가입을 위한 임시 코드(code)를 반환합니다."
     )
     @PostMapping("/social-login")
     public ResponseEntity<ResSocialLoginDto> socialLogin(@RequestBody ReqSocialLoginDto dto) {

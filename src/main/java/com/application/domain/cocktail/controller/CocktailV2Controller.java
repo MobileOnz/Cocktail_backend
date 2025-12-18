@@ -224,6 +224,18 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
     }
 
+    @Getter
+    @Setter
+    public static class CocktailNameDto {
+        private int id;
+        private String name;
+
+        public CocktailNameDto(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+    }
+
     /**
      * <pre>
      *     상큼한 칵테일 조회
