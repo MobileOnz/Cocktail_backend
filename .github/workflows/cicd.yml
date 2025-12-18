@@ -1,0 +1,61 @@
+name: cicd.yml
+
+# 언제 실행할지 설정 (dev 브랜치에 push 될 때)
+on:
+  push:
+    branches: [ "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  # 1. 빌드 및 테스트 (CI)
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        # 테스트를 포함하려면 'build', 테스트 제외하고 빌드만 확인하려면 '-x test' 추가
+        run: ./gradlew clean build -x test
+
+  # 2. 서버 배포 (CD)
+  deploy:
+    needs: build # build job이 성공해야 실행됨
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}       # EC2 IP 주소
+          username: ${{ secrets.EC2_USERNAME }} # 접속 계정 (보통 ubuntu 또는 root)
+          key: ${{ secrets.EC2_SSH_KEY }}     # pem 키 내용
+          port: 22
+          script: |
+            # 1. 프로젝트 폴더로 이동
+            cd ~/cocktail-api
+            
+            # 2. 최신 코드 받기
+            git pull origin dev
+            
+            # 3. Gradle 권한 다시 부여 (혹시 모르니)
+            chmod +x gradlew
+            
+            # 4. 기존 컨테이너 종료 및 정리 (네트워크 충돌 방지)
+            docker-compose down
+            
+            # 5. 다시 빌드 및 실행 (캐시 활용하지 않고 확실하게 빌드)
+            docker-compose up -d --build
+            
+            # 6. 불필요한 이미지 정리 (디스크 용량 확보)
+            docker image prune -f
