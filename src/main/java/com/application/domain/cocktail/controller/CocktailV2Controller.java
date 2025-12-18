@@ -2,6 +2,7 @@ package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
+import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -110,11 +111,11 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 
     /**
      * <pre>
-     *     칵테일 Best 10 조회
+     *     최근 업데이트된 칵테일 조회
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 Best 10 조회", description = "추천을 많이 받은 칵테일의 정보를 조회합니다.")
+    @Operation(summary = "칵테일 최신순 top 10 조회", description = "최근 업데이트된 칵테일의 정보를 조회합니다.")
     @GetMapping("/recent")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRecentCocktails(
     ){
@@ -161,6 +162,28 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     ){
 
         CocktailResponseDto cocktail = cocktailService.getCocktailV2(null);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                HttpStatus.OK
+        );
+    }
+
+
+    /**
+     * <pre>
+     *     칵테일 맞춤추천
+     * </pre>
+     * @return
+     */
+    @Operation(summary = "칵테일 맞춤추천", description = "조건에 부합하는 칵테일을 조회합니다.")
+    @GetMapping("/recommendation")
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getRecommendation(
+            @Parameter(description = "질문에 대한 응답")
+            @ModelAttribute CocktailRecommendationDto dto
+    ){
+
+        CocktailResponseDto cocktail = cocktailService.getRecommendation(dto);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
@@ -285,20 +308,20 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     // -----------------------
     // ↓ 기존 기능
 
-    @Override
-    @GetMapping("/{cocktailId}/unused")
-    public ResponseEntity<?> getCocktailUnused(@RequestParam Long cocktailId){
+//    @Override
+//    @GetMapping("/{cocktailId}/unused")
+//    public ResponseEntity<?> getCocktailUnused(@RequestParam Long cocktailId){
+//
+//        var result = cocktailService.getCocktailInfo(cocktailId);
+//        return ResponseEntity.ok(ResponseDto.onSuccess("cocktail info", result));
+////        return new ResponseEntity<>(new ResponseDto<>(1, "cocktail info", cocktailService.getCocktailInfo(cocktailId)),HttpStatus.OK);
+//    }
 
-        var result = cocktailService.getCocktailInfo(cocktailId);
-        return ResponseEntity.ok(ResponseDto.onSuccess("cocktail info", result));
-//        return new ResponseEntity<>(new ResponseDto<>(1, "cocktail info", cocktailService.getCocktailInfo(cocktailId)),HttpStatus.OK);
-    }
-
-    @Override
-    @GetMapping("/unused")
-    public ResponseEntity<?> getCocktailsUnused(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size){
-        return new ResponseEntity<>(new ResponseDto<>(1, "cocktails info", cocktailService.getCocktailFindAll(page, size)), HttpStatus.OK);
-    }
+//    @Override
+//    @GetMapping("/unused")
+//    public ResponseEntity<?> getCocktailsUnused(@RequestParam(value = "page", required = false, defaultValue = "0") int page,@RequestParam(value = "size", required = false, defaultValue = "10") int size){
+//        return new ResponseEntity<>(new ResponseDto<>(1, "cocktails info", cocktailService.getCocktailFindAll(page, size)), HttpStatus.OK);
+//    }
 
     @Getter
     @Setter
@@ -317,28 +340,28 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         private List<Long> tagIds;
     }
 
-    @Override
-    @PostMapping("/cocktail/search")
-    public ResponseEntity<?> getCocktailSearch(@RequestBody CocktailSearchRequest request){
-        return new ResponseEntity<>(new ResponseDto<>(1, "serach result",
-                cocktailService.getCocktailSearch(
-                        request.getPage(),
-                        request.getSize(),
-                        request.getSearchText(),
-                        request.getAbvLevel(),
-                        request.getTasteLevel(),
-                        request.getSeasons(),
-                        request.getTagIds()
-                    )
-                )
-                , HttpStatus.OK);
-    }
+//    @Override
+//    @PostMapping("/cocktail/search")
+//    public ResponseEntity<?> getCocktailSearch(@RequestBody CocktailSearchRequest request){
+//        return new ResponseEntity<>(new ResponseDto<>(1, "serach result",
+//                cocktailService.getCocktailSearch(
+//                        request.getPage(),
+//                        request.getSize(),
+//                        request.getSearchText(),
+//                        request.getAbvLevel(),
+//                        request.getTasteLevel(),
+//                        request.getSeasons(),
+//                        request.getTagIds()
+//                    )
+//                )
+//                , HttpStatus.OK);
+//    }
 
-    @Override
-    @GetMapping("/cocktail/pre-search")
-    public ResponseEntity<?> getRelatedCocktail(@RequestParam String searchText){
-        return new ResponseEntity<>(new ResponseDto<>(1, "related Search result", cocktailService.getRelatedCocktail(searchText)), HttpStatus.OK);
-    }
+//    @Override
+//    @GetMapping("/cocktail/pre-search")
+//    public ResponseEntity<?> getRelatedCocktail(@RequestParam String searchText){
+//        return new ResponseEntity<>(new ResponseDto<>(1, "related Search result", cocktailService.getRelatedCocktail(searchText)), HttpStatus.OK);
+//    }
 
     @Getter
     @Setter
@@ -353,11 +376,11 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         private List<Long> tagIds;
     }
 
-    @Override
-    @PostMapping("/cocktail/personalize")
-    public ResponseEntity<?> getPersonalCocktail(@RequestBody CocktailFilter cocktailFilter){
-        return new ResponseEntity<>(new ResponseDto<>(1, "personalize cocktail result", cocktailService.getPersonalCocktail(cocktailFilter)), HttpStatus.OK);
-    }
+//    @Override
+//    @PostMapping("/cocktail/personalize")
+//    public ResponseEntity<?> getPersonalCocktail(@RequestBody CocktailFilter cocktailFilter){
+//        return new ResponseEntity<>(new ResponseDto<>(1, "personalize cocktail result", cocktailService.getPersonalCocktail(cocktailFilter)), HttpStatus.OK);
+//    }
 
     @Getter
     @Setter
@@ -366,11 +389,11 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         private List<String> tagType;
     }
 
-    @Override
-    @PostMapping("/cocktail/tags")
-    public ResponseEntity<?> getCocktailTags(@RequestBody RequestTagType requestTagType){
-        return new ResponseEntity<>(new ResponseDto<>(1, "tags", cocktailService.getCocktailTags(requestTagType)), HttpStatus.OK);
-    }
+//    @Override
+//    @PostMapping("/cocktail/tags")
+//    public ResponseEntity<?> getCocktailTags(@RequestBody RequestTagType requestTagType){
+//        return new ResponseEntity<>(new ResponseDto<>(1, "tags", cocktailService.getCocktailTags(requestTagType)), HttpStatus.OK);
+//    }
 
     @Override
     @GetMapping("/{cocktailId}/reactions")
