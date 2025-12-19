@@ -90,9 +90,9 @@ public class SecurityConfig {
                         // swagger
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
-                        // onz_v2
-//                        .requestMatchers("/api/v2/**").permitAll()
-//                        .requestMatchers("/onz/api/v2/**").permitAll()
+                        // onz_v2 - JWT 필터 화이트리스트 방식에 맞춰 v2 API는 기본 허용
+                        .requestMatchers("/api/v2/**").permitAll()
+                        .requestMatchers("/onz/api/v2/**").permitAll()
                         .anyRequest().authenticated());
 
         http
