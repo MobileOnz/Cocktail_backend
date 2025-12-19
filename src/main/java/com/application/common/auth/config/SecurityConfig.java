@@ -1,6 +1,8 @@
 package com.application.common.auth.config;
 
 import com.application.common.auth.JWTAccessTokenBlackListService;
+import com.application.common.auth.jwt.JWTFilter;
+import com.application.common.auth.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -26,11 +29,11 @@ public class SecurityConfig {
             "/v3/api-docs/**"   // API 설계도(JSON)
     };
 
-    // private final JWTUtil jwtUtil; // 1. jwtUtil 필드 주석 처리
+    private final JWTUtil jwtUtil;
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
-    public SecurityConfig(/*JWTUtil jwtUtil,*/ JWTAccessTokenBlackListService jwtAccessTokenBlackListService){ // 2. 생성자에서 jwtUtil 파라미터 주석 처리
-        // this.jwtUtil = jwtUtil; // 3. 생성자에서 jwtUtil 주입 로직 주석 처리
+    public SecurityConfig(JWTUtil jwtUtil, JWTAccessTokenBlackListService jwtAccessTokenBlackListService){
+        this.jwtUtil = jwtUtil;
         this.jwtAccessTokenBlackListService = jwtAccessTokenBlackListService;
     }
 
@@ -70,10 +73,8 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        // 4. JWTFilter를 추가하는 라인 주석 처리 (jwtUtil을 사용하기 때문)
-        // http
-        //        .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
-
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .authorizeHttpRequests((auth)->auth
@@ -90,8 +91,8 @@ public class SecurityConfig {
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
                         // onz_v2
-                        .requestMatchers("/api/v2/**").permitAll()
-                        .requestMatchers("/onz/api/v2/**").permitAll()
+//                        .requestMatchers("/api/v2/**").permitAll()
+//                        .requestMatchers("/onz/api/v2/**").permitAll()
                         .anyRequest().authenticated());
 
         http
