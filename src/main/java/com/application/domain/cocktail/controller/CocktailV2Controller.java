@@ -4,6 +4,7 @@ import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
+import com.application.domain.cocktail.dto.response.GuideResponseDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
@@ -130,6 +131,75 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 
     /**
      * <pre>
+     *     상큼한 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/refresh", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails() {
+
+        List<String> korNameList = List.of(
+                "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     입문자용 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/beginner", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails() {
+
+        List<String> korNameList = List.of(
+                "아페롤 스프리츠", "메리 픽포드", "다크 앤 스토미", "파라다이스", "사이드카", "샴페인 칵테일", "홀시스 넥"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     중급자 이상 칵테일 조회
+     * </pre>
+     *
+     * @return
+     */
+    @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @RequestMapping(path = "/intermediate", method = RequestMethod.GET)
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails() {
+
+        List<String> korNameList = List.of(
+                "스팅어", "페이퍼 플레인", "진 바질 스매시", "네이키드 앤 페이머스", "알렉산더", "일레갈", "IBA 티키"
+        );
+
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
      *     칵테일 상세 조회
      * </pre>
      * @param cocktailId
@@ -168,7 +238,6 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                 HttpStatus.OK
         );
     }
-
 
     /**
      * <pre>
@@ -236,71 +305,17 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         }
     }
 
-    /**
-     * <pre>
-     *     상큼한 칵테일 조회
-     * </pre>
-     *
-     * @return
-     */
-    @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
-    @RequestMapping(path = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails() {
+    @GetMapping("/guide")
+    public ResponseEntity<ResponseDto<GuideResponseDto>> getCocktailGuide(
+            @RequestParam Integer part
+    ){
 
-        List<String> korNameList = List.of(
-                "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
-        );
+        GuideResponseDto guide = cocktailService.getCocktailGuide(part);
 
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+        String msg = "칵테일 가이드 Part " + part + " 조회 성공";
 
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
-                HttpStatus.OK
-        );
-    }
-
-    /**
-     * <pre>
-     *     입문자용 칵테일 조회
-     * </pre>
-     *
-     * @return
-     */
-    @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
-    @RequestMapping(path = "/beginner", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails() {
-
-        List<String> korNameList = List.of(
-                "아페롤 스프리츠", "메리 픽포드", "다크 앤 스토미", "파라다이스", "사이드카", "샴페인 칵테일", "홀시스 넥"
-        );
-
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
-
-        return new ResponseEntity<>(
-                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
-                HttpStatus.OK
-        );
-    }
-
-    /**
-     * <pre>
-     *     중급자 이상 칵테일 조회
-     * </pre>
-     *
-     * @return
-     */
-    @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
-    @RequestMapping(path = "/intermediate", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails() {
-
-        List<String> korNameList = List.of(
-                "스팅어", "페이퍼 플레인", "진 바질 스매시", "네이키드 앤 페이머스", "알렉산더", "일레갈", "IBA 티키"
-        );
-
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
-
-        return new ResponseEntity<>(
-                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+                ResponseDto.onSuccess(msg, guide),
                 HttpStatus.OK
         );
     }

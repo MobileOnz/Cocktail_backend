@@ -6,15 +6,14 @@ import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.TagDto;
 import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
+import com.application.domain.cocktail.dto.response.GuideResponseDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
 import com.application.domain.cocktail.entity.*;
+import com.application.domain.cocktail.entity.guide.Guide;
 import com.application.domain.cocktail.enums.*;
-import com.application.domain.cocktail.repository.CocktailReactionRepository;
-import com.application.domain.cocktail.repository.CocktailRepository;
-import com.application.domain.cocktail.repository.CocktailTagRepository;
-import com.application.domain.cocktail.repository.TagRepository;
+import com.application.domain.cocktail.repository.*;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.repository.MemberRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -42,6 +41,7 @@ public class CocktailService {
     private final JPAQueryFactory queryFactory;
     private final CocktailReactionRepository reactionRepository;
     private final MemberRepository memberRepository;
+    private final GuideRepository guideRepository;
 
     /* ----------------------- 조회 ------------------------- */
 
@@ -255,6 +255,27 @@ public class CocktailService {
         }
 
         return allNames;
+    }
+
+    // ======================================================================================
+    // v2 칵테일 가이드
+    // ======================================================================================
+
+    /**
+     * <pre>
+     *     칵테일 가이드 조회
+     * </pre>
+     * @param part
+     * @return
+     */
+    @Transactional(readOnly = true) // 리스트 호출을 위한 트랜잭션
+    public GuideResponseDto getCocktailGuide(Integer part) {
+
+        Guide guide = guideRepository.findByPart(part)
+                .orElseThrow(() -> new CustomApiException("해당 파트의 가이드를 찾을 수 없습니다."));
+
+        // 2. DTO 변환 (이때 guide.getDetails()가 호출)
+        return GuideResponseDto.from(guide);
     }
 
     // ======================================================================================
