@@ -26,57 +26,164 @@ public class JWTFilter extends OncePerRequestFilter {
     private final JWTUtil jwtUtil;
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
-    private final static List<String> EXCLUDE_PATH =  List.of(
-        "/api/auth/refresh", "/api/auth/social-login","/api/auth/signup",
-        "/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao",
-        "/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token",
-        "/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url",
-        "/api/public/", "/.well-known/acme-challenge/",
-        "/admin/cocktail/excel/upload","/admin/cocktail/excel/download", "/admin/cocktail/excel"
+    // [기존 방식 - 주석 처리] JWT 필터 예외 경로 (기본 차단, 예외만 허용)
+//    private final static List<String> EXCLUDE_PATH =  List.of(
+//        "/api/auth/refresh", "/api/auth/social-login","/api/auth/signup",
+//        "/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao",
+//        "/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token",
+//        "/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url",
+//        "/api/public/", "/.well-known/acme-challenge/",
+//        "/admin/cocktail/excel/upload","/admin/cocktail/excel/download", "/admin/cocktail/excel"
+//    );
+
+    // [기존 방식 - 주석 처리] JWT 필터 예외 경로 (토큰 없이 접근 가능)
+//    private final static List<String> EXCLUDE_PATH_PATTERNS = List.of(
+//            // 공개 API
+//            "^/api/public/.*",                      // 공개 API (인증 불필요)
+//            "^/api/v2/public/.*",                   // 공개 API v2 (칵테일, 모니터링)
+//            "^/onz/api/v2/public/.*",               // 공개 API v2 (onz 경로)
+//
+//            // SSL 인증서 관련
+//            "^/.well-known/acme-challenge/.*",      // Let's Encrypt SSL 인증서 검증
+//
+//            // 정적 리소스
+//            "^/images/.*",                          // 이미지 파일
+//            "^/error$",                             // 에러 페이지
+//            "^/favicon\\.ico$",                     // 파비콘
+//
+//            // Swagger (API 문서)
+//            "^/onz/swagger-ui/.*",                  // Swagger UI (onz 경로)
+//            "^/swagger-ui/.*",                      // Swagger UI
+//            "^/onz/v3/api-docs.*",                  // Swagger API Docs (onz 경로)
+//            "^/v3/api-docs.*",                      // Swagger API Docs
+//            "^/webjars/.*",                         // Swagger UI 리소스
+//
+//            // 인증 API (v1 - 기존)
+//            "^/api/auth/.*",                        // 기존 인증 API 전체
+//            "^/onz/api/auth/.*",                    // 기존 인증 API 전체 (onz 경로)
+//
+//            // 인증 API (v2 - 신규)
+//            "^/api/v2/auth/social-login$",          // 소셜 로그인
+//            "^/api/v2/auth/signup$",                // 회원가입
+//            "^/api/v2/auth/reissue$",               // 토큰 재발급
+//            "^/onz/api/v2/auth/social-login$",      // 소셜 로그인 (onz 경로)
+//            "^/onz/api/v2/auth/signup$",            // 회원가입 (onz 경로)
+//            "^/onz/api/v2/auth/reissue$",           // 토큰 재발급 (onz 경로)
+//
+//            // OAuth2 콜백
+//            "^/login/oauth2/code/.*",               // OAuth2 콜백 (Google, Naver, Kakao, Apple)
+//            "^/onz/login/oauth2/code/.*"            // OAuth2 콜백 (onz 경로)
+//    );
+//
+//    private final static List<String> OPTIONAL_AUTH_PATH_PATTERNS = List.of(
+//            "^/api/location/.*",
+//            "^/api/search/.*",
+//            "^/api/bar/.*",
+//            "^/api/item/public/.*"
+//    );
+
+    // [새로운 방식 - 기존의 예외 방식이 아닌 jwt 필터가 필요한 부분만 적용] JWT 필터 적용 경로 (기본 허용, 특정 경로만 인증 필요)
+    private final static List<String> REQUIRE_AUTH_PATH_PATTERNS = List.of(
+            // 회원 관련 API (모두 인증 필요)
+            "^/api/v2/members/.*",                      // 회원 정보 조회, 수정, 탈퇴, 프로필 관리
+            "^/onz/api/v2/members/.*",                  // 회원 API (onz 경로)
+
+            // 인증 API (로그아웃만 인증 필요)
+            "^/api/v2/auth/logout$",                    // 로그아웃
+            "^/onz/api/v2/auth/logout$",                // 로그아웃 (onz 경로)
+
+            // 칵테일 반응 API (인증 필요)
+            "^/api/v2/cocktails/[0-9]+/reactions$",     // 칵테일 반응 조회/토글
+            "^/onz/api/v2/cocktails/[0-9]+/reactions$"  // 칵테일 반응 (onz 경로)
     );
 
-    private final static List<String> EXCLUDE_PATH_PATTERNS = List.of(
-            "^/api/public/.*",
-            "^/.well-known/acme-challenge/.*",
-            "^/images/.*"
-    );
+    // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]
+//    @Override
+//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//
+//        if(isExcludedPath(request.getRequestURI())){
+//            log.info("Skipping JWTFilter : {}", request.getRequestURI());
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        String accessToken = getAccessToken(request);
+//
+//        if (isOptionalAuthPath(request.getRequestURI())) {
+//            if (accessToken != null && !jwtUtil.isAccessExpired(accessToken)) {
+//                String uuid = jwtUtil.getUUID(accessToken);
+//                String blackListToken = jwtAccessTokenBlackListService.getAccessTokenFromBlackList(uuid);
+//
+//                if (blackListToken == null) {
+//                    setSecurityContext(jwtUtil, accessToken);
+//                    log.info("Optional path - SecurityContext set for accessToken UUID: {}", uuid);
+//                } else {
+//                    log.info("Optional path - Access Token is blacklisted, skip auth");
+//                }
+//            } else {
+//                log.info("Optional path - No valid accessToken, proceed as anonymous");
+//            }
+//
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//
+//        if(accessToken == null){
+//            log.info("accessToken null");
+//            sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_BAD_REQUEST, "Access Token 값이 헤더에 존재하지 않음");
+//            return;
+//        }
+//
+//        if(jwtUtil.isAccessExpired(accessToken)){
+//            log.info("Access Token expire");
+//            sendErrorResponse(response, Constant.NEED_REFRESH_TOKEN_CODE, HttpServletResponse.SC_UNAUTHORIZED,"Access Token Expired");
+//            return;
+//        }
+//
+//        log.info("jwt filter [accessToken UUID] : {}", jwtUtil.getUUID(accessToken));
+//        String blackListToken = jwtAccessTokenBlackListService.getAccessTokenFromBlackList(jwtUtil.getUUID(accessToken));
+//
+//        if(blackListToken != null){
+//            log.info("Access Token already logout");
+//            sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_UNAUTHORIZED, "Already logout member");
+//            return;
+//        }
+//
+//        log.info("Access Token is valid");
+//        setSecurityContext(jwtUtil, accessToken);
+//        filterChain.doFilter(request, response);
+//
+//    }
+//
+//    private Boolean isExcludedPath(String uri){
+//        if (EXCLUDE_PATH.contains(uri) || EXCLUDE_PATH_PATTERNS.stream().anyMatch(uri::matches)){
+//            return true;
+//        }
+//        return false;
+//    }
+//
+//    private boolean isOptionalAuthPath(String uri) {
+//        return OPTIONAL_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
+//    }
 
-    private final static List<String> OPTIONAL_AUTH_PATH_PATTERNS = List.of(
-            "^/api/location/.*",
-            "^/api/search/.*",
-            "^/api/bar/.*",
-            "^/api/item/public/.*"
-    );
-
+    // [새로운 방식] 기본 허용, 특정 경로만 인증 필요
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(isExcludedPath(request.getRequestURI())){
-            log.info("Skipping JWTFilter : {}", request.getRequestURI());
+        String uri = request.getRequestURI();
+
+        // 인증이 필요한 경로인지 확인
+        if (!isRequireAuthPath(uri)) {
+            // 인증이 필요하지 않은 경로 -> 바로 통과
+            log.info("Public path, skipping JWT validation: {}", uri);
             filterChain.doFilter(request, response);
             return;
         }
+
+        // 인증이 필요한 경로 -> JWT 토큰 검증
+        log.info("Protected path, validating JWT: {}", uri);
 
         String accessToken = getAccessToken(request);
-
-        if (isOptionalAuthPath(request.getRequestURI())) {
-            if (accessToken != null && !jwtUtil.isAccessExpired(accessToken)) {
-                String uuid = jwtUtil.getUUID(accessToken);
-                String blackListToken = jwtAccessTokenBlackListService.getAccessTokenFromBlackList(uuid);
-
-                if (blackListToken == null) {
-                    setSecurityContext(jwtUtil, accessToken);
-                    log.info("Optional path - SecurityContext set for accessToken UUID: {}", uuid);
-                } else {
-                    log.info("Optional path - Access Token is blacklisted, skip auth");
-                }
-            } else {
-                log.info("Optional path - No valid accessToken, proceed as anonymous");
-            }
-
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         if(accessToken == null){
             log.info("accessToken null");
@@ -105,15 +212,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
     }
 
-    private Boolean isExcludedPath(String uri){
-        if (EXCLUDE_PATH.contains(uri) || EXCLUDE_PATH_PATTERNS.stream().anyMatch(uri::matches)){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOptionalAuthPath(String uri) {
-        return OPTIONAL_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
+    // 인증이 필요한 경로인지 확인
+    private boolean isRequireAuthPath(String uri) {
+        return REQUIRE_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
     }
 
     private void sendErrorResponse(HttpServletResponse response,int code,  int status, String message) throws IOException{
