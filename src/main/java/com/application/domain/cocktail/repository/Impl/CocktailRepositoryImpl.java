@@ -8,8 +8,10 @@ import com.application.domain.cocktail.entity.QCocktail;
 import com.application.domain.cocktail.entity.QCocktailFlavor;
 import com.application.domain.cocktail.entity.QCocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
+import com.application.domain.cocktail.enums.FlavorSearchType;
 import com.application.domain.cocktail.repository.custom.CocktailRepositoryCustom;
 import com.application.domain.cocktail.util.FlavorMappingUtil;
+import com.application.domain.cocktail.util.FlavorSearchMappingUtil;
 import com.application.domain.cocktail.util.MoodMappingUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
@@ -58,12 +60,25 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         builder.and(styleEq(condition.style()));
         builder.and(baseEq(condition.base()));
 
+        // 맛 카테고리 필터링 로직 (다중 선택)
+        List<FlavorSearchType> selectedTypes = condition.flavor();
+        if (!CollectionUtils.isEmpty(selectedTypes)) {
+            List<String> allDetailTags = new ArrayList<>();
+            // 선택된 모든 Enum 타입에 대해 매핑된 세부 태그들을 하나의 리스트로 합칩니다.
+            for (FlavorSearchType type : selectedTypes) {
+                allDetailTags.addAll(FlavorSearchMappingUtil.getTags(type));
+            }
+            // 합쳐진 태그 리스트로 IN 검색 쿼리 추가 (OR 조건으로 동작: 태그 중 하나라도 포함되면 검색)
+            builder.and(flavorNameIn(allDetailTags));
+        }
+
         // 정렬 조건 리스트 생성
         List<OrderSpecifier<?>> orderSpecifiers = getOrderSpecifiers(pageable.getSort());
 
         // 1. 컨텐츠 조회 쿼리 (페이징 적용)
         List<Cocktail> content = queryFactory
                 .selectFrom(cocktail)
+                .distinct()
                 .where(builder) // 조립된 WHERE 절 사용
                 .orderBy(orderSpecifiers.toArray(OrderSpecifier[]::new)) // 정렬 적용
                 .offset(pageable.getOffset())
@@ -74,6 +89,7 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         Long total = queryFactory
                 .select(Wildcard.count)
                 .from(cocktail)
+                .distinct()
                 .where(builder) // 동일한 WHERE 절 사용
                 .fetchOne();
 
