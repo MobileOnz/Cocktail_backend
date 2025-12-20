@@ -62,6 +62,9 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                             "- 이름 (korName/engName): 부분 일치 검색\n" +
                             "- 도수 (abvBand): 레벨 필터링 [WEAK | NORMAL | STRONG]\n" +
                             "- 스타일 (style): [스트롱 | 스탠다드 | 스페셜 | 라이트 | 클래식]\n" +
+                            "- 맛 (flavor): FRUIT(\"과일\"),\n BITTER(\"쌉쌀함\"),\n SWEET(\"달콤함\"),\n" +
+                            " CREAMY(\"부드러움\"),\n COMPLEX(\"복합적인 맛\"),\n HERBAL_SPICE(\"허브 & 스파이스\"),\n" +
+                            " LIGHT_REFRESHING(\"라이트 & 청량함\"),\n STRONG_UNIQUE(\"개성 강한 맛\"),\n ETC_SPECIAL(\"기타 & 특별한 맛\")\n " +
                             "- 베이스 (base): 보드카, 리큐르, 메즈칼, 코냑, 진, 럼 등\n\n" +
                             "**페이징 및 정렬:**\n" +
                             "- page와 size 파라미터로 페이지네이션을 제어합니다. (기본값 - page: 0, size: 10)\n" +
