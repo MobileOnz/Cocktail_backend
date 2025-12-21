@@ -18,6 +18,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -63,13 +64,26 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         // 맛 카테고리 필터링 로직 (다중 선택)
         List<FlavorSearchType> selectedTypes = condition.flavor();
         if (!CollectionUtils.isEmpty(selectedTypes)) {
+
             List<String> allDetailTags = new ArrayList<>();
+
+            // [25.12.22] 맛 다중 선택 -> OR 조건에서 AND 조건으로 변경됨
             // 선택된 모든 Enum 타입에 대해 매핑된 세부 태그들을 하나의 리스트로 합칩니다.
+//            for (FlavorSearchType type : selectedTypes) {
+//                allDetailTags.addAll(FlavorSearchMappingUtil.getTags(type));
+//            }
+//            // 합쳐진 태그 리스트로 IN 검색 쿼리 추가 (OR 조건으로 동작: 태그 중 하나라도 포함되면 검색)
+//            builder.and(flavorNameIn(allDetailTags));
+
             for (FlavorSearchType type : selectedTypes) {
-                allDetailTags.addAll(FlavorSearchMappingUtil.getTags(type));
+                // 1. 각 카테고리에 해당하는 세부 태그 리스트 가져오기
+                List<String> detailTags = FlavorSearchMappingUtil.getTags(type);
+
+                // 2. 각 카테고리별 조건을 AND로 연결
+                // flavorNameIn 메서드는 "해당 태그 리스트 중 하나라도 가진 칵테일 ID인지 확인"하는 서브쿼리를 반환함
+                builder.and(flavorNameIn(detailTags));
             }
-            // 합쳐진 태그 리스트로 IN 검색 쿼리 추가 (OR 조건으로 동작: 태그 중 하나라도 포함되면 검색)
-            builder.and(flavorNameIn(allDetailTags));
+
         }
 
         // 정렬 조건 리스트 생성
@@ -194,19 +208,44 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
      * @param flavorNameList
      * @return
      */
+//    private BooleanExpression flavorNameIn(List<String> flavorNameList) {
+//        if (CollectionUtils.isEmpty(flavorNameList)) {
+//            return null;
+//        }
+//        QCocktailFlavor flavor = QCocktailFlavor.cocktailFlavor;
+//        return cocktail.id.in(
+//                queryFactory
+//                        .select(flavor.cocktail.id)
+//                        .from(flavor)
+//                        .where(flavor.flavorName.in(flavorNameList))
+//                        .groupBy(flavor.cocktail.id)
+//                        .fetch()
+//        );
+//    }
+
+    /**
+     * <pre>
+     *     cocktail_flavor 테이블 - 조건 조회 (AND 조건 :: 교집합)
+     * </pre>
+     * @param flavorNameList
+     * @return
+     */
     private BooleanExpression flavorNameIn(List<String> flavorNameList) {
         if (CollectionUtils.isEmpty(flavorNameList)) {
             return null;
         }
-        QCocktailFlavor flavor = QCocktailFlavor.cocktailFlavor;
-        return cocktail.id.in(
-                queryFactory
-                        .select(flavor.cocktail.id)
-                        .from(flavor)
-                        .where(flavor.flavorName.in(flavorNameList))
-                        .groupBy(flavor.cocktail.id)
-                        .fetch()
-        );
+
+        // 서브쿼리용 Q클래스 별칭 생성 (메인 쿼리의 cocktailFlavor와 겹치지 않게)
+        QCocktailFlavor subFlavor = new QCocktailFlavor("subFlavor");
+
+        // 칵테일 ID가 서브쿼리 결과에 포함되는지 확인 (EXISTS와 유사한 효과)
+        // SELECT 1 FROM cocktail_flavor WHERE cocktail_id = main.id AND flavor_name IN (...)
+        return JPAExpressions
+                .selectOne()
+                .from(subFlavor)
+                .where(subFlavor.cocktail.id.eq(cocktail.id) // 메인 쿼리의 ID와 연결
+                        .and(subFlavor.flavorName.in(flavorNameList))) // 태그 조건
+                .exists();
     }
 
     /**
