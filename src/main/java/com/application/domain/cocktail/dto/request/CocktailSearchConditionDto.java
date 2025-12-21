@@ -28,8 +28,11 @@ public record CocktailSearchConditionDto(
         @Schema(description = "맛 카테고리 필터링 (과일, 쌉쌀함 등)", example = "[\"FRUIT\", \"SWEET\"]")
         List<FlavorSearchType> flavor,
 
-        @Schema(description = "베이스", example = "보드카")
-        String base,
+        // [25.12.22] base 다중 선택 가능하도록 변경
+//        @Schema(description = "베이스", example = "보드카")
+//        String base,
+        @Schema(description = "베이스 주류 필터링 (다중 선택 가능)", example = "[\"진\", \"보드카\"]")
+        List<String> base,
 
         @Schema(description = "최소 알코올 도수", example = "0")
         Integer minAbv
