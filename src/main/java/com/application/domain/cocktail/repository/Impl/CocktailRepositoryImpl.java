@@ -10,6 +10,7 @@ import com.application.domain.cocktail.entity.QCocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.enums.FlavorSearchType;
 import com.application.domain.cocktail.repository.custom.CocktailRepositoryCustom;
+import com.application.domain.cocktail.util.BaseMappingUtil;
 import com.application.domain.cocktail.util.FlavorMappingUtil;
 import com.application.domain.cocktail.util.FlavorSearchMappingUtil;
 import com.application.domain.cocktail.util.MoodMappingUtil;
@@ -59,7 +60,22 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         builder.and(engNameContains(condition.engName()));
         builder.and(abvBandEq(condition.abvBand()));
         builder.and(styleEq(condition.style()));
-        builder.and(baseEq(condition.base()));
+//        builder.and(baseEq(condition.base())); // base 다중선택 가능하도록 변경
+
+        // 베이스 교집합(AND) + "기타" OR 처리
+        if (!CollectionUtils.isEmpty(condition.base())) {
+            for (String baseStr : condition.base()) {
+                if ("기타".equals(baseStr)) {
+                    BooleanBuilder etcOrBuilder = new BooleanBuilder();
+                    for (String etcUnit : BaseMappingUtil.ETC_BASES) {
+                        etcOrBuilder.or(cocktail.base.contains(etcUnit));
+                    }
+                    builder.and(etcOrBuilder);
+                } else {
+                    builder.and(cocktail.base.contains(baseStr));
+                }
+            }
+        }
 
         // 맛 카테고리 필터링 로직 (다중 선택)
         List<FlavorSearchType> selectedTypes = condition.flavor();
