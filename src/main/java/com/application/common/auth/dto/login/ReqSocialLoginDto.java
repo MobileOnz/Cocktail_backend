@@ -6,23 +6,33 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-@Schema(description = "소셜 로그인 요청 DTO")
+@Schema(description = "소셜 로그인 요청 DTO - 모바일 앱 방식과 웹 OAuth 방식 모두 지원")
 public class ReqSocialLoginDto {
     @NotNull
     @JsonProperty("provider")
-    @Schema(description = "소셜 로그인 제공자 (kakao, naver, apple, google)", example = "kakao")
+    @Schema(description = "소셜 로그인 제공자",
+            example = "naver",
+            allowableValues = {"kakao", "naver", "apple", "google"})
     private String provider;
 
     @JsonProperty("code")
-    @Schema(description = "소셜 플랫폼에서 발급받은 인증 코드 (code 또는 accessToken 중 하나 필수)", example = "authorization_code_from_provider")
+    @Schema(description = "[웹 OAuth 방식] 소셜 플랫폼에서 발급받은 인증 코드. " +
+            "웹 OAuth 리다이렉트 콜백으로 받은 authorization code를 전달합니다. " +
+            "모바일 앱 방식에서는 사용하지 않습니다.",
+            example = "authorization_code_from_provider")
     private String code;
 
     @JsonProperty("state")
-    @Schema(description = "CSRF 방지를 위한 state 값 (네이버 로그인 시 필요)", example = "random_state_string")
+    @Schema(description = "[웹 OAuth 방식 - 네이버만 해당] CSRF 방지를 위한 state 값. " +
+            "네이버 웹 OAuth 사용 시에만 필요하며, 모바일 앱 방식에서는 사용하지 않습니다.",
+            example = "random_state_string")
     private String state;
 
     @JsonProperty("accessToken")
-    @Schema(description = "소셜 플랫폼에서 발급받은 액세스 토큰 (code 또는 accessToken 중 하나 필수)", example = "access_token_from_provider")
+    @Schema(description = "[모바일 앱 방식] 소셜 플랫폼 SDK에서 직접 발급받은 액세스 토큰. " +
+            "React Native, Flutter 등 모바일 앱에서 네이버/카카오/구글 SDK로 받은 토큰을 전달합니다. " +
+            "code 또는 accessToken 중 하나는 필수입니다.",
+            example = "AAAANvMf...mobile_app_access_token")
     private String accessToken;
 
 

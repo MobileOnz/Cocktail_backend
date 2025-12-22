@@ -22,9 +22,44 @@ public class AuthController {
      */
     @Operation(
             summary = "소셜 로그인 요청",
-            description = "소셜 플랫폼(카카오, 네이버, 애플 등)에서 받은 인증 코드 또는 액세스 토큰을 이용해 로그인합니다. " +
-                    "**기존 회원**이면 JWT 토큰 쌍(accessToken, refreshToken)을 반환하고, " +
-                    "**신규 회원**이면 회원가입을 위한 임시 코드(code)를 반환합니다."
+            description = """
+                    소셜 플랫폼(카카오, 네이버, 애플, 구글)에서 받은 인증 코드 또는 액세스 토큰을 이용해 로그인합니다.
+
+                    ## 응답 유형
+                    - **기존 회원**: JWT 토큰 쌍(accessToken, refreshToken)을 반환 (type: "token")
+                    - **신규 회원**: 회원가입을 위한 임시 코드를 반환 (type: "signup")
+
+                    ## 사용 방식
+
+                    ### 1️⃣ 모바일 앱 방식 (권장)
+                    React Native, Flutter 등 모바일 앱에서 네이버/카카오/구글 SDK를 사용하는 경우
+                    ```json
+                    {
+                      "provider": "naver",
+                      "accessToken": "AAAANvMf...SDK에서_받은_토큰"
+                    }
+                    ```
+
+                    ### 2️⃣ 웹 OAuth 방식
+                    웹에서 OAuth 리다이렉트 콜백을 받는 경우
+
+                    **네이버 (state 필요):**
+                    ```json
+                    {
+                      "provider": "naver",
+                      "code": "authorization_code",
+                      "state": "csrf_state_value"
+                    }
+                    ```
+
+                    **카카오/구글 (state 불필요):**
+                    ```json
+                    {
+                      "provider": "kakao",
+                      "code": "authorization_code"
+                    }
+                    ```
+                    """
     )
     @PostMapping("/social-login")
     public ResponseEntity<ResSocialLoginDto> socialLogin(@RequestBody ReqSocialLoginDto dto) {
