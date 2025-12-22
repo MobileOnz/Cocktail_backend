@@ -3,6 +3,7 @@ package com.application.domain.member.controller;
 import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.common.response.ResponseDto;
 import com.application.domain.member.dto.MemberUpdateDto;
+import com.application.domain.member.dto.OnboardingDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -192,4 +193,41 @@ public interface MemberV2ControllerDocs {
 
     })
     ResponseEntity<Resource> getProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User);
+
+    // 온보딩 정보 저장
+    @Operation(summary = "온보딩 정보 저장", description = "온보딩 화면에서 사용자의 성별과 연령대 정보를 저장")
+    @ApiResponses(value = {
+
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "저장 성공",
+                    content = @Content(schema = @Schema(example = """
+                            {
+                                "code": 1,
+                                "msg": "Save Onboarding Info",
+                                "data": {
+                                    "gender": "male",
+                                    "ageRange": "20_24"
+                                }
+                            }
+            """))),
+
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청",
+                    content = @Content(schema = @Schema(example = """
+                            {
+                                "code": -1,
+                                "msg": "유효성 검사 실패",
+                                "data": {
+                                    "gender": "성별 정보는 필수입니다.",
+                                    "ageRange": "연령대 정보는 필수입니다."
+                                }
+                            }
+            """)))
+
+    })
+    ResponseEntity<?> saveOnboarding(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+                                      @Valid @RequestBody OnboardingDto onboardingDto,
+                                      BindingResult bindingResult);
 }
