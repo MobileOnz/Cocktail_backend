@@ -12,6 +12,8 @@ public interface SearchHistoryRepository extends JpaRepository<SearchHistory, Lo
     // 유저별 최근 검색어를 최신순으로 조회
     List<SearchHistory> findByUserIdOrderByCreatedAtDesc(Long userId);
 
+    void deleteByUserIdAndQueryText(Long userId, String trimmedQuery);
+
     // 전체 삭제
     void deleteByUserId(Long userId);
 

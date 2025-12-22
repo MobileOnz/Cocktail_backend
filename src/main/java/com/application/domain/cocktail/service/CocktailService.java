@@ -43,6 +43,8 @@ public class CocktailService {
     private final MemberRepository memberRepository;
     private final GuideRepository guideRepository;
 
+    private final SearchHistoryService searchHistoryService;
+
     /* ----------------------- 조회 ------------------------- */
 
     //TODO) enum값 (맛단계, 도수단계) 조회값 주기
@@ -132,6 +134,11 @@ public class CocktailService {
 
         // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
         Page<Cocktail> cocktailPage = cocktailRepository.getCocktails(condition, pageable);
+
+        // 검색어가 있다면 최근 검색어 저장
+        if(condition.korName() != null && !condition.korName().isEmpty()) {
+            searchHistoryService.addSearchHistory(0L, condition.korName()); // FIXME
+        }
 
         // Page<Entity>를 Page<DTO>로 변환
         return cocktailPage.map(CocktailResponseDto::from);
