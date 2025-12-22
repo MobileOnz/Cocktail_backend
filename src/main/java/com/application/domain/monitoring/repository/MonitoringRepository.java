@@ -12,4 +12,6 @@ public interface MonitoringRepository extends JpaRepository<Monitoring, Long> {
     Optional<Monitoring> findByDeviceNumber(String deviceNumber);
 
     boolean existsByDeviceNumber(String deviceNumber);
+
+    void deleteByMemberId(Long memberId);
 }
