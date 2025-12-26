@@ -3,7 +3,9 @@ package com.application.domain.member.service;
 import com.application.common.Constant;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.dto.MemberUpdateDto;
+import com.application.domain.member.dto.OnboardingDto;
 import com.application.domain.member.entity.Member;
+import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
 import com.application.domain.member.repository.MemberRepository;
 import com.application.domain.monitoring.repository.MonitoringRepository;
@@ -133,6 +135,15 @@ public class MemberService {
         }else{
             log.info("no file exist");
         }
+    }
+
+    public void saveOnboardingInfo(Member member, OnboardingDto onboardingDto) {
+        member.setGender(Gender.fromString(onboardingDto.getGender())
+                .orElseThrow(() -> new CustomApiException("Invalid Gender Type")));
+        member.setAgeRange(AgeRange.fromString(onboardingDto.getAgeRange())
+                .orElseThrow(() -> new CustomApiException("Invalid Age Range Type")));
+
+        memberRepository.save(member);
     }
 
 }
