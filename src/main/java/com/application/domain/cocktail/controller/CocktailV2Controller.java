@@ -74,10 +74,10 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                             "- sort는 \"기준,오름/내림차순\" 형식으로 지정 가능합니다. (기본값 - id,asc)\n" +
                             "  - 기준 - [id | korName | engName] , 오름/내림차순 - [asc | desc]"
     )
-    @RequestMapping(path = "", method = RequestMethod.GET)
+    @RequestMapping(path = "", method = RequestMethod.POST)
     public ResponseEntity<ResponseDto<Page<CocktailResponseDto>>> getCocktails(
             @Parameter(description = "검색 및 필터링 정보 (korName=아&abvBand=WEAK)")
-            @ModelAttribute CocktailSearchConditionDto condition,
+            @RequestBody CocktailSearchConditionDto condition,
             @Parameter(description = "페이징 및 정렬 정보 (page=0&size=10&sort=name,asc)", example = "{\n" +
                     "  \"page\": 0,\n" +
                     "  \"size\": 10,\n" +
