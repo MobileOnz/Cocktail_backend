@@ -4,6 +4,7 @@ import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
+import com.application.domain.cocktail.dto.response.GuideListResponseDto;
 import com.application.domain.cocktail.dto.response.GuideResponseDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -311,6 +312,30 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         }
     }
 
+    /**
+     * [가이드 목록 조회]
+     * GET /api/v2/guide/list
+     */
+    @Operation(summary = "칵테일 가이드 목록 조회", description = "모든 가이드의 파트 번호와 제목 리스트를 조회합니다.")
+    @GetMapping("/guide/list")
+    public ResponseEntity<ResponseDto<List<GuideListResponseDto>>> getGuideList() {
+        List<GuideListResponseDto> list = cocktailService.getCocktailGuideList();
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("칵테일 가이드 목록 조회 성공", list),
+                HttpStatus.OK
+        );
+    }
+
+    /**
+     * <pre>
+     *     가이드 상세 조회
+     * </pre>
+     * @param part
+     * @return
+     */
+    @Operation(summary = "칵테일 가이드 상세 조회",
+            description = "각 가이드의 상세 정보를 조회합니다.\n\n" +
+                    "part * 100 + ep 값을 전달하면 됩니다. (ex : part1 ep2 -> 102 ")
     @GetMapping("/guide")
     public ResponseEntity<ResponseDto<GuideResponseDto>> getCocktailGuide(
             @RequestParam Integer part

@@ -6,6 +6,7 @@ import com.application.domain.cocktail.controller.CocktailV2Controller;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.TagDto;
 import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
+import com.application.domain.cocktail.dto.response.GuideListResponseDto;
 import com.application.domain.cocktail.dto.response.GuideResponseDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -267,6 +269,20 @@ public class CocktailService {
     // ======================================================================================
     // v2 칵테일 가이드
     // ======================================================================================
+
+    /**
+     * <pre>
+     *     칵테일 가이드 리스트 조회
+     * </pre>
+     * @return
+     */
+    @Transactional(readOnly = true) // 리스트 호출을 위한 트랜잭션
+    public List<GuideListResponseDto> getCocktailGuideList() {
+
+        return guideRepository.findAll().stream()
+                .map(GuideListResponseDto::from)
+                .collect(Collectors.toList());
+    }
 
     /**
      * <pre>
