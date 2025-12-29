@@ -7,6 +7,7 @@ import com.application.domain.cocktail.dto.response.CocktailResponseDto;
 import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,8 @@ public class CocktailBookmarkController {
     @Operation(
             summary = "칵테일 북마크 토글",
             description = "칵테일을 북마크에 추가하거나 삭제합니다. " +
-                    "이미 북마크되어 있으면 삭제, 북마크되어 있지 않으면 추가합니다."
+                    "이미 북마크되어 있으면 삭제, 북마크되어 있지 않으면 추가합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @PostMapping("/{cocktailId}/bookmarks")
     public ResponseEntity<ResponseDto<BookmarkToggleResponse>> toggleBookmark(
@@ -61,7 +63,8 @@ public class CocktailBookmarkController {
      */
     @Operation(
             summary = "내가 북마크한 칵테일 목록 조회",
-            description = "로그인한 사용자가 북마크한 칵테일 목록을 최근 북마크 순서대로 조회합니다."
+            description = "로그인한 사용자가 북마크한 칵테일 목록을 최근 북마크 순서대로 조회합니다.",
+            security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping("/bookmarks")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getMyBookmarks(
