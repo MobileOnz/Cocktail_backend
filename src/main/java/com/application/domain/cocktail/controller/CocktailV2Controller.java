@@ -1,20 +1,25 @@
 package com.application.domain.cocktail.controller;
 
+import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
 import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.ReactionReq;
+import com.application.domain.cocktail.dto.response.CocktailDetailResponseDto;
 import com.application.domain.cocktail.dto.response.GuideListResponseDto;
 import com.application.domain.cocktail.dto.response.GuideResponseDto;
 import com.application.domain.cocktail.dto.response.ReactionRes;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
+import com.application.domain.cocktail.entity.Cocktail;
 import com.application.domain.cocktail.enums.AbvLevel;
 import com.application.domain.cocktail.enums.Season;
 import com.application.domain.cocktail.enums.TasteLevel;
 
+import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.cocktail.service.CocktailService;
 import com.application.domain.member.entity.ParsedMember;
+import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,6 +44,8 @@ import java.util.List;
 @Tag(name = "칵테일 관련 API", description = "칵테일 정보 조회, 수정, 삭제 및 검색 등")
 public class CocktailV2Controller implements CocktailV2ControllerDocs{
     private final CocktailService cocktailService;
+    private final CocktailBookmarkService bookmarkService;
+    private final MemberService memberService;
 
     // v2 -----------------------
 
@@ -210,19 +217,34 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      *     칵테일 상세 조회
      * </pre>
      * @param cocktailId
+     * @param customOAuth2User 로그인 사용자 정보 (선택)
      * @return
      */
-    @Operation(summary = "칵테일 상세 조회", description = "칵테일 상세 정보를 조회합니다.")
+    @Operation(
+            summary = "칵테일 상세 조회",
+            description = "칵테일 상세 정보를 조회합니다. 로그인한 사용자는 북마크 여부를 함께 확인할 수 있습니다."
+    )
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(
+    public ResponseEntity<ResponseDto<CocktailDetailResponseDto>> getCocktail(
             @Parameter(example = "1")
-            @RequestParam Long cocktailId
+            @RequestParam Long cocktailId,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
+        // 1. 칵테일 엔티티 조회
+        Cocktail cocktail = cocktailService.getCocktailV2Entity(cocktailId);
 
-        CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId);
+        // 2. 북마크 여부 확인 (로그인한 사용자만)
+        Boolean isBookmarked = null;
+        if (customOAuth2User != null) {
+            Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
+            isBookmarked = bookmarkService.isBookmarked(memberId, cocktailId);
+        }
+
+        // 3. DTO 변환 (북마크 여부 포함)
+        CocktailDetailResponseDto response = CocktailDetailResponseDto.from(cocktail, isBookmarked);
 
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", response),
                 HttpStatus.OK
         );
     }
