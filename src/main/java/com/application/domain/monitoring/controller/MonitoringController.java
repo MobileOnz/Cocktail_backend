@@ -1,7 +1,11 @@
 package com.application.domain.monitoring.controller;
 
+import com.application.common.Constant;
+import com.application.common.response.ResponseDto;
+import com.application.domain.monitoring.dto.ReqSaveOnboardingDto;
 import com.application.domain.monitoring.dto.ReqTrackingDto;
 import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
+import com.application.domain.monitoring.dto.ResOnboardingStatusDto;
 import com.application.domain.monitoring.dto.ResTrackingDto;
 import com.application.domain.monitoring.service.MonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +49,32 @@ public class MonitoringController {
             @RequestParam String deviceNumber) {
         ResMonitoringInfoDto response = monitoringService.getMonitoringInfo(deviceNumber);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "온보딩 상태 확인",
+            description = "기기 고유 번호로 온보딩 완료 여부를 확인합니다. " +
+                    "회원인 경우 Member의 gender와 ageRange로 확인하고, " +
+                    "비회원인 경우 Monitoring의 onboardingCompleted로 확인합니다. " +
+                    "최초 접근 시 온보딩이 필요한 것으로 반환됩니다."
+    )
+    @GetMapping("/onboarding/status")
+    public ResponseEntity<ResOnboardingStatusDto> getOnboardingStatus(
+            @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
+            @RequestParam String deviceNumber) {
+        ResOnboardingStatusDto response = monitoringService.getOnboardingStatus(deviceNumber);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "비회원 온보딩 정보 저장",
+            description = "비회원(로그인 전) 사용자의 온보딩 정보를 Monitoring 테이블에 저장합니다. " +
+                    "나중에 로그인하면 이 정보가 Member로 복사됩니다. " +
+                    "이미 회원으로 등록된 기기는 회원 온보딩 API를 사용해야 합니다."
+    )
+    @PostMapping("/onboarding")
+    public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody ReqSaveOnboardingDto dto) {
+        monitoringService.saveNonMemberOnboarding(dto);
+        return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Non-Member Onboarding Info", dto), HttpStatus.OK);
     }
 }
