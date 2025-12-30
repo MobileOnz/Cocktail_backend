@@ -20,20 +20,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v2/cocktails")
 @RequiredArgsConstructor
-@Tag(name = "칵테일 북마크 API", description = "칵테일 북마크 추가/삭제 및 목록 조회")
+@Tag(name = "칵테일 즐겨찾기 API", description = "칵테일 즐겨찾기 추가/삭제 및 목록 조회")
 public class CocktailBookmarkController {
 
     private final CocktailBookmarkService bookmarkService;
     private final MemberService memberService;
 
     /**
-     * 북마크 토글 (추가/삭제)
+     * 즐겨찾기 토글 (추가/삭제)
      * POST /api/v2/cocktails/{cocktailId}/bookmarks
      */
     @Operation(
-            summary = "칵테일 북마크 토글",
-            description = "칵테일을 북마크에 추가하거나 삭제합니다. " +
-                    "이미 북마크되어 있으면 삭제, 북마크되어 있지 않으면 추가합니다.",
+            summary = "칵테일 즐겨찾기 토글",
+            description = "칵테일을 즐겨찾기에 추가하거나 삭제합니다. " +
+                    "이미 즐겨찾기되어 있으면 삭제, 즐겨찾기되어 있지 않으면 추가합니다.",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @PostMapping("/{cocktailId}/bookmarks")
@@ -52,18 +52,18 @@ public class CocktailBookmarkController {
                 .build();
 
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("북마크 토글 성공", response),
+                ResponseDto.onSuccess("즐겨찾기 토글 성공", response),
                 HttpStatus.OK
         );
     }
 
     /**
-     * 내가 북마크한 칵테일 목록 조회
+     * 내가 즐겨찾기한 칵테일 목록 조회
      * GET /api/v2/cocktails/bookmarks
      */
     @Operation(
-            summary = "내가 북마크한 칵테일 목록 조회",
-            description = "로그인한 사용자가 북마크한 칵테일 목록을 최근 북마크 순서대로 조회합니다.",
+            summary = "내가 즐겨찾기한 칵테일 목록 조회",
+            description = "로그인한 사용자가 즐겨찾기한 칵테일 목록을 최근 즐겨찾기 순서대로 조회합니다.",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @GetMapping("/bookmarks")
@@ -76,7 +76,7 @@ public class CocktailBookmarkController {
                 bookmarkService.getMyBookmarkedCocktails(memberId);
 
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("북마크 목록 조회 성공", bookmarkedCocktails),
+                ResponseDto.onSuccess("즐겨찾기 목록 조회 성공", bookmarkedCocktails),
                 HttpStatus.OK
         );
     }
