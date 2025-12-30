@@ -206,6 +206,25 @@ public class CocktailService {
         return CocktailResponseDto.from(cocktail);
     }
 
+    /**
+     * 칵테일 엔티티 조회 (내부용 - 컨트롤러에서 북마크 여부 확인 시 사용)
+     * getCocktailV2와 동일한 로직이지만 DTO 대신 엔티티를 반환
+     */
+    public Cocktail getCocktailV2Entity(Long cocktailId) {
+        // 랜덤 ID 생성 (1부터 105까지 포함)
+        final long MIN_ID = 1;
+        final long MAX_ID = 105;
+
+        // 랜덤 조회 api 호출 시 사용됨
+        if(cocktailId == null) {
+            cocktailId = ThreadLocalRandom.current().nextLong(MIN_ID, MAX_ID + 1);
+        }
+
+        return cocktailRepository.findById(cocktailId).orElseThrow(
+                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+        );
+    }
+
     public CocktailResponseDto getRecommendation(CocktailRecommendationDto dto) {
 
         // 1. 조건에 맞는 모든 후보 칵테일 조회
