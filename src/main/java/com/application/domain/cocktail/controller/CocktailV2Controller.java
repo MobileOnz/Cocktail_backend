@@ -18,6 +18,7 @@ import com.application.domain.member.entity.ParsedMember;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
             summary = "칵테일 목록 조회",
             description =
                     "**[칵테일 목록 조회 및 필터링]**\n\n" + // \n\n 으로 단락 구분
+                            "🔓 **인증 불필요** - 이 API는 JWT 토큰 없이 사용 가능합니다.\n\n" +
                             "이 API는 다양한 검색 조건과 페이징을 지원합니다.<br/>" +
                             "모든 옵션은 nullable이며, 결과는 Page<CocktailResponseDto> 형태로 반환됩니다.\n\n" +
                             "**필터링 옵션:**\n" +
@@ -75,6 +77,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                             "- sort는 \"기준,오름/내림차순\" 형식으로 지정 가능합니다. (기본값 - id,asc)\n" +
                             "  - 기준 - [id | korName | engName] , 오름/내림차순 - [asc | desc]"
     )
+    @SecurityRequirements // 인증 불필요 명시
     @RequestMapping(path = "", method = RequestMethod.POST)
     public ResponseEntity<ResponseDto<Page<CocktailResponseDto>>> getCocktails(
             @Parameter(description = "검색 및 필터링 정보 (korName=아&abvBand=WEAK)")
@@ -104,7 +107,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 Best 10 조회", description = "추천을 많이 받은 칵테일의 정보를 조회합니다.")
+    @Operation(summary = "칵테일 Best 10 조회", description = "🔓 **인증 불필요** - 추천을 많이 받은 칵테일의 정보를 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/best")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBestCocktails(
     ){
@@ -123,7 +127,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 최신순 top 10 조회", description = "최근 업데이트된 칵테일의 정보를 조회합니다.")
+    @Operation(summary = "칵테일 최신순 top 10 조회", description = "🔓 **인증 불필요** - 최근 업데이트된 칵테일의 정보를 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/recent")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRecentCocktails(
     ){
@@ -143,7 +148,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      *
      * @return
      */
-    @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
+    @SecurityRequirements
     @RequestMapping(path = "/refresh", method = RequestMethod.GET)
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails() {
 
@@ -166,7 +172,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      *
      * @return
      */
-    @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
+    @SecurityRequirements
     @RequestMapping(path = "/beginner", method = RequestMethod.GET)
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails() {
 
@@ -189,7 +196,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      *
      * @return
      */
-    @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "칵테일 목록을 조회합니다.")
+    @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
+    @SecurityRequirements
     @RequestMapping(path = "/intermediate", method = RequestMethod.GET)
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails() {
 
@@ -212,7 +220,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * @param cocktailId
      * @return
      */
-    @Operation(summary = "칵테일 상세 조회", description = "칵테일 상세 정보를 조회합니다.")
+    @Operation(summary = "칵테일 상세 조회", description = "🔓 **인증 불필요** - 칵테일 상세 정보를 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/detail")
     public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(
             @Parameter(example = "1")
@@ -233,7 +242,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 랜덤 조회", description = "ID 1부터 105 사이에서 무작위 칵테일 1개의 상세 정보를 조회합니다.")
+    @Operation(summary = "칵테일 랜덤 조회", description = "🔓 **인증 불필요** - ID 1부터 105 사이에서 무작위 칵테일 1개의 상세 정보를 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/random")
     public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktailRandom(
     ){
@@ -252,7 +262,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * </pre>
      * @return
      */
-    @Operation(summary = "칵테일 맞춤추천", description = "조건에 부합하는 칵테일을 조회합니다.")
+    @Operation(summary = "칵테일 맞춤추천", description = "🔓 **인증 불필요** - 조건에 부합하는 칵테일을 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/recommendation")
     public ResponseEntity<ResponseDto<CocktailResponseDto>> getRecommendation(
             @Parameter(description = "질문에 대한 응답")
@@ -267,7 +278,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
     }
 
-    @Operation(summary = "칵테일 연관검색어 v2", description = "searchText에 따라 칵테일 이름을 조회합니다.")
+    @Operation(summary = "칵테일 연관검색어 v2", description = "🔓 **인증 불필요** - searchText에 따라 칵테일 이름을 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/suggestions")
     public ResponseEntity<ResponseDto<List<String>>> getCocktailSuggestions(
             @Parameter(example = "아")
@@ -288,7 +300,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * </pre>
      * @return
      */
-    @Operation(summary = "모든 칵테일 이름 조회", description = "DB에 저장된 모든 칵테일의 한글 이름과 영어 이름을 순번과 함께 순서대로 조회. 형식: [{id: 1, name: \"한글1\"}, {id: 2, name: \"영어1\"}, ...]")
+    @Operation(summary = "모든 칵테일 이름 조회", description = "🔓 **인증 불필요** - DB에 저장된 모든 칵테일의 한글 이름과 영어 이름을 순번과 함께 순서대로 조회. 형식: [{id: 1, name: \"한글1\"}, {id: 2, name: \"영어1\"}, ...]")
+    @SecurityRequirements
     @GetMapping("/names")
     public ResponseEntity<ResponseDto<List<CocktailNameDto>>> getAllCocktailNames(){
 
@@ -316,7 +329,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * [가이드 목록 조회]
      * GET /api/v2/guide/list
      */
-    @Operation(summary = "칵테일 가이드 목록 조회", description = "모든 가이드의 파트 번호와 제목 리스트를 조회합니다.")
+    @Operation(summary = "칵테일 가이드 목록 조회", description = "🔓 **인증 불필요** - 모든 가이드의 파트 번호와 제목 리스트를 조회합니다.")
+    @SecurityRequirements
     @GetMapping("/guide/list")
     public ResponseEntity<ResponseDto<List<GuideListResponseDto>>> getGuideList() {
         List<GuideListResponseDto> list = cocktailService.getCocktailGuideList();
@@ -334,8 +348,9 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
      * @return
      */
     @Operation(summary = "칵테일 가이드 상세 조회",
-            description = "각 가이드의 상세 정보를 조회합니다.\n\n" +
+            description = "🔓 **인증 불필요** - 각 가이드의 상세 정보를 조회합니다.\n\n" +
                     "part * 100 + ep 값을 전달하면 됩니다. (ex : part1 ep2 -> 102 ")
+    @SecurityRequirements
     @GetMapping("/guide")
     public ResponseEntity<ResponseDto<GuideResponseDto>> getCocktailGuide(
             @RequestParam Integer part
@@ -442,6 +457,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
 //    }
 
     @Override
+    @Operation(summary = "칵테일 반응 조회", description = "🔒 **인증 필요** - 로그인한 사용자의 해당 칵테일에 대한 반응(좋아요/싫어요) 상태를 조회합니다.")
     @GetMapping("/{cocktailId}/reactions")
     public ResponseEntity<ReactionRes> getMyReaction( // todo ReactionDto.Response 뭐임?
                                                       @PathVariable Long cocktailId,
@@ -453,7 +469,8 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         return ResponseEntity.ok(response);
     }
 
-    @Override // todo swagger
+    @Override
+    @Operation(summary = "칵테일 반응 토글", description = "🔒 **인증 필요** - 로그인한 사용자의 칵테일 반응(좋아요/싫어요)을 추가/변경/삭제합니다.")
     @PostMapping("/{cocktailId}/reactions")
     public ResponseEntity<ReactionRes> toggleReaction(
             @PathVariable Long cocktailId,
