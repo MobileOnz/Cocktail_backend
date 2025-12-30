@@ -51,7 +51,10 @@ public record CocktailResponseDto(
 
         // 분위기 태그 리스트
         @Schema(description = "분위기 태그 목록", example = "[\"파티\", \"데이트\"]")
-        List<String> moods
+        List<String> moods,
+
+        @Schema(description = "즐겨찾기 여부", example = "true")
+        boolean isBookmarked
 
 ) {
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
@@ -105,7 +108,66 @@ public record CocktailResponseDto(
 
                 cocktail.getMoods().stream()
                         .map(CocktailMood::getMoodName)
-                        .toList()
+                        .toList(),
+
+                false
+        );
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
+    public static CocktailResponseDto from(Cocktail cocktail, boolean isBookmarked) {
+
+//        String rawGlassType = cocktail.getGlassType();
+//        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
+//        List<String> splitGlassTypes = (rawGlassType != null && !rawGlassType.isEmpty())
+//                ? Arrays.stream(rawGlassType.split("/"))
+//                .map(String::trim) // 공백 제거
+//                .toList()
+//                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        // 재료 리스트로 전달하도록 수정
+        String rawIngredientsText = cocktail.getIngredientsText();
+        List<String> ingredients = (rawIngredientsText != null && !rawIngredientsText.isEmpty())
+                ? Arrays.stream(rawIngredientsText.split(","))
+                .map(String::trim) // 공백 제거
+                .toList()
+                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        return new CocktailResponseDto(
+                cocktail.getId(),
+                cocktail.getKorName(),
+                cocktail.getEngName(),
+                cocktail.getAbvBand(),         // Enum 필드
+                cocktail.getMaxAlcohol(),
+                cocktail.getMinAlcohol(),
+                cocktail.getOriginText(),
+                cocktail.getSeason(),
+
+                // 재료 list로 변경에 따른 수정
+                ingredients,
+//                cocktail.getIngredientsText(),
+
+                cocktail.getStyle(),
+
+                cocktail.getGlassType(), // 잔 list로 변경에 따른 수정 -> 원복
+//                splitGlassTypes,
+
+                cocktail.getGlassImageUrl(),
+                cocktail.getBase(),
+
+                cocktail.getImageUrl(),
+
+                // [매핑 로직] Entity List -> String List 변환
+                // application.properties의 batch_fetch_size 덕분에 여기서 성능 저하 없이 조회됨
+                cocktail.getFlavors().stream()
+                        .map(CocktailFlavor::getFlavorName)
+                        .toList(),
+
+                cocktail.getMoods().stream()
+                        .map(CocktailMood::getMoodName)
+                        .toList(),
+
+                isBookmarked
         );
     }
 }

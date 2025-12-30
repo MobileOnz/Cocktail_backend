@@ -91,10 +91,20 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                     "  \"size\": 10,\n" +
                     "  \"sort\": \"korName,asc\"" +
                     "}")
-            @PageableDefault(size = 10, sort = "id") Pageable pageable
+            @PageableDefault(size = 10, sort = "id") Pageable pageable,
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ) {
+
+//        if (customOAuth2User != null) { // 로그인한 사용자
+//            String credentialId = customOAuth2User.getCredentialId();
+//            Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
+//
+//        } else { // 비로그인 사용자
+//            // 비로그인 사용자용 로직
+//        }
+
         // 1. Service 호출
-        Page<CocktailResponseDto> cocktailPage = cocktailService.getCocktailsV2(condition, pageable);
+        Page<CocktailResponseDto> cocktailPage = cocktailService.getCocktailsV2(condition, pageable, customOAuth2User);
 
         // 2. 응답 포장
         // Page<T> 객체 자체가 totalPages, totalElements 등 모든 메타데이터를 담고 있으므로,
