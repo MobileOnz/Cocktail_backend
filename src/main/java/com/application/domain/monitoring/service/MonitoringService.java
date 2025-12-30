@@ -1,7 +1,9 @@
 package com.application.domain.monitoring.service;
 
+import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.Member;
 import com.application.domain.monitoring.dto.ReqTrackingDto;
+import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
 import com.application.domain.monitoring.dto.ResTrackingDto;
 import com.application.domain.monitoring.entity.Monitoring;
 import com.application.domain.monitoring.repository.MonitoringRepository;
@@ -156,5 +158,29 @@ public class MonitoringService {
             return 0L;
         }
         return monitoringRepository.sumCountByMemberId(memberId);
+    }
+
+    /**
+     * deviceNumber로 기기 정보, 연령, 성별 조회
+     * 회원이면 회원 정보 포함, 비회원이면 기기 정보만 반환
+     */
+    @Transactional(readOnly = true)
+    public ResMonitoringInfoDto getMonitoringInfo(String deviceNumber) {
+        Monitoring monitoring = monitoringRepository.findByDeviceNumber(deviceNumber)
+                .orElseThrow(() -> new CustomApiException("해당 기기 정보를 찾을 수 없습니다."));
+
+        Member member = monitoring.getMember();
+        boolean isMember = (member != null);
+        Long totalCount = isMember ? getTotalCountByMember(member) : monitoring.getCount();
+
+        return ResMonitoringInfoDto.builder()
+                .deviceNumber(deviceNumber)
+                .isMember(isMember)
+                .memberId(isMember ? member.getId() : null)
+                .age(isMember ? member.getAge() : null)
+                .ageRange(isMember ? member.getAgeRange() : null)
+                .gender(isMember ? member.getGender() : null)
+                .totalCount(totalCount)
+                .build();
     }
 }
