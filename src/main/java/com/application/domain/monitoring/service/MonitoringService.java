@@ -49,6 +49,7 @@ public class MonitoringService {
 
     /**
      * 페이지 접근 추적 (프론트에서 전달받은 count 값으로 업데이트)
+     * 회원이면 전체 count 합산 반환, 비회원이면 기기별 count 반환
      */
     @Transactional
     public ResTrackingDto trackPageAccess(ReqTrackingDto reqTrackingDto) {
@@ -63,13 +64,20 @@ public class MonitoringService {
             monitoring.updateCount(count);
             monitoringRepository.save(monitoring);
 
-            log.info("[MONITORING] Updated - Device: {}, Count: {}", deviceNumber, count);
+            Member member = monitoring.getMember();
+            boolean isMember = (member != null);
+            Long totalCount = isMember ? getTotalCountByMember(member) : monitoring.getCount();
+
+            log.info("[MONITORING] Updated - Device: {}, Count: {}, IsMember: {}, TotalCount: {}",
+                    deviceNumber, count, isMember, totalCount);
 
             return ResTrackingDto.builder()
                     .deviceNumber(deviceNumber)
-                    .count(monitoring.getCount())
+                    .count(totalCount)
                     .isFirstAccess(false)
                     .createdAt(monitoring.getCreatedAt())
+                    .isMember(isMember)
+                    .memberId(isMember ? member.getId() : null)
                     .build();
         } else {
             // 최초 접근: 새로운 레코드 생성
@@ -87,6 +95,8 @@ public class MonitoringService {
                     .count(savedMonitoring.getCount())
                     .isFirstAccess(true)
                     .createdAt(savedMonitoring.getCreatedAt())
+                    .isMember(false)
+                    .memberId(null)
                     .build();
         }
     }
@@ -124,5 +134,27 @@ public class MonitoringService {
     @Transactional(readOnly = true)
     public Optional<Monitoring> getByDeviceNumber(String deviceNumber) {
         return monitoringRepository.findByDeviceNumber(deviceNumber);
+    }
+
+    /**
+     * 회원의 모든 기기 count 합산 조회
+     */
+    @Transactional(readOnly = true)
+    public Long getTotalCountByMember(Member member) {
+        if (member == null) {
+            return 0L;
+        }
+        return monitoringRepository.sumCountByMemberId(member.getId());
+    }
+
+    /**
+     * 회원 ID로 모든 기기 count 합산 조회
+     */
+    @Transactional(readOnly = true)
+    public Long getTotalCountByMemberId(Long memberId) {
+        if (memberId == null) {
+            return 0L;
+        }
+        return monitoringRepository.sumCountByMemberId(memberId);
     }
 }
