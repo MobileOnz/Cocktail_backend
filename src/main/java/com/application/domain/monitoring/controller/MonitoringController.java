@@ -53,10 +53,21 @@ public class MonitoringController {
 
     @Operation(
             summary = "온보딩 상태 확인",
-            description = "기기 고유 번호로 온보딩 완료 여부를 확인합니다. " +
-                    "회원인 경우 Member의 gender와 ageRange로 확인하고, " +
-                    "비회원인 경우 Monitoring의 onboardingCompleted로 확인합니다. " +
-                    "최초 접근 시 온보딩이 필요한 것으로 반환됩니다."
+            description = """
+                    🔓 **인증 불필요** - 기기 고유 번호로 온보딩 완료 여부를 확인합니다.
+
+                    스플래시 화면에서 이 API를 호출하여 온보딩 화면 표시 여부를 결정합니다.
+
+                    **확인 로직:**
+                    - 회원(로그인): Member 테이블의 gender, ageRange 필드로 확인
+                    - 비회원(비로그인): Monitoring 테이블의 onboardingCompleted 필드로 확인
+                    - 최초 접근: requiresOnboarding=true 반환
+
+                    **Response:**
+                    - onboardingCompleted: 온보딩 완료 여부
+                    - requiresOnboarding: 온보딩이 필요한지 여부 (onboardingCompleted의 반대값)
+                    - isMember: 회원 여부
+                    """
     )
     @GetMapping("/onboarding/status")
     public ResponseEntity<ResOnboardingStatusDto> getOnboardingStatus(
@@ -68,9 +79,19 @@ public class MonitoringController {
 
     @Operation(
             summary = "비회원 온보딩 정보 저장",
-            description = "비회원(로그인 전) 사용자의 온보딩 정보를 Monitoring 테이블에 저장합니다. " +
-                    "나중에 로그인하면 이 정보가 Member로 복사됩니다. " +
-                    "이미 회원으로 등록된 기기는 회원 온보딩 API를 사용해야 합니다."
+            description = """
+                    🔓 **인증 불필요** - 비로그인 사용자의 온보딩 정보를 저장합니다.
+
+                    비회원(로그인 전) 사용자의 온보딩 정보를 Monitoring 테이블에 저장합니다.
+                    나중에 로그인하면 이 정보가 자동으로 Member 테이블로 복사됩니다.
+
+                    **로그인한 사용자는 `/api/v2/members/onboarding` API를 사용해야 합니다.**
+
+                    **Request Body:**
+                    - deviceNumber (필수): 기기 고유 번호
+                    - gender (필수): 성별 정보
+                    - ageRange (필수): 연령대 정보
+                    """
     )
     @PostMapping("/onboarding")
     public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody ReqSaveOnboardingDto dto) {

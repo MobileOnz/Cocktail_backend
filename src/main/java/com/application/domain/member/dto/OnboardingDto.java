@@ -13,7 +13,7 @@ import lombok.Setter;
 public class OnboardingDto {
 
     @Schema(
-            description = "기기 고유 번호 (회원 온보딩 시 필수)",
+            description = "기기 고유 번호 (현재 사용되지 않음, 생략 권장)",
             example = "device_unique_identifier_12345",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED
     )
