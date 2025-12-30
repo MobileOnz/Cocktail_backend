@@ -35,9 +35,14 @@ public class ReqSocialLoginDto {
             example = "AAAANvMf...mobile_app_access_token")
     private String accessToken;
 
+    @JsonProperty("deviceNumber")
+    @Schema(description = "사용자 기기 고유 번호 (로그인 시 기기-회원 매핑에 사용)",
+            example = "device_unique_identifier_12345")
+    private String deviceNumber;
+
 
     @Override
     public String toString(){
-        return "[DTO] Provider : " + provider +"\n[DTO] code : " + code + "\n[DTO] state : " + state +"\n[DTO] accessToken : " + accessToken;
+        return "[DTO] Provider : " + provider +"\n[DTO] code : " + code + "\n[DTO] state : " + state +"\n[DTO] accessToken : " + accessToken + "\n[DTO] deviceNumber : " + deviceNumber;
     }
 }
