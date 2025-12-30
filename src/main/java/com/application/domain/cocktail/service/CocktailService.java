@@ -1,5 +1,6 @@
 package com.application.domain.cocktail.service;
 
+import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.common.mapper.CocktailMapper;
 import com.application.domain.cocktail.controller.CocktailV2Controller;
@@ -44,6 +45,8 @@ public class CocktailService {
     private final CocktailReactionRepository reactionRepository;
     private final MemberRepository memberRepository;
     private final GuideRepository guideRepository;
+
+    private final CocktailBookmarkRepository bookmarkRepository;
 
     private final SearchHistoryService searchHistoryService;
 
@@ -129,7 +132,8 @@ public class CocktailService {
      */
     public Page<CocktailResponseDto> getCocktailsV2(
             CocktailSearchConditionDto condition,
-            Pageable pageable
+            Pageable pageable,
+            CustomOAuth2User user
     ) {
         // [주의] 실제 구현 시, 여기서는 QueryDSL 또는 JPA Specification을 사용하여
         //       condition에 따라 동적으로 쿼리를 생성해야 합니다.
@@ -137,13 +141,43 @@ public class CocktailService {
         // 예시: Repository에 정의된 동적 쿼리 메서드를 호출한다고 가정
         Page<Cocktail> cocktailPage = cocktailRepository.getCocktails(condition, pageable);
 
+        // 2. 현재 유저가 북마크한 칵테일 ID 목록 조회 (Set으로 최적화)
+        // (비로그인 유저라면 빈 Set 반환)
+        Set<Long> bookmarkedIds = getBookmarkedIds(user);
+
         // 검색어가 있다면 최근 검색어 저장
         if(condition.korName() != null && !condition.korName().isEmpty()) {
             searchHistoryService.addSearchHistory(0L, condition.korName()); // FIXME
         }
 
         // Page<Entity>를 Page<DTO>로 변환
-        return cocktailPage.map(CocktailResponseDto::from);
+//        return cocktailPage.map(CocktailResponseDto::from);
+
+        // 3. Entity -> DTO 변환 (북마크 여부 주입)
+        return cocktailPage.map(cocktail ->
+                CocktailResponseDto.from(
+                        cocktail,
+                        bookmarkedIds.contains(cocktail.getId()) // ⭐️ 내 북마크 목록에 있으면 true
+                )
+        );
+    }
+
+    /**
+     * [Helper] 로그인한 사용자의 북마크 칵테일 ID 목록 조회
+     */
+    private Set<Long> getBookmarkedIds(CustomOAuth2User user) {
+        if (user == null) {
+            return Collections.emptySet();
+        }
+
+        String credentialId = user.getCredentialId();
+        if (credentialId == null) return Collections.emptySet();
+
+        Member member = memberRepository.findByCredentialId(credentialId);
+        if (member == null) return Collections.emptySet();
+
+        // Member ID로 북마크한 칵테일 ID만 조회 (BookmarkRepository에 메서드 필요)
+        return bookmarkRepository.findCocktailIdsByMemberId(member.getId());
     }
 
     /**

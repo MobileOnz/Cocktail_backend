@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface CocktailBookmarkRepository extends JpaRepository<CocktailBookmark, Long> {
 
@@ -29,4 +30,8 @@ public interface CocktailBookmarkRepository extends JpaRepository<CocktailBookma
      * 북마크 여부 확인 (성능 최적화를 위한 boolean 반환)
      */
     boolean existsByMemberIdAndCocktailId(Long memberId, Long cocktailId);
+
+    // Set<Long> 반환
+    @Query("SELECT b.cocktail.id FROM CocktailBookmark b WHERE b.member.id = :memberId")
+    Set<Long> findCocktailIdsByMemberId(@Param("memberId") Long memberId);
 }
