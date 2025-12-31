@@ -195,7 +195,22 @@ public interface MemberV2ControllerDocs {
     ResponseEntity<Resource> getProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User);
 
     // 온보딩 정보 저장
-    @Operation(summary = "온보딩 정보 저장", description = "온보딩 화면에서 사용자의 성별과 연령대 정보를 저장")
+    @Operation(
+            summary = "회원 온보딩 정보 저장",
+            description = """
+                    🔒 **인증 필요** - 로그인한 사용자의 온보딩 정보를 저장합니다.
+
+                    온보딩 화면에서 사용자의 성별과 연령대 정보를 Member 테이블에 저장하며,
+                    해당 회원이 사용하는 모든 기기의 온보딩 상태를 자동으로 동기화합니다.
+
+                    **비로그인 사용자는 `/api/v2/monitoring/onboarding` API를 사용해야 합니다.**
+
+                    **Request Body:**
+                    - gender (필수): 성별 정보
+                    - ageRange (필수): 연령대 정보
+                    - deviceNumber (선택): 사용하지 않음, 생략 가능
+                    """
+    )
     @ApiResponses(value = {
 
             @ApiResponse(

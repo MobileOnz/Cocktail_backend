@@ -1,7 +1,11 @@
 package com.application.domain.monitoring.controller;
 
+import com.application.common.Constant;
+import com.application.common.response.ResponseDto;
+import com.application.domain.monitoring.dto.ReqSaveOnboardingDto;
 import com.application.domain.monitoring.dto.ReqTrackingDto;
 import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
+import com.application.domain.monitoring.dto.ResOnboardingStatusDto;
 import com.application.domain.monitoring.dto.ResTrackingDto;
 import com.application.domain.monitoring.service.MonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,5 +49,53 @@ public class MonitoringController {
             @RequestParam String deviceNumber) {
         ResMonitoringInfoDto response = monitoringService.getMonitoringInfo(deviceNumber);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "온보딩 상태 확인",
+            description = """
+                    🔓 **인증 불필요** - 기기 고유 번호로 온보딩 완료 여부를 확인합니다.
+
+                    스플래시 화면에서 이 API를 호출하여 온보딩 화면 표시 여부를 결정합니다.
+
+                    **확인 로직:**
+                    - 회원(로그인): Member 테이블의 gender, ageRange 필드로 확인
+                    - 비회원(비로그인): Monitoring 테이블의 onboardingCompleted 필드로 확인
+                    - 최초 접근: requiresOnboarding=true 반환
+
+                    **Response:**
+                    - onboardingCompleted: 온보딩 완료 여부
+                    - requiresOnboarding: 온보딩이 필요한지 여부 (onboardingCompleted의 반대값)
+                    - isMember: 회원 여부
+                    """
+    )
+    @GetMapping("/onboarding/status")
+    public ResponseEntity<ResOnboardingStatusDto> getOnboardingStatus(
+            @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
+            @RequestParam String deviceNumber) {
+        ResOnboardingStatusDto response = monitoringService.getOnboardingStatus(deviceNumber);
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "비회원 온보딩 정보 저장",
+            description = """
+                    🔓 **인증 불필요** - 비로그인 사용자의 온보딩 정보를 저장합니다.
+
+                    비회원(로그인 전) 사용자의 온보딩 정보를 Monitoring 테이블에 저장합니다.
+                    나중에 로그인하면 이 정보가 자동으로 Member 테이블로 복사됩니다.
+
+                    **로그인한 사용자는 `/api/v2/members/onboarding` API를 사용해야 합니다.**
+
+                    **Request Body:**
+                    - deviceNumber (필수): 기기 고유 번호
+                    - gender (필수): 성별 정보
+                    - ageRange (필수): 연령대 정보
+                    """
+    )
+    @PostMapping("/onboarding")
+    public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody ReqSaveOnboardingDto dto) {
+        monitoringService.saveNonMemberOnboarding(dto);
+        return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Non-Member Onboarding Info", dto), HttpStatus.OK);
     }
 }

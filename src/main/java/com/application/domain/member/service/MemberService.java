@@ -137,6 +137,7 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void saveOnboardingInfo(Member member, OnboardingDto onboardingDto) {
         member.setGender(Gender.fromString(onboardingDto.getGender())
                 .orElseThrow(() -> new CustomApiException("Invalid Gender Type")));
@@ -144,6 +145,16 @@ public class MemberService {
                 .orElseThrow(() -> new CustomApiException("Invalid Age Range Type")));
 
         memberRepository.save(member);
+
+        // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
+        monitoringRepository.findAllByMemberId(member.getId()).forEach(monitoring -> {
+            monitoring.markOnboardingCompleted();
+            monitoringRepository.save(monitoring);
+        });
+
+        log.info("[ONBOARDING] Member onboarding saved - MemberId: {}, Gender: {}, AgeRange: {}, Devices synchronized: {}",
+                member.getId(), member.getGender(), member.getAgeRange(),
+                monitoringRepository.findAllByMemberId(member.getId()).size());
     }
 
 }
