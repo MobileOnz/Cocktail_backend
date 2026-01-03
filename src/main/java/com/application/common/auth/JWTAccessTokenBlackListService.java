@@ -29,8 +29,9 @@ public class JWTAccessTokenBlackListService {
     }
 
 
-    @Scheduled(fixedRate = Constant.BLACKLIST_EXPIRED_TIME)
+    @Scheduled(fixedRate = Constant.BLACKLIST_CLEANUP_INTERVAL)
     public void blackListExpired(){
+        long blacklistExpirationMinutes = Constant.BLACKLIST_EXPIRATION / (60 * 1000);
 
         List<String> keys = jwtAccessBlackListStore.findAllKeySet();
         for (String key : keys) {
@@ -38,7 +39,7 @@ public class JWTAccessTokenBlackListService {
             LocalDateTime startTime = dto.getCreateTime();
             Duration duration = Duration.between(startTime, LocalDateTime.now());
 
-            if(duration.toMinutes() > 60){
+            if(duration.toMinutes() > blacklistExpirationMinutes){
                 deleteAccessTokeFromBlackList(key);
             }
 
