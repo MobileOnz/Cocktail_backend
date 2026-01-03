@@ -94,7 +94,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // 칵테일 반응 API (인증 필요)
             "^/api/v2/cocktails/[0-9]+/reactions$",     // 칵테일 반응 조회/토글
-            "^/onz/api/v2/cocktails/[0-9]+/reactions$"  // 칵테일 반응 (onz 경로)
+            "^/onz/api/v2/cocktails/[0-9]+/reactions$", // 칵테일 반응 (onz 경로)
+
+            // 칵테일 북마크 API (인증 필요)
+            "^/api/v2/cocktails/[0-9]+/bookmarks$",     // 칵테일 북마크 토글
+            "^/api/v2/cocktails/bookmarks$",            // 내 북마크 목록 조회
+            "^/onz/api/v2/cocktails/[0-9]+/bookmarks$", // 칵테일 북마크 토글 (onz 경로)
+            "^/onz/api/v2/cocktails/bookmarks$"         // 내 북마크 목록 조회 (onz 경로)
     );
 
     // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]
