@@ -44,10 +44,11 @@ public class JWTStoreService {
         }
     }
 
-    @Scheduled(fixedRate = Constant.REFRESH_EXPIRED_TIME) // 2주관리
+    @Scheduled(fixedRate = Constant.REFRESH_TOKEN_EXPIRATION) // Refresh token 만료 주기로 스케줄링
     public void isRefreshExpired(){
+        long refreshTokenExpirationMinutes = Constant.REFRESH_TOKEN_EXPIRATION / (60 * 1000);
         jwtRefreshStore.getJwtStore().entrySet().removeIf(entry ->
-                Duration.between(entry.getValue().getCreateTime(), LocalDateTime.now()).toMinutes() > 14* 24* 60);
+                Duration.between(entry.getValue().getCreateTime(), LocalDateTime.now()).toMinutes() > refreshTokenExpirationMinutes);
     }
 
 }

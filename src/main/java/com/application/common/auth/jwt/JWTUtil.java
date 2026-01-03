@@ -1,5 +1,6 @@
 package com.application.common.auth.jwt;
 
+import com.application.common.Constant;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +62,7 @@ public class JWTUtil {
                 .claim("credentialId", credentialId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+ 60 * 60 * 1000L))
+                .expiration(new Date(System.currentTimeMillis() + Constant.ACCESS_TOKEN_EXPIRATION))
                 .signWith(secretKey)
                 .compact();
 
@@ -74,7 +75,7 @@ public class JWTUtil {
                 .claim("credentialId", credentialId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+ 14 * 24 * 60 * 60 * 1000L))
+                .expiration(new Date(System.currentTimeMillis() + Constant.REFRESH_TOKEN_EXPIRATION))
                 .signWith(secretKey)
                 .compact();
 
