@@ -11,14 +11,18 @@ import com.application.domain.member.entity.Member;
 import com.application.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v2/cocktails")
@@ -93,5 +97,55 @@ public class CocktailBookmarkController {
                 ResponseDto.onSuccess("즐겨찾기 목록 조회 성공", response),
                 HttpStatus.OK
         );
+    }
+
+    /**
+     * [테스트 전용] JWT 토큰 생성
+     * POST /api/v2/cocktails/test/token
+     */
+    @Operation(
+            summary = "[테스트] JWT 토큰 생성",
+            description = "테스트용 JWT Access Token을 생성합니다. credentialId를 전달하면 해당 사용자의 토큰을 생성합니다."
+    )
+    @SecurityRequirements
+    @PostMapping("/test/token")
+    public ResponseEntity<ResponseDto<TestTokenResponse>> generateTestToken(
+            @RequestBody(required = false) TestTokenRequest request
+    ) {
+        String credentialId = (request != null && request.getCredentialId() != null)
+                ? request.getCredentialId()
+                : "test-user-123";
+
+        String uuid = UUID.randomUUID().toString();
+        String role = "ROLE_USER";
+
+        String accessToken = jwtUtil.createAccessJwt(uuid, credentialId, role);
+        String refreshToken = jwtUtil.createRefreshJwt(uuid, credentialId, role);
+
+        TestTokenResponse response = new TestTokenResponse();
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setCredentialId(credentialId);
+        response.setMessage("Authorization 헤더에 'Bearer " + accessToken + "' 형식으로 추가하세요");
+
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("테스트 토큰 생성 성공", response),
+                HttpStatus.OK
+        );
+    }
+
+    @Getter
+    @Setter
+    public static class TestTokenRequest {
+        private String credentialId;
+    }
+
+    @Getter
+    @Setter
+    public static class TestTokenResponse {
+        private String accessToken;
+        private String refreshToken;
+        private String credentialId;
+        private String message;
     }
 }
