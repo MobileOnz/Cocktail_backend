@@ -32,6 +32,8 @@ public class CocktailBookmarkService {
      */
     @Transactional
     public boolean toggleBookmark(Long memberId, Long cocktailId) {
+        log.info("[즐겨찾기 토글 시작] memberId={}, cocktailId={}", memberId, cocktailId);
+
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Cocktail cocktail = cocktailRepository.findById(cocktailId)
@@ -42,11 +44,15 @@ public class CocktailBookmarkService {
 
         if (existingBookmark.isEmpty()) {
             // 북마크 추가
-            createBookmark(member, cocktail);
+            log.info("[즐겨찾기 추가] memberId={}, cocktailId={}", memberId, cocktailId);
+            CocktailBookmark saved = createBookmark(member, cocktail);
+            log.info("[즐겨찾기 추가 완료] bookmarkId={}", saved.getId());
             return true; // 북마크됨
         } else {
             // 북마크 삭제
+            log.info("[즐겨찾기 삭제] bookmarkId={}", existingBookmark.get().getId());
             removeBookmark(existingBookmark.get());
+            log.info("[즐겨찾기 삭제 완료] memberId={}, cocktailId={}", memberId, cocktailId);
             return false; // 북마크 취소됨
         }
     }
@@ -57,8 +63,12 @@ public class CocktailBookmarkService {
      */
     @Transactional(readOnly = true)
     public List<CocktailResponseDto> getMyBookmarkedCocktails(Long memberId) {
+        log.info("[보관함 조회 시작] memberId={}", memberId);
+
         List<CocktailBookmark> bookmarks =
                 bookmarkRepository.findByMemberIdOrderByCreatedAtDesc(memberId);
+
+        log.info("[보관함 조회 완료] memberId={}, 결과 개수={}", memberId, bookmarks.size());
 
         return bookmarks.stream()
                 .map(bookmark -> CocktailResponseDto.from(bookmark.getCocktail()))
@@ -75,12 +85,12 @@ public class CocktailBookmarkService {
 
     // ===== Private Helper Methods =====
 
-    private void createBookmark(Member member, Cocktail cocktail) {
+    private CocktailBookmark createBookmark(Member member, Cocktail cocktail) {
         CocktailBookmark bookmark = CocktailBookmark.builder()
                 .member(member)
                 .cocktail(cocktail)
                 .build();
-        bookmarkRepository.save(bookmark);
+        return bookmarkRepository.save(bookmark);
     }
 
     private void removeBookmark(CocktailBookmark bookmark) {
