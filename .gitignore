@@ -33,4 +33,8 @@ out/
 /src/main/resources/*.properties
 /src/test/resources/*.properties
 
+### Test Files ###
+# 로컬 JWT 테스트용 파일
+/src/main/java/com/application/test/
+
 .env
