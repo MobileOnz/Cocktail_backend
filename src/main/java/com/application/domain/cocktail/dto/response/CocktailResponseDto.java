@@ -57,8 +57,12 @@ public record CocktailResponseDto(
         boolean isBookmarked
 
 ) {
-    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
     public static CocktailResponseDto from(Cocktail cocktail) {
+        return from(cocktail, null);
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
+    public static CocktailResponseDto from(Cocktail cocktail, Long userId) {
 
 //        String rawGlassType = cocktail.getGlassType();
 //        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
@@ -110,7 +114,7 @@ public record CocktailResponseDto(
                         .map(CocktailMood::getMoodName)
                         .toList(),
 
-                false
+                cocktail.isBookmarkedBy(userId)
         );
     }
 

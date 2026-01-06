@@ -181,7 +181,7 @@ public class Cocktail {
 //
 
     // ⭐️ [편의 메서드] 특정 사용자가 이 칵테일을 북마크했는지 확인
-    public boolean isBookmarkedBy(String userId) {
+    public boolean isBookmarkedBy(Long userId) {
         if (userId == null) return false;
 
         // 내 북마크 리스트를 순회하며 userId가 일치하는지 확인
