@@ -186,11 +186,24 @@ public class CocktailService {
      * </pre>
      * @return
      */
-    public List<CocktailResponseDto> getBestCocktails() {
+    public List<CocktailResponseDto> getBestCocktails(CustomOAuth2User user) {
 
         List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByRecommendCountDesc();
 
-        return cocktails.stream().map(CocktailResponseDto::from).toList();
+        if(user == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        String credentialId = user.getCredentialId();
+        if (credentialId == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        Member member = memberRepository.findByCredentialId(credentialId);
+
+        return cocktails.stream()
+                .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
+                .toList();
     }
 
     /**
@@ -199,11 +212,24 @@ public class CocktailService {
      * </pre>
      * @return
      */
-    public List<CocktailResponseDto> getRecentCocktails() {
+    public List<CocktailResponseDto> getRecentCocktails(CustomOAuth2User user) {
 
         List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByUpdatedAtDesc();
 
-        return cocktails.stream().map(CocktailResponseDto::from).toList();
+        if(user == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        String credentialId = user.getCredentialId();
+        if (credentialId == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        Member member = memberRepository.findByCredentialId(credentialId);
+
+        return cocktails.stream()
+                .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
+                .toList();
     }
 
     /**
@@ -212,16 +238,27 @@ public class CocktailService {
      * </pre>
      * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
      */
-    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList) {
+    public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList, CustomOAuth2User user) {
 
         List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
 
+        if(user == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        String credentialId = user.getCredentialId();
+        if (credentialId == null) {
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
+
+        Member member = memberRepository.findByCredentialId(credentialId);
+
         return cocktails.stream()
-                .map(CocktailResponseDto::from)
+                .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
                 .toList();
     }
 
-    public CocktailResponseDto getCocktailV2(Long cocktailId) {
+    public CocktailResponseDto getCocktailV2(Long cocktailId, CustomOAuth2User user) {
 
         // 랜덤 ID 생성 (1부터 105까지 포함)
         final long MIN_ID = 1;
@@ -237,7 +274,18 @@ public class CocktailService {
                 () -> new CustomApiException("칵테일이 존재하지 않습니다.")
         );
 
-        return CocktailResponseDto.from(cocktail);
+        if(user == null) {
+            return CocktailResponseDto.from(cocktail);
+        }
+
+        String credentialId = user.getCredentialId();
+        if (credentialId == null) {
+            return CocktailResponseDto.from(cocktail);
+        }
+
+        Member member = memberRepository.findByCredentialId(credentialId);
+
+        return CocktailResponseDto.from(cocktail, member.getId());
     }
 
     /**

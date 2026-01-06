@@ -128,9 +128,10 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @SecurityRequirements
     @GetMapping("/best")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBestCocktails(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
 
-        List<CocktailResponseDto> cocktails = cocktailService.getBestCocktails();
+        List<CocktailResponseDto> cocktails = cocktailService.getBestCocktails(customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktails),
@@ -148,9 +149,10 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @SecurityRequirements
     @GetMapping("/recent")
     public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRecentCocktails(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
 
-        List<CocktailResponseDto> cocktails = cocktailService.getRecentCocktails();
+        List<CocktailResponseDto> cocktails = cocktailService.getRecentCocktails(customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktails),
@@ -168,13 +170,15 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Operation(summary = "상큼한 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
     @SecurityRequirements
     @RequestMapping(path = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails() {
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getRefreshCocktails(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
+    ) {
 
         List<String> korNameList = List.of(
                 "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
         );
 
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
@@ -192,13 +196,15 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Operation(summary = "입문자용 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
     @SecurityRequirements
     @RequestMapping(path = "/beginner", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails() {
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getBeginnerCocktails(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
+    ) {
 
         List<String> korNameList = List.of(
                 "아페롤 스프리츠", "메리 픽포드", "다크 앤 스토미", "파라다이스", "사이드카", "샴페인 칵테일", "홀시스 넥"
         );
 
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
@@ -216,13 +222,15 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Operation(summary = "중급자 이상 칵테일 7종 목록 조회", description = "🔓 **인증 불필요** - 칵테일 목록을 조회합니다.")
     @SecurityRequirements
     @RequestMapping(path = "/intermediate", method = RequestMethod.GET)
-    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails() {
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getIntermediateCocktails(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
+    ) {
 
         List<String> korNameList = List.of(
                 "스팅어", "페이퍼 플레인", "진 바질 스매시", "네이키드 앤 페이머스", "알렉산더", "일레갈", "IBA 티키"
         );
 
-        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList);
+        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
@@ -275,9 +283,10 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @SecurityRequirements
     @GetMapping("/random")
     public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktailRandom(
+            @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
 
-        CocktailResponseDto cocktail = cocktailService.getCocktailV2(null);
+        CocktailResponseDto cocktail = cocktailService.getCocktailV2(null, customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
