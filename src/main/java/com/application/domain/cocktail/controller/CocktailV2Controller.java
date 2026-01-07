@@ -249,26 +249,29 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Operation(summary = "칵테일 상세 조회", description = "🔓 **인증 불필요** - 칵테일 상세 정보를 조회합니다.")
     @SecurityRequirements
     @GetMapping("/detail")
-    public ResponseEntity<ResponseDto<CocktailDetailResponseDto>> getCocktail(
+    public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(
+//    public ResponseEntity<ResponseDto<CocktailDetailResponseDto>> getCocktail(
             @Parameter(example = "1")
             @RequestParam Long cocktailId,
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
-        // 1. 칵테일 엔티티 조회
-        Cocktail cocktail = cocktailService.getCocktailV2Entity(cocktailId);
+//        // 1. 칵테일 엔티티 조회
+//        Cocktail cocktail = cocktailService.getCocktailV2Entity(cocktailId);
+//
+//        // 2. 북마크 여부 확인 (로그인한 사용자만)
+//        Boolean isBookmarked = null;
+//        if (customOAuth2User != null) {
+//            Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
+//            isBookmarked = bookmarkService.isBookmarked(memberId, cocktailId);
+//        }
+//
+//        // 3. DTO 변환 (북마크 여부 포함)
+//        CocktailDetailResponseDto response = CocktailDetailResponseDto.from(cocktail, isBookmarked);
 
-        // 2. 북마크 여부 확인 (로그인한 사용자만)
-        Boolean isBookmarked = null;
-        if (customOAuth2User != null) {
-            Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
-            isBookmarked = bookmarkService.isBookmarked(memberId, cocktailId);
-        }
-
-        // 3. DTO 변환 (북마크 여부 포함)
-        CocktailDetailResponseDto response = CocktailDetailResponseDto.from(cocktail, isBookmarked);
+        CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId, customOAuth2User);
 
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", response),
+                ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktail),
                 HttpStatus.OK
         );
     }
