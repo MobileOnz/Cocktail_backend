@@ -1,4 +1,4 @@
-package com.application.domain.member.dto;
+package com.application.domain.member.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Schema(description = "온보딩 정보 요청 DTO")
-public class OnboardingDto {
+public class OnboardingReq {
 
     @Schema(
             description = "기기 고유 번호 (현재 사용되지 않음, 생략 권장)",

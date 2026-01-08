@@ -2,11 +2,11 @@ package com.application.domain.monitoring.controller;
 
 import com.application.common.Constant;
 import com.application.common.response.ResponseDto;
-import com.application.domain.monitoring.dto.ReqSaveOnboardingDto;
-import com.application.domain.monitoring.dto.ReqTrackingDto;
-import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
-import com.application.domain.monitoring.dto.ResOnboardingStatusDto;
-import com.application.domain.monitoring.dto.ResTrackingDto;
+import com.application.domain.monitoring.dto.response.SaveOnboardingReq;
+import com.application.domain.monitoring.dto.response.TrackingReq;
+import com.application.domain.monitoring.dto.request.MonitoringInfoRes;
+import com.application.domain.monitoring.dto.response.OnboardingStatusRes;
+import com.application.domain.monitoring.dto.request.TrackingRes;
 import com.application.domain.monitoring.service.MonitoringService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,8 +32,8 @@ public class MonitoringController {
                     "생성 시간(createdAt)은 최초 접근 시점으로 자동 저장됩니다."
     )
     @PostMapping("/track")
-    public ResponseEntity<ResTrackingDto> trackPageAccess(@Valid @RequestBody ReqTrackingDto reqTrackingDto) {
-        ResTrackingDto response = monitoringService.trackPageAccess(reqTrackingDto);
+    public ResponseEntity<TrackingRes> trackPageAccess(@Valid @RequestBody TrackingReq reqTrackingDto) {
+        TrackingRes response = monitoringService.trackPageAccess(reqTrackingDto);
         return ResponseEntity.ok(response);
     }
 
@@ -44,10 +44,10 @@ public class MonitoringController {
                     "비회원인 경우 기기 정보와 해당 기기의 count만 반환합니다."
     )
     @GetMapping("/info")
-    public ResponseEntity<ResMonitoringInfoDto> getMonitoringInfo(
+    public ResponseEntity<MonitoringInfoRes> getMonitoringInfo(
             @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
             @RequestParam String deviceNumber) {
-        ResMonitoringInfoDto response = monitoringService.getMonitoringInfo(deviceNumber);
+        MonitoringInfoRes response = monitoringService.getMonitoringInfo(deviceNumber);
         return ResponseEntity.ok(response);
     }
 
@@ -70,10 +70,10 @@ public class MonitoringController {
                     """
     )
     @GetMapping("/onboarding/status")
-    public ResponseEntity<ResOnboardingStatusDto> getOnboardingStatus(
+    public ResponseEntity<OnboardingStatusRes> getOnboardingStatus(
             @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
             @RequestParam String deviceNumber) {
-        ResOnboardingStatusDto response = monitoringService.getOnboardingStatus(deviceNumber);
+        OnboardingStatusRes response = monitoringService.getOnboardingStatus(deviceNumber);
         return ResponseEntity.ok(response);
     }
 
@@ -94,7 +94,7 @@ public class MonitoringController {
                     """
     )
     @PostMapping("/onboarding")
-    public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody ReqSaveOnboardingDto dto) {
+    public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody SaveOnboardingReq dto) {
         monitoringService.saveNonMemberOnboarding(dto);
         return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Non-Member Onboarding Info", dto), HttpStatus.OK);
     }

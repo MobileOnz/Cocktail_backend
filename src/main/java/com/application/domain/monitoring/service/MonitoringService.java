@@ -4,11 +4,11 @@ import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
-import com.application.domain.monitoring.dto.ReqSaveOnboardingDto;
-import com.application.domain.monitoring.dto.ReqTrackingDto;
-import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
-import com.application.domain.monitoring.dto.ResOnboardingStatusDto;
-import com.application.domain.monitoring.dto.ResTrackingDto;
+import com.application.domain.monitoring.dto.response.SaveOnboardingReq;
+import com.application.domain.monitoring.dto.response.TrackingReq;
+import com.application.domain.monitoring.dto.request.MonitoringInfoRes;
+import com.application.domain.monitoring.dto.response.OnboardingStatusRes;
+import com.application.domain.monitoring.dto.request.TrackingRes;
 import com.application.domain.monitoring.entity.Monitoring;
 import com.application.domain.monitoring.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class MonitoringService {
      * 회원이면 전체 count 합산 반환, 비회원이면 기기별 count 반환
      */
     @Transactional
-    public ResTrackingDto trackPageAccess(ReqTrackingDto reqTrackingDto) {
+    public TrackingRes trackPageAccess(TrackingReq reqTrackingDto) {
         String deviceNumber = reqTrackingDto.getDeviceNumber();
         Long count = reqTrackingDto.getCount();
 
@@ -77,7 +77,7 @@ public class MonitoringService {
             log.info("[MONITORING] Updated - Device: {}, Count: {}, IsMember: {}, TotalCount: {}",
                     deviceNumber, count, isMember, totalCount);
 
-            return ResTrackingDto.builder()
+            return TrackingRes.builder()
                     .deviceNumber(deviceNumber)
                     .count(totalCount)
                     .isFirstAccess(false)
@@ -96,7 +96,7 @@ public class MonitoringService {
             log.info("[MONITORING] Created - Device: {}, Count: {}, CreatedAt: {}",
                     deviceNumber, count, savedMonitoring.getCreatedAt());
 
-            return ResTrackingDto.builder()
+            return TrackingRes.builder()
                     .deviceNumber(deviceNumber)
                     .count(savedMonitoring.getCount())
                     .isFirstAccess(true)
@@ -191,7 +191,7 @@ public class MonitoringService {
      * 회원이면 회원 정보 포함, 비회원이면 기기 정보만 반환
      */
     @Transactional(readOnly = true)
-    public ResMonitoringInfoDto getMonitoringInfo(String deviceNumber) {
+    public MonitoringInfoRes getMonitoringInfo(String deviceNumber) {
         Monitoring monitoring = monitoringRepository.findByDeviceNumber(deviceNumber)
                 .orElseThrow(() -> new CustomApiException("해당 기기 정보를 찾을 수 없습니다."));
 
@@ -199,7 +199,7 @@ public class MonitoringService {
         boolean isMember = (member != null);
         Long totalCount = isMember ? getTotalCountByMember(member) : monitoring.getCount();
 
-        return ResMonitoringInfoDto.builder()
+        return MonitoringInfoRes.builder()
                 .deviceNumber(deviceNumber)
                 .isMember(isMember)
                 .memberId(isMember ? member.getId() : null)
@@ -215,13 +215,13 @@ public class MonitoringService {
      * 회원이면 Member의 온보딩 정보 확인, 비회원이면 Monitoring의 온보딩 정보 확인
      */
     @Transactional(readOnly = true)
-    public ResOnboardingStatusDto getOnboardingStatus(String deviceNumber) {
+    public OnboardingStatusRes getOnboardingStatus(String deviceNumber) {
         Optional<Monitoring> monitoringOpt = monitoringRepository.findByDeviceNumber(deviceNumber);
 
         if (monitoringOpt.isEmpty()) {
             // 최초 접근: 온보딩 필요
             log.info("[ONBOARDING] First access for device: {}", deviceNumber);
-            return ResOnboardingStatusDto.builder()
+            return OnboardingStatusRes.builder()
                     .deviceNumber(deviceNumber)
                     .onboardingCompleted(false)
                     .requiresOnboarding(true)
@@ -246,7 +246,7 @@ public class MonitoringService {
                     deviceNumber, onboardingCompleted);
         }
 
-        return ResOnboardingStatusDto.builder()
+        return OnboardingStatusRes.builder()
                 .deviceNumber(deviceNumber)
                 .onboardingCompleted(onboardingCompleted)
                 .requiresOnboarding(!onboardingCompleted)
@@ -259,7 +259,7 @@ public class MonitoringService {
      * Monitoring에 gender, ageRange, onboardingCompleted를 저장
      */
     @Transactional
-    public void saveNonMemberOnboarding(ReqSaveOnboardingDto dto) {
+    public void saveNonMemberOnboarding(SaveOnboardingReq dto) {
         String deviceNumber = dto.getDeviceNumber();
 
         Gender gender = Gender.fromString(dto.getGender())

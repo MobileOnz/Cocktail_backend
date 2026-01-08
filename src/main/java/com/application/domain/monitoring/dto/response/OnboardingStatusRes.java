@@ -1,4 +1,4 @@
-package com.application.domain.monitoring.dto;
+package com.application.domain.monitoring.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @Schema(description = "온보딩 상태 응답 DTO")
-public class ResOnboardingStatusDto {
+public class OnboardingStatusRes {
 
     @JsonProperty("onboardingCompleted")
     @Schema(description = "온보딩 완료 여부", example = "true")

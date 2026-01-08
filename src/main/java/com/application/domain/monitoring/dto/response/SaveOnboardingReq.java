@@ -1,4 +1,4 @@
-package com.application.domain.monitoring.dto;
+package com.application.domain.monitoring.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Schema(description = "비회원 온보딩 정보 저장 요청 DTO")
-public class ReqSaveOnboardingDto {
+public class SaveOnboardingReq {
 
     @NotBlank(message = "기기 번호는 필수입니다.")
     @JsonProperty("deviceNumber")
