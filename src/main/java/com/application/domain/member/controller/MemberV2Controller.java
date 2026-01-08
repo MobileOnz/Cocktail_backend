@@ -6,7 +6,6 @@ import com.application.common.exception.custom.CustomApiException;
 import com.application.common.response.ResponseDto;
 import com.application.domain.member.dto.MemberDto;
 import com.application.domain.member.dto.MemberUpdateDto;
-import com.application.domain.member.dto.OnboardingDto;
 import com.application.domain.member.entity.Member;
 
 import com.application.domain.member.service.MemberService;
@@ -89,14 +88,4 @@ public class MemberV2Controller implements MemberV2ControllerDocs {
         }
     }
 
-    @Override
-    @PostMapping("/onboarding")
-    public ResponseEntity<?> saveOnboarding(@AuthenticationPrincipal CustomOAuth2User customOAuth2User,
-                                            @Valid @RequestBody OnboardingDto onboardingDto,
-                                            BindingResult bindingResult) {
-        Member member = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId());
-        memberService.saveOnboardingInfo(member, onboardingDto);
-
-        return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Onboarding Info", onboardingDto), HttpStatus.OK);
-    }
 }

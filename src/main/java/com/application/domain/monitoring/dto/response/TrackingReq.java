@@ -1,4 +1,4 @@
-package com.application.domain.monitoring.dto;
+package com.application.domain.monitoring.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Schema(description = "페이지 접근 추적 요청 DTO")
-public class ReqTrackingDto {
+public class TrackingReq {
 
     @NotNull
     @JsonProperty("deviceNumber")

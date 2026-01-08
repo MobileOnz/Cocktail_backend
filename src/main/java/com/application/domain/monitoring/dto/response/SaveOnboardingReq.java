@@ -1,22 +1,17 @@
-package com.application.domain.member.dto;
+package com.application.domain.monitoring.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@Schema(description = "온보딩 정보 요청 DTO")
-public class OnboardingDto {
+@Data
+@Schema(description = "비회원 온보딩 정보 저장 요청 DTO")
+public class SaveOnboardingReq {
 
-    @Schema(
-            description = "기기 고유 번호 (현재 사용되지 않음, 생략 권장)",
-            example = "device_unique_identifier_12345",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED
-    )
+    @NotBlank(message = "기기 번호는 필수입니다.")
+    @JsonProperty("deviceNumber")
+    @Schema(description = "기기 고유 번호", example = "device_unique_identifier_12345", requiredMode = Schema.RequiredMode.REQUIRED)
     private String deviceNumber;
 
     @Schema(
@@ -26,6 +21,7 @@ public class OnboardingDto {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     @NotBlank(message = "성별 정보는 필수입니다.")
+    @JsonProperty("gender")
     private String gender;
 
     @Schema(
@@ -43,5 +39,6 @@ public class OnboardingDto {
             requiredMode = Schema.RequiredMode.REQUIRED
     )
     @NotBlank(message = "연령대 정보는 필수입니다.")
+    @JsonProperty("ageRange")
     private String ageRange;
 }
