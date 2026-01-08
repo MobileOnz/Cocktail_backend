@@ -212,7 +212,7 @@ public class MonitoringService {
 
     /**
      * deviceNumber로 온보딩 상태 확인
-     * 회원이면 Member의 온보딩 정보 확인, 비회원이면 Monitoring의 온보딩 정보 확인
+     * 로그인/비로그인 상관없이 Monitoring의 onboardingCompleted로 체크
      */
     @Transactional(readOnly = true)
     public OnboardingStatusRes getOnboardingStatus(String deviceNumber) {
@@ -232,19 +232,12 @@ public class MonitoringService {
         Monitoring monitoring = monitoringOpt.get();
         Member member = monitoring.getMember();
         boolean isMember = (member != null);
-        boolean onboardingCompleted;
 
-        if (isMember) {
-            // 회원: Member의 gender와 ageRange 확인
-            onboardingCompleted = (member.getGender() != null && member.getAgeRange() != null);
-            log.info("[ONBOARDING] Member check - Device: {}, MemberId: {}, Completed: {}",
-                    deviceNumber, member.getId(), onboardingCompleted);
-        } else {
-            // 비회원: Monitoring의 onboardingCompleted 확인
-            onboardingCompleted = monitoring.getOnboardingCompleted();
-            log.info("[ONBOARDING] Non-member check - Device: {}, Completed: {}",
-                    deviceNumber, onboardingCompleted);
-        }
+        // 로그인/비로그인 상관없이 Monitoring의 onboardingCompleted로 체크 (기기별 관리)
+        boolean onboardingCompleted = monitoring.getOnboardingCompleted();
+
+        log.info("[ONBOARDING] Device check - Device: {}, IsMember: {}, Completed: {}",
+                deviceNumber, isMember, onboardingCompleted);
 
         return OnboardingStatusRes.builder()
                 .deviceNumber(deviceNumber)
@@ -255,8 +248,10 @@ public class MonitoringService {
     }
 
     /**
-     * 비회원 온보딩 정보 저장
-     * Monitoring에 gender, ageRange, onboardingCompleted를 저장
+     * 온보딩 정보 저장 (회원/비회원 통합)
+     * deviceNumber로 회원 여부를 확인하여 자동으로 회원/비회원 온보딩 처리
+     * - 회원: 해당 기기에 온보딩 정보 저장 + 회원의 모든 기기를 온보딩 완료로 동기화
+     * - 비회원: 해당 기기에만 온보딩 정보 저장
      */
     @Transactional
     public void saveNonMemberOnboarding(SaveOnboardingReq dto) {
@@ -277,16 +272,25 @@ public class MonitoringService {
                     return monitoringRepository.save(newMonitoring);
                 });
 
-        // 이미 회원인 경우 에러
-        if (monitoring.getMember() != null) {
-            throw new CustomApiException("이미 회원으로 등록된 기기입니다. 회원 온보딩 API를 사용하세요.");
-        }
-
         // 온보딩 정보 저장
         monitoring.saveOnboardingInfo(gender, ageRange);
         monitoringRepository.save(monitoring);
 
-        log.info("[ONBOARDING] Non-member onboarding saved - Device: {}, Gender: {}, AgeRange: {}",
-                deviceNumber, gender, ageRange);
+        Member member = monitoring.getMember();
+        if (member != null) {
+            // 회원인 경우: 해당 회원의 모든 기기를 온보딩 완료로 동기화
+            monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                if (!m.getOnboardingCompleted()) {
+                    m.markOnboardingCompleted();
+                    monitoringRepository.save(m);
+                }
+            });
+            log.info("[ONBOARDING] Member onboarding saved - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}, Devices synchronized: {}",
+                    deviceNumber, member.getId(), gender, ageRange, monitoringRepository.findAllByMemberId(member.getId()).size());
+        } else {
+            // 비회원인 경우
+            log.info("[ONBOARDING] Non-member onboarding saved - Device: {}, Gender: {}, AgeRange: {}",
+                    deviceNumber, gender, ageRange);
+        }
     }
 }

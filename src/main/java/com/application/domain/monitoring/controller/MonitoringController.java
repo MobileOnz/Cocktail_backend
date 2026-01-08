@@ -59,9 +59,9 @@ public class MonitoringController {
                     스플래시 화면에서 이 API를 호출하여 온보딩 화면 표시 여부를 결정합니다.
 
                     **확인 로직:**
-                    - 회원(로그인): Member 테이블의 gender, ageRange 필드로 확인
-                    - 비회원(비로그인): Monitoring 테이블의 onboardingCompleted 필드로 확인
+                    - 회원/비회원 상관없이 Monitoring 테이블의 onboardingCompleted 필드로 확인 (기기별 관리)
                     - 최초 접근: requiresOnboarding=true 반환
+                    - 한 회원이 여러 기기를 사용하는 경우, 한 기기에서 온보딩 완료 시 모든 기기가 완료로 동기화됨
 
                     **Response:**
                     - onboardingCompleted: 온보딩 완료 여부
@@ -78,24 +78,25 @@ public class MonitoringController {
     }
 
     @Operation(
-            summary = "비회원 온보딩 정보 저장",
+            summary = "온보딩 정보 저장 (회원/비회원 통합)",
             description = """
-                    🔓 **인증 불필요** - 비로그인 사용자의 온보딩 정보를 저장합니다.
+                    🔓 **인증 불필요** - deviceNumber로 회원/비회원을 자동 구분하여 온보딩 정보를 저장합니다.
 
-                    비회원(로그인 전) 사용자의 온보딩 정보를 Monitoring 테이블에 저장합니다.
-                    나중에 로그인하면 이 정보가 자동으로 Member 테이블로 복사됩니다.
-
-                    **로그인한 사용자는 `/api/v2/members/onboarding` API를 사용해야 합니다.**
+                    **처리 로직:**
+                    1. deviceNumber로 Monitoring 조회/생성
+                    2. 해당 기기가 회원과 매핑되어 있는지 자동 확인
+                    3. 회원: 해당 기기에 온보딩 정보 저장 + 회원의 모든 기기를 온보딩 완료로 동기화
+                    4. 비회원: 해당 기기에만 온보딩 정보 저장 (나중에 로그인 시 Member로 복사됨)
 
                     **Request Body:**
                     - deviceNumber (필수): 기기 고유 번호
-                    - gender (필수): 성별 정보
-                    - ageRange (필수): 연령대 정보
+                    - gender (필수): 성별 정보 (male, female, none)
+                    - ageRange (필수): 연령대 정보 (under_19, 20_24, 25_29, 30_34, 35_39, 50_over)
                     """
     )
     @PostMapping("/onboarding")
     public ResponseEntity<?> saveNonMemberOnboarding(@Valid @RequestBody SaveOnboardingReq dto) {
         monitoringService.saveNonMemberOnboarding(dto);
-        return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Non-Member Onboarding Info", dto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(Constant.SUCCESS_CODE, "Save Onboarding Info", dto), HttpStatus.OK);
     }
 }

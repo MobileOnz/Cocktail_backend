@@ -13,10 +13,11 @@ import lombok.Setter;
 public class OnboardingReq {
 
     @Schema(
-            description = "기기 고유 번호 (현재 사용되지 않음, 생략 권장)",
+            description = "기기 고유 번호",
             example = "device_unique_identifier_12345",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @NotBlank(message = "기기 고유 번호는 필수입니다.")
     private String deviceNumber;
 
     @Schema(

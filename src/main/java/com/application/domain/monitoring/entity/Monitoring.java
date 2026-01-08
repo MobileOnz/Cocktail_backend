@@ -22,6 +22,7 @@ public class Monitoring extends BaseTimeEntity {
     @Column(name="device_number", nullable = false, unique = true)
     private String deviceNumber;
 
+    // 접근 횟수
     @Column(name="count", nullable = false)
     private Long count = 0L;
 
