@@ -122,24 +122,21 @@ public class MonitoringService {
             Monitoring monitoring = monitoringOpt.get();
             monitoring.mapToMember(member);
 
-            // 비회원 온보딩 데이터가 있으면 Member로 복사
+            // 비회원 온보딩 데이터가 있으면 Member로 복사/업데이트
             if (monitoring.getOnboardingCompleted() && monitoring.getGender() != null && monitoring.getAgeRange() != null) {
-                // Member에 온보딩 정보가 없을 때만 복사
-                if (member.getGender() == null || member.getAgeRange() == null) {
-                    member.setGender(monitoring.getGender());
-                    member.setAgeRange(monitoring.getAgeRange());
-                    log.info("[ONBOARDING] Merged non-member onboarding to member - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}",
-                            deviceNumber, member.getId(), monitoring.getGender(), monitoring.getAgeRange());
+                // Member에 온보딩 정보 업데이트 (새로운 기기의 온보딩 정보로 덮어쓰기)
+                member.setGender(monitoring.getGender());
+                member.setAgeRange(monitoring.getAgeRange());
+                log.info("[ONBOARDING] Updated member onboarding from device - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}",
+                        deviceNumber, member.getId(), monitoring.getGender(), monitoring.getAgeRange());
 
-                    // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
-                    monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
+                monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                    if (!m.getOnboardingCompleted()) {
                         m.markOnboardingCompleted();
                         monitoringRepository.save(m);
-                    });
-                } else {
-                    // Member에 이미 온보딩 정보가 있으면, Monitoring의 온보딩 완료 상태만 동기화
-                    monitoring.markOnboardingCompleted();
-                }
+                    }
+                });
             }
 
             monitoringRepository.save(monitoring);
