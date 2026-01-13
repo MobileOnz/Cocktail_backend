@@ -18,7 +18,6 @@ import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.cocktail.service.CocktailService;
-import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -500,11 +499,11 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @Override
     @Operation(summary = "칵테일 반응 조회", description = "🔒 **인증 필요** - 로그인한 사용자의 해당 칵테일에 대한 반응(좋아요/싫어요) 상태를 조회합니다.")
     @GetMapping("/{cocktailId}/reactions")
-    public ResponseEntity<ReactionRes> getMyReaction( // todo ReactionDto.Response 뭐임?
+    public ResponseEntity<ReactionRes> getMyReaction(
                                                       @PathVariable Long cocktailId,
-                                                      @AuthenticationPrincipal ParsedMember user
+                                                      @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        Long memberId = Long.valueOf(user.getCredentialId());
+        Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
 
         ReactionRes response = cocktailService.getReactionStatus(memberId, cocktailId);
         return ResponseEntity.ok(response);
@@ -516,11 +515,9 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     public ResponseEntity<ReactionRes> toggleReaction(
             @PathVariable Long cocktailId,
             @RequestBody ReactionReq request,
-            @AuthenticationPrincipal ParsedMember user // JWT Filter에서 넣어준 유저 정보
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        // ParsedMember에 id가 없다면 credentialId로 조회하는 로직이 필요할 수 있음
-        // 여기서는 user 객체에 식별자가 있다고 가정
-        Long memberId = Long.valueOf(user.getCredentialId());
+        Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
 
         ReactionRes response = cocktailService.toggleReaction(memberId, cocktailId, request.getReactionType());
         return ResponseEntity.ok(response);

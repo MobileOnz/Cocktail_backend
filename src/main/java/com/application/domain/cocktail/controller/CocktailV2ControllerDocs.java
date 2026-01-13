@@ -1,8 +1,8 @@
 package com.application.domain.cocktail.controller;
 
+import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.domain.cocktail.dto.request.ReactionReq;
 import com.application.domain.cocktail.dto.response.ReactionRes;
-import com.application.domain.member.entity.ParsedMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -500,8 +500,8 @@ public interface CocktailV2ControllerDocs {
 //    ResponseEntity<?> getCocktailTags(@RequestBody CocktailV2Controller.RequestTagType requestTagType);
 
     @Operation(summary = "내 반응 조회", description = "페이지 진입 시, 내가 이 칵테일에 어떤 버튼을 눌렀는지 확인합니다.")
-    ResponseEntity<ReactionRes> getMyReaction(@PathVariable Long cocktailId, @AuthenticationPrincipal ParsedMember user);
+    ResponseEntity<ReactionRes> getMyReaction(@PathVariable Long cocktailId, @AuthenticationPrincipal CustomOAuth2User customOAuth2User);
 
     @Operation(summary = "반응 토글 (추천/어려워요)", description = "버튼 클릭 시 호출. 이미 눌렀으면 취소, 다른 걸 누르면 스위칭됩니다.")
-    ResponseEntity<ReactionRes> toggleReaction(@PathVariable Long cocktailId, @RequestBody ReactionReq request, @AuthenticationPrincipal ParsedMember user);
+    ResponseEntity<ReactionRes> toggleReaction(@PathVariable Long cocktailId, @RequestBody ReactionReq request, @AuthenticationPrincipal CustomOAuth2User customOAuth2User);
 }
