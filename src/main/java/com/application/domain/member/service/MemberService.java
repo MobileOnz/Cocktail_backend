@@ -3,7 +3,6 @@ package com.application.domain.member.service;
 import com.application.common.Constant;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.dto.MemberUpdateDto;
-import com.application.domain.member.dto.OnboardingDto;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
@@ -135,26 +134,6 @@ public class MemberService {
         }else{
             log.info("no file exist");
         }
-    }
-
-    @Transactional
-    public void saveOnboardingInfo(Member member, OnboardingDto onboardingDto) {
-        member.setGender(Gender.fromString(onboardingDto.getGender())
-                .orElseThrow(() -> new CustomApiException("Invalid Gender Type")));
-        member.setAgeRange(AgeRange.fromString(onboardingDto.getAgeRange())
-                .orElseThrow(() -> new CustomApiException("Invalid Age Range Type")));
-
-        memberRepository.save(member);
-
-        // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
-        monitoringRepository.findAllByMemberId(member.getId()).forEach(monitoring -> {
-            monitoring.markOnboardingCompleted();
-            monitoringRepository.save(monitoring);
-        });
-
-        log.info("[ONBOARDING] Member onboarding saved - MemberId: {}, Gender: {}, AgeRange: {}, Devices synchronized: {}",
-                member.getId(), member.getGender(), member.getAgeRange(),
-                monitoringRepository.findAllByMemberId(member.getId()).size());
     }
 
 }

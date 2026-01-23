@@ -4,11 +4,11 @@ import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
-import com.application.domain.monitoring.dto.ReqSaveOnboardingDto;
-import com.application.domain.monitoring.dto.ReqTrackingDto;
-import com.application.domain.monitoring.dto.ResMonitoringInfoDto;
-import com.application.domain.monitoring.dto.ResOnboardingStatusDto;
-import com.application.domain.monitoring.dto.ResTrackingDto;
+import com.application.domain.monitoring.dto.response.SaveOnboardingReq;
+import com.application.domain.monitoring.dto.response.TrackingReq;
+import com.application.domain.monitoring.dto.request.MonitoringInfoRes;
+import com.application.domain.monitoring.dto.response.OnboardingStatusRes;
+import com.application.domain.monitoring.dto.request.TrackingRes;
 import com.application.domain.monitoring.entity.Monitoring;
 import com.application.domain.monitoring.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class MonitoringService {
      * 회원이면 전체 count 합산 반환, 비회원이면 기기별 count 반환
      */
     @Transactional
-    public ResTrackingDto trackPageAccess(ReqTrackingDto reqTrackingDto) {
+    public TrackingRes trackPageAccess(TrackingReq reqTrackingDto) {
         String deviceNumber = reqTrackingDto.getDeviceNumber();
         Long count = reqTrackingDto.getCount();
 
@@ -77,7 +77,7 @@ public class MonitoringService {
             log.info("[MONITORING] Updated - Device: {}, Count: {}, IsMember: {}, TotalCount: {}",
                     deviceNumber, count, isMember, totalCount);
 
-            return ResTrackingDto.builder()
+            return TrackingRes.builder()
                     .deviceNumber(deviceNumber)
                     .count(totalCount)
                     .isFirstAccess(false)
@@ -96,7 +96,7 @@ public class MonitoringService {
             log.info("[MONITORING] Created - Device: {}, Count: {}, CreatedAt: {}",
                     deviceNumber, count, savedMonitoring.getCreatedAt());
 
-            return ResTrackingDto.builder()
+            return TrackingRes.builder()
                     .deviceNumber(deviceNumber)
                     .count(savedMonitoring.getCount())
                     .isFirstAccess(true)
@@ -122,24 +122,21 @@ public class MonitoringService {
             Monitoring monitoring = monitoringOpt.get();
             monitoring.mapToMember(member);
 
-            // 비회원 온보딩 데이터가 있으면 Member로 복사
+            // 비회원 온보딩 데이터가 있으면 Member로 복사/업데이트
             if (monitoring.getOnboardingCompleted() && monitoring.getGender() != null && monitoring.getAgeRange() != null) {
-                // Member에 온보딩 정보가 없을 때만 복사
-                if (member.getGender() == null || member.getAgeRange() == null) {
-                    member.setGender(monitoring.getGender());
-                    member.setAgeRange(monitoring.getAgeRange());
-                    log.info("[ONBOARDING] Merged non-member onboarding to member - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}",
-                            deviceNumber, member.getId(), monitoring.getGender(), monitoring.getAgeRange());
+                // Member에 온보딩 정보 업데이트 (새로운 기기의 온보딩 정보로 덮어쓰기)
+                member.setGender(monitoring.getGender());
+                member.setAgeRange(monitoring.getAgeRange());
+                log.info("[ONBOARDING] Updated member onboarding from device - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}",
+                        deviceNumber, member.getId(), monitoring.getGender(), monitoring.getAgeRange());
 
-                    // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
-                    monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                // 해당 회원의 모든 기기의 온보딩 상태를 완료로 동기화
+                monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                    if (!m.getOnboardingCompleted()) {
                         m.markOnboardingCompleted();
                         monitoringRepository.save(m);
-                    });
-                } else {
-                    // Member에 이미 온보딩 정보가 있으면, Monitoring의 온보딩 완료 상태만 동기화
-                    monitoring.markOnboardingCompleted();
-                }
+                    }
+                });
             }
 
             monitoringRepository.save(monitoring);
@@ -191,7 +188,7 @@ public class MonitoringService {
      * 회원이면 회원 정보 포함, 비회원이면 기기 정보만 반환
      */
     @Transactional(readOnly = true)
-    public ResMonitoringInfoDto getMonitoringInfo(String deviceNumber) {
+    public MonitoringInfoRes getMonitoringInfo(String deviceNumber) {
         Monitoring monitoring = monitoringRepository.findByDeviceNumber(deviceNumber)
                 .orElseThrow(() -> new CustomApiException("해당 기기 정보를 찾을 수 없습니다."));
 
@@ -199,7 +196,7 @@ public class MonitoringService {
         boolean isMember = (member != null);
         Long totalCount = isMember ? getTotalCountByMember(member) : monitoring.getCount();
 
-        return ResMonitoringInfoDto.builder()
+        return MonitoringInfoRes.builder()
                 .deviceNumber(deviceNumber)
                 .isMember(isMember)
                 .memberId(isMember ? member.getId() : null)
@@ -212,16 +209,16 @@ public class MonitoringService {
 
     /**
      * deviceNumber로 온보딩 상태 확인
-     * 회원이면 Member의 온보딩 정보 확인, 비회원이면 Monitoring의 온보딩 정보 확인
+     * 로그인/비로그인 상관없이 Monitoring의 onboardingCompleted로 체크
      */
     @Transactional(readOnly = true)
-    public ResOnboardingStatusDto getOnboardingStatus(String deviceNumber) {
+    public OnboardingStatusRes getOnboardingStatus(String deviceNumber) {
         Optional<Monitoring> monitoringOpt = monitoringRepository.findByDeviceNumber(deviceNumber);
 
         if (monitoringOpt.isEmpty()) {
             // 최초 접근: 온보딩 필요
             log.info("[ONBOARDING] First access for device: {}", deviceNumber);
-            return ResOnboardingStatusDto.builder()
+            return OnboardingStatusRes.builder()
                     .deviceNumber(deviceNumber)
                     .onboardingCompleted(false)
                     .requiresOnboarding(true)
@@ -232,21 +229,14 @@ public class MonitoringService {
         Monitoring monitoring = monitoringOpt.get();
         Member member = monitoring.getMember();
         boolean isMember = (member != null);
-        boolean onboardingCompleted;
 
-        if (isMember) {
-            // 회원: Member의 gender와 ageRange 확인
-            onboardingCompleted = (member.getGender() != null && member.getAgeRange() != null);
-            log.info("[ONBOARDING] Member check - Device: {}, MemberId: {}, Completed: {}",
-                    deviceNumber, member.getId(), onboardingCompleted);
-        } else {
-            // 비회원: Monitoring의 onboardingCompleted 확인
-            onboardingCompleted = monitoring.getOnboardingCompleted();
-            log.info("[ONBOARDING] Non-member check - Device: {}, Completed: {}",
-                    deviceNumber, onboardingCompleted);
-        }
+        // 로그인/비로그인 상관없이 Monitoring의 onboardingCompleted로 체크 (기기별 관리)
+        boolean onboardingCompleted = monitoring.getOnboardingCompleted();
 
-        return ResOnboardingStatusDto.builder()
+        log.info("[ONBOARDING] Device check - Device: {}, IsMember: {}, Completed: {}",
+                deviceNumber, isMember, onboardingCompleted);
+
+        return OnboardingStatusRes.builder()
                 .deviceNumber(deviceNumber)
                 .onboardingCompleted(onboardingCompleted)
                 .requiresOnboarding(!onboardingCompleted)
@@ -255,11 +245,13 @@ public class MonitoringService {
     }
 
     /**
-     * 비회원 온보딩 정보 저장
-     * Monitoring에 gender, ageRange, onboardingCompleted를 저장
+     * 온보딩 정보 저장 (회원/비회원 통합)
+     * deviceNumber로 회원 여부를 확인하여 자동으로 회원/비회원 온보딩 처리
+     * - 회원: 해당 기기에 온보딩 정보 저장 + 회원의 모든 기기를 온보딩 완료로 동기화
+     * - 비회원: 해당 기기에만 온보딩 정보 저장
      */
     @Transactional
-    public void saveNonMemberOnboarding(ReqSaveOnboardingDto dto) {
+    public void saveNonMemberOnboarding(SaveOnboardingReq dto) {
         String deviceNumber = dto.getDeviceNumber();
 
         Gender gender = Gender.fromString(dto.getGender())
@@ -277,16 +269,25 @@ public class MonitoringService {
                     return monitoringRepository.save(newMonitoring);
                 });
 
-        // 이미 회원인 경우 에러
-        if (monitoring.getMember() != null) {
-            throw new CustomApiException("이미 회원으로 등록된 기기입니다. 회원 온보딩 API를 사용하세요.");
-        }
-
         // 온보딩 정보 저장
         monitoring.saveOnboardingInfo(gender, ageRange);
         monitoringRepository.save(monitoring);
 
-        log.info("[ONBOARDING] Non-member onboarding saved - Device: {}, Gender: {}, AgeRange: {}",
-                deviceNumber, gender, ageRange);
+        Member member = monitoring.getMember();
+        if (member != null) {
+            // 회원인 경우: 해당 회원의 모든 기기를 온보딩 완료로 동기화
+            monitoringRepository.findAllByMemberId(member.getId()).forEach(m -> {
+                if (!m.getOnboardingCompleted()) {
+                    m.markOnboardingCompleted();
+                    monitoringRepository.save(m);
+                }
+            });
+            log.info("[ONBOARDING] Member onboarding saved - Device: {}, MemberId: {}, Gender: {}, AgeRange: {}, Devices synchronized: {}",
+                    deviceNumber, member.getId(), gender, ageRange, monitoringRepository.findAllByMemberId(member.getId()).size());
+        } else {
+            // 비회원인 경우
+            log.info("[ONBOARDING] Non-member onboarding saved - Device: {}, Gender: {}, AgeRange: {}",
+                    deviceNumber, gender, ageRange);
+        }
     }
 }

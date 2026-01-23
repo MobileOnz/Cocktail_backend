@@ -1,4 +1,4 @@
-package com.application.domain.monitoring.dto;
+package com.application.domain.monitoring.dto.request;
 
 import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Schema(description = "모니터링 정보 조회 응답 DTO")
-public class ResMonitoringInfoDto {
+public class MonitoringInfoRes {
 
     @JsonProperty("deviceNumber")
     @Schema(description = "기기 고유 번호", example = "device_unique_identifier_12345")
@@ -40,8 +40,8 @@ public class ResMonitoringInfoDto {
     private Long totalCount;
 
     @Builder
-    public ResMonitoringInfoDto(String deviceNumber, Boolean isMember, Long memberId,
-                                 Integer age, AgeRange ageRange, Gender gender, Long totalCount) {
+    public MonitoringInfoRes(String deviceNumber, Boolean isMember, Long memberId,
+                             Integer age, AgeRange ageRange, Gender gender, Long totalCount) {
         this.deviceNumber = deviceNumber;
         this.isMember = isMember;
         this.memberId = memberId;

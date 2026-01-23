@@ -1,4 +1,4 @@
-package com.application.domain.monitoring.dto;
+package com.application.domain.monitoring.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Schema(description = "페이지 접근 추적 응답 DTO")
-public class ResTrackingDto {
+public class TrackingRes {
 
     @JsonProperty("deviceNumber")
     @Schema(description = "기기 고유 번호", example = "device_unique_identifier_12345")
@@ -36,7 +36,7 @@ public class ResTrackingDto {
     private Long memberId;
 
     @Builder
-    public ResTrackingDto(String deviceNumber, Long count, Boolean isFirstAccess, LocalDateTime createdAt, Boolean isMember, Long memberId) {
+    public TrackingRes(String deviceNumber, Long count, Boolean isFirstAccess, LocalDateTime createdAt, Boolean isMember, Long memberId) {
         this.deviceNumber = deviceNumber;
         this.count = count;
         this.isFirstAccess = isFirstAccess;
