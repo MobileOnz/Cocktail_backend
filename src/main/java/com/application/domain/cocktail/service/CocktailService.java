@@ -147,7 +147,7 @@ public class CocktailService {
 
         // 검색어가 있다면 최근 검색어 저장
         if(condition.korName() != null && !condition.korName().isEmpty()) {
-            searchHistoryService.addSearchHistory(0L, condition.korName()); // FIXME
+            searchHistoryService.addSearchHistory(user, condition.korName()); // FIXME
         }
 
         // Page<Entity>를 Page<DTO>로 변환
