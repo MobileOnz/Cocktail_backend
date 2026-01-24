@@ -24,6 +24,7 @@ public class CocktailBookmarkService {
     private final CocktailBookmarkRepository bookmarkRepository;
     private final CocktailRepository cocktailRepository;
     private final MemberRepository memberRepository;
+    private final jakarta.persistence.EntityManager entityManager;
 
     /**
      * 북마크 토글 (추가/삭제)
@@ -90,10 +91,13 @@ public class CocktailBookmarkService {
                 .member(member)
                 .cocktail(cocktail)
                 .build();
-        return bookmarkRepository.save(bookmark);
+        CocktailBookmark saved = bookmarkRepository.save(bookmark);
+        entityManager.flush(); // DB에 즉시 반영
+        return saved;
     }
 
     private void removeBookmark(CocktailBookmark bookmark) {
         bookmarkRepository.delete(bookmark);
+        entityManager.flush(); // DB에 즉시 반영
     }
 }
