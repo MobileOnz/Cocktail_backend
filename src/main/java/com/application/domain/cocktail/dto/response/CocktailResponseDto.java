@@ -139,6 +139,51 @@ public record CocktailResponseDto(
         );
     }
 
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (반응 정보 + 북마크 여부 직접 지정)
+    public static CocktailResponseDto from(Cocktail cocktail, ReactionType myReaction, Integer recommendCount, Integer hardCount, boolean isBookmarked) {
+
+        // 재료 리스트로 전달하도록 수정
+        String rawIngredientsText = cocktail.getIngredientsText();
+        List<String> ingredients = (rawIngredientsText != null && !rawIngredientsText.isEmpty())
+                ? Arrays.stream(rawIngredientsText.split(","))
+                .map(String::trim) // 공백 제거
+                .toList()
+                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        return new CocktailResponseDto(
+                cocktail.getId(),
+                cocktail.getKorName(),
+                cocktail.getEngName(),
+                cocktail.getAbvBand(),
+                cocktail.getMaxAlcohol(),
+                cocktail.getMinAlcohol(),
+                cocktail.getOriginText(),
+                cocktail.getSeason(),
+                ingredients,
+                cocktail.getStyle(),
+                cocktail.getGlassType(),
+                cocktail.getGlassImageUrl(),
+                cocktail.getBase(),
+                cocktail.getImageUrl(),
+
+                // [매핑 로직] Entity List -> String List 변환
+                cocktail.getFlavors().stream()
+                        .map(CocktailFlavor::getFlavorName)
+                        .toList(),
+
+                cocktail.getMoods().stream()
+                        .map(CocktailMood::getMoodName)
+                        .toList(),
+
+                isBookmarked, // ⭐️ 북마크 여부를 직접 전달받음
+
+                // 반응 정보
+                myReaction,
+                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                hardCount != null ? hardCount : cocktail.getHardCount()
+        );
+    }
+
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (북마크 여부만 지정)
     public static CocktailResponseDto from(Cocktail cocktail, boolean isBookmarked) {
 

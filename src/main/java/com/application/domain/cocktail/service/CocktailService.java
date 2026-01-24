@@ -260,6 +260,7 @@ public class CocktailService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public CocktailResponseDto getCocktailV2(Long cocktailId, CustomOAuth2User user) {
 
         // 랜덤 ID 생성 (1부터 105까지 포함)
@@ -276,24 +277,29 @@ public class CocktailService {
                 () -> new CustomApiException("칵테일이 존재하지 않습니다.")
         );
 
+        // 비로그인 사용자 처리
         if(user == null) {
-            return CocktailResponseDto.from(cocktail);
+            return CocktailResponseDto.from(cocktail, null, null, null, false);
         }
 
         String credentialId = user.getCredentialId();
         if (credentialId == null) {
-            return CocktailResponseDto.from(cocktail);
+            return CocktailResponseDto.from(cocktail, null, null, null, false);
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+
+        // ⭐️ 북마크 여부를 직접 조회 (LAZY 로딩 문제 해결)
+        boolean isBookmarked = bookmarkRepository.existsByMemberIdAndCocktailId(member.getId(), cocktailId);
 
         // 반응 정보 조회
         ReactionType myReaction = reactionRepository.findByMemberIdAndCocktailId(member.getId(), cocktailId)
                 .map(CocktailReaction::getReactionType)
                 .orElse(null);
 
-        return CocktailResponseDto.from(cocktail, member.getId(), myReaction,
-                cocktail.getRecommendCount(), cocktail.getHardCount());
+        // ⭐️ 새로운 팩토리 메서드 사용: isBookmarked를 직접 전달
+        return CocktailResponseDto.from(cocktail, myReaction,
+                cocktail.getRecommendCount(), cocktail.getHardCount(), isBookmarked);
     }
 
     /**

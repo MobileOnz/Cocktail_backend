@@ -249,24 +249,10 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
     @SecurityRequirements
     @GetMapping("/detail")
     public ResponseEntity<ResponseDto<CocktailResponseDto>> getCocktail(
-//    public ResponseEntity<ResponseDto<CocktailDetailResponseDto>> getCocktail(
             @Parameter(example = "1")
             @RequestParam Long cocktailId,
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
-//        // 1. 칵테일 엔티티 조회
-//        Cocktail cocktail = cocktailService.getCocktailV2Entity(cocktailId);
-//
-//        // 2. 북마크 여부 확인 (로그인한 사용자만)
-//        Boolean isBookmarked = null;
-//        if (customOAuth2User != null) {
-//            Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
-//            isBookmarked = bookmarkService.isBookmarked(memberId, cocktailId);
-//        }
-//
-//        // 3. DTO 변환 (북마크 여부 포함)
-//        CocktailDetailResponseDto response = CocktailDetailResponseDto.from(cocktail, isBookmarked);
-
         CocktailResponseDto cocktail = cocktailService.getCocktailV2(cocktailId, customOAuth2User);
 
         return new ResponseEntity<>(
