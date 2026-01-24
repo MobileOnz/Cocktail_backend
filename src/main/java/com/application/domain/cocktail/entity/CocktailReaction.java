@@ -49,4 +49,8 @@ public class CocktailReaction {
         this.reactionType = reactionType;
     }
 
+    public void updateReactionType(ReactionType reactionType) {
+        this.reactionType = reactionType;
+    }
+
 }

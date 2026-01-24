@@ -571,10 +571,24 @@ public class CocktailService {
                 removeReaction(existing, cocktailId, targetType);
             } else {
                 // [CASE 3] 다른거 누름 (추천 -> 어려워요) -> 스위칭
-                // 1. 기존 것 삭제 및 카운트 감소
-                removeReaction(existing, cocktailId, existing.getReactionType());
-                // 2. 새로운 것 생성 및 카운트 증가
-                createReaction(member, cocktail, targetType);
+                ReactionType previousType = existing.getReactionType();
+
+                // 1. 기존 카운트 감소
+                if (previousType == ReactionType.RECOMMEND) {
+                    cocktailRepository.decrementRecommend(cocktailId);
+                } else {
+                    cocktailRepository.decrementHard(cocktailId);
+                }
+
+                // 2. 반응 타입 업데이트 (DELETE + INSERT 대신 UPDATE 사용)
+                existing.updateReactionType(targetType);
+
+                // 3. 새로운 카운트 증가
+                if (targetType == ReactionType.RECOMMEND) {
+                    cocktailRepository.incrementRecommend(cocktailId);
+                } else {
+                    cocktailRepository.incrementHard(cocktailId);
+                }
             }
         }
 

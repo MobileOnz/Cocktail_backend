@@ -38,3 +38,5 @@ out/
 /src/main/java/com/application/test/
 
 .env
+
+CLAUDE.md
