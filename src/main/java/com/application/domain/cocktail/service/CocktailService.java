@@ -287,7 +287,13 @@ public class CocktailService {
 
         Member member = memberRepository.findByCredentialId(credentialId);
 
-        return CocktailResponseDto.from(cocktail, member.getId());
+        // 반응 정보 조회
+        ReactionType myReaction = reactionRepository.findByMemberIdAndCocktailId(member.getId(), cocktailId)
+                .map(CocktailReaction::getReactionType)
+                .orElse(null);
+
+        return CocktailResponseDto.from(cocktail, member.getId(), myReaction,
+                cocktail.getRecommendCount(), cocktail.getHardCount());
     }
 
     /**

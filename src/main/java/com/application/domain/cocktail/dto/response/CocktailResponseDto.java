@@ -4,6 +4,7 @@ import com.application.domain.cocktail.entity.Cocktail;
 import com.application.domain.cocktail.entity.CocktailFlavor;
 import com.application.domain.cocktail.entity.CocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
+import com.application.domain.cocktail.enums.ReactionType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Arrays;
@@ -54,15 +55,30 @@ public record CocktailResponseDto(
         List<String> moods,
 
         @Schema(description = "즐겨찾기 여부", example = "true")
-        boolean isBookmarked
+        boolean isBookmarked,
+
+        // 반응 정보 추가
+        @Schema(description = "현재 나의 반응 상태 (null이면 아무것도 안 누름)", example = "RECOMMEND")
+        ReactionType myReaction,
+
+        @Schema(description = "추천해요 총 개수", example = "15")
+        Integer recommendCount,
+
+        @Schema(description = "어려워요 총 개수", example = "3")
+        Integer hardCount
 
 ) {
     public static CocktailResponseDto from(Cocktail cocktail) {
-        return from(cocktail, null);
+        return from(cocktail, null, null, null, null);
     }
 
     // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
     public static CocktailResponseDto from(Cocktail cocktail, Long userId) {
+        return from(cocktail, userId, null, null, null);
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (반응 정보 포함)
+    public static CocktailResponseDto from(Cocktail cocktail, Long userId, ReactionType myReaction, Integer recommendCount, Integer hardCount) {
 
 //        String rawGlassType = cocktail.getGlassType();
 //        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
@@ -114,11 +130,16 @@ public record CocktailResponseDto(
                         .map(CocktailMood::getMoodName)
                         .toList(),
 
-                cocktail.isBookmarkedBy(userId)
+                cocktail.isBookmarkedBy(userId),
+
+                // 반응 정보
+                myReaction,
+                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                hardCount != null ? hardCount : cocktail.getHardCount()
         );
     }
 
-    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (북마크 여부만 지정)
     public static CocktailResponseDto from(Cocktail cocktail, boolean isBookmarked) {
 
 //        String rawGlassType = cocktail.getGlassType();
@@ -171,7 +192,12 @@ public record CocktailResponseDto(
                         .map(CocktailMood::getMoodName)
                         .toList(),
 
-                isBookmarked
+                isBookmarked,
+
+                // 반응 정보 (기본값)
+                null,
+                cocktail.getRecommendCount(),
+                cocktail.getHardCount()
         );
     }
 }
