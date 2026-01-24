@@ -50,6 +50,8 @@ public class CocktailService {
 
     private final SearchHistoryService searchHistoryService;
 
+    private final jakarta.persistence.EntityManager entityManager;
+
     /* ----------------------- 조회 ------------------------- */
 
     //TODO) enum값 (맛단계, 도수단계) 조회값 주기
@@ -560,28 +562,33 @@ public class CocktailService {
 
         Optional<CocktailReaction> existingOpt = reactionRepository.findByMemberIdAndCocktailId(memberId, cocktailId);
 
+        ReactionType myFinalReaction; // 최종 반응 상태 추적
+
         if (existingOpt.isEmpty()) {
             // [CASE 1] 아무것도 안 누른 상태 -> 생성
             createReaction(member, cocktail, targetType);
+            myFinalReaction = targetType;
         } else {
             CocktailReaction existing = existingOpt.get();
 
             if (existing.getReactionType() == targetType) {
                 // [CASE 2] 같은거 또 누름 -> 취소 (삭제)
                 removeReaction(existing, cocktailId, targetType);
+                myFinalReaction = null;
             } else {
                 // [CASE 3] 다른거 누름 (추천 -> 어려워요) -> 스위칭
                 ReactionType previousType = existing.getReactionType();
 
-                // 1. 기존 카운트 감소
+                // 1. 반응 타입 업데이트 (DELETE + INSERT 대신 UPDATE 사용)
+                existing.updateReactionType(targetType);
+                entityManager.flush(); // @Modifying의 clearAutomatically 전에 먼저 flush
+
+                // 2. 기존 카운트 감소
                 if (previousType == ReactionType.RECOMMEND) {
                     cocktailRepository.decrementRecommend(cocktailId);
                 } else {
                     cocktailRepository.decrementHard(cocktailId);
                 }
-
-                // 2. 반응 타입 업데이트 (DELETE + INSERT 대신 UPDATE 사용)
-                existing.updateReactionType(targetType);
 
                 // 3. 새로운 카운트 증가
                 if (targetType == ReactionType.RECOMMEND) {
@@ -589,18 +596,13 @@ public class CocktailService {
                 } else {
                     cocktailRepository.incrementHard(cocktailId);
                 }
+
+                myFinalReaction = targetType;
             }
         }
 
         // 최신 카운트 값을 포함하여 응답 반환
-        // (영속성 컨텍스트가 갱신되지 않았을 수 있으므로 다시 조회하거나, 계산된 값을 리턴)
-        // 안전하게 다시 조회해서 리턴
         Cocktail updatedCocktail = cocktailRepository.findById(cocktailId).get();
-
-        // 현재 유저의 최종 상태 확인
-        ReactionType myFinalReaction = reactionRepository.findByMemberIdAndCocktailId(memberId, cocktailId)
-                .map(CocktailReaction::getReactionType)
-                .orElse(null);
 
         return ReactionRes.builder()
                 .cocktailId(cocktailId)
@@ -634,6 +636,7 @@ public class CocktailService {
                 .reactionType(type)
                 .build();
         reactionRepository.save(reaction);
+        entityManager.flush(); // @Modifying 전에 flush
 
         if (type == ReactionType.RECOMMEND) cocktailRepository.incrementRecommend(cocktail.getId());
         else cocktailRepository.incrementHard(cocktail.getId());
@@ -641,6 +644,7 @@ public class CocktailService {
 
     private void removeReaction(CocktailReaction reaction, Long cocktailId, ReactionType type) {
         reactionRepository.delete(reaction);
+        entityManager.flush(); // @Modifying 전에 flush
 
         if (type == ReactionType.RECOMMEND) cocktailRepository.decrementRecommend(cocktailId);
         else cocktailRepository.decrementHard(cocktailId);
