@@ -23,9 +23,10 @@ repositories {
 	mavenCentral()
 }
 
-tasks.withType(Test) {
-	enabled = false
-}
+// 테스트 임시 활성화 (북마크 기능 테스트를 위해)
+//tasks.withType(Test) {
+//	enabled = false
+//}
 
 
 // --- QueryDSL 설정 ---
@@ -67,6 +68,9 @@ dependencies {
 
     // Postgresql
     runtimeOnly 'org.postgresql:postgresql'
+
+    // H2 (테스트용 인메모리 DB)
+    testRuntimeOnly 'com.h2database:h2'
 
 	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

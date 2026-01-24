@@ -202,6 +202,10 @@ public class CocktailService {
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        if (member == null) {
+            log.warn("Member not found for credentialId: {}", credentialId);
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
 
         return cocktails.stream()
                 .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
@@ -228,6 +232,10 @@ public class CocktailService {
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        if (member == null) {
+            log.warn("Member not found for credentialId: {}", credentialId);
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
 
         return cocktails.stream()
                 .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
@@ -254,6 +262,10 @@ public class CocktailService {
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        if (member == null) {
+            log.warn("Member not found for credentialId: {}", credentialId);
+            return cocktails.stream().map(CocktailResponseDto::from).toList();
+        }
 
         return cocktails.stream()
                 .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
@@ -283,11 +295,17 @@ public class CocktailService {
         }
 
         String credentialId = user.getCredentialId();
+        log.info("Credential ID: {}", credentialId); // 디버깅용 로그
         if (credentialId == null) {
+            log.warn("credentialId is null for user: {}", user.getName());
             return CocktailResponseDto.from(cocktail, null, null, null, false);
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        if (member == null) {
+            log.warn("Member not found for credentialId: {}", credentialId);
+            return CocktailResponseDto.from(cocktail, null, null, null, false);
+        }
 
         // ⭐️ 북마크 여부를 직접 조회 (LAZY 로딩 문제 해결)
         boolean isBookmarked = bookmarkRepository.existsByMemberIdAndCocktailId(member.getId(), cocktailId);

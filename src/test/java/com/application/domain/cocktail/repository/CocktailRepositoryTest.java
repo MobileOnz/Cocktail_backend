@@ -34,9 +34,19 @@ class CocktailRepositoryTest {
 
         // 2. 데이터 준비 (초기값 0)
         Cocktail cocktail = Cocktail.builder()
-                .cocktailKR("모히또")
-                .cocktailEN("Mojito")
-                .maxAlcohol(10).minAlcohol(5)
+                .korName("모히또")
+                .engName("Mojito")
+                .maxAlcohol(10)
+                .minAlcohol(5)
+                .originText("동시성 테스트용")
+                .season("사계절")
+                .ingredientsText("럼, 민트")
+                .style("라이트")
+                .glassType("하이볼")
+                .base("럼")
+                .imageUrl("https://example.com/test.jpg")
+                .recommendCount(0)
+                .hardCount(0)
                 .build();
 
         // ★ 중요: saveAndFlush로 즉시 DB에 반영하여 다른 스레드가 볼 수 있게 함
