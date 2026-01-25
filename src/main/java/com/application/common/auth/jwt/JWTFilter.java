@@ -103,6 +103,20 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/onz/api/v2/cocktails/bookmarks$"         // 내 북마크 목록 조회 (onz 경로)
     );
 
+    // 선택적 인증 경로 (JWT 토큰이 있으면 검증하고, 없으면 익명 사용자로 통과)
+    private final static List<String> OPTIONAL_AUTH_PATH_PATTERNS = List.of(
+            "^/api/v2/cocktails$",                      // 칵테일 목록 조회 (북마크 여부 포함)
+            "^/api/v2/cocktails/detail$",               // 칵테일 상세 조회 (북마크 여부 포함)
+            "^/api/v2/cocktails/best$",                 // BEST 칵테일 조회 (북마크 여부 포함)
+            "^/api/v2/cocktails/recent$",               // 최근 칵테일 조회 (북마크 여부 포함)
+            "^/api/v2/cocktails/specific$",             // 특정 칵테일 조회 (북마크 여부 포함)
+            "^/onz/api/v2/cocktails$",                  // 칵테일 목록 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/detail$",           // 칵테일 상세 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/best$",             // BEST 칵테일 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/recent$",           // 최근 칵테일 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/specific$"          // 특정 칵테일 조회 (onz 경로)
+    );
+
     // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]
 //    @Override
 //    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -178,7 +192,31 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        // 인증이 필요한 경로인지 확인
+        // 1. 선택적 인증 경로 처리 (JWT 토큰이 있으면 검증, 없으면 통과)
+        if (isOptionalAuthPath(uri)) {
+            log.info("Optional auth path: {}", uri);
+            String accessToken = getAccessToken(request);
+
+            // JWT 토큰이 있으면 검증하고 SecurityContext 설정
+            if (accessToken != null && !jwtUtil.isAccessExpired(accessToken)) {
+                String uuid = jwtUtil.getUUID(accessToken);
+                String blackListToken = jwtAccessTokenBlackListService.getAccessTokenFromBlackList(uuid);
+
+                if (blackListToken == null) {
+                    setSecurityContext(jwtUtil, accessToken);
+                    log.info("Optional path - SecurityContext set for accessToken UUID: {}", uuid);
+                } else {
+                    log.info("Optional path - Access Token is blacklisted, proceed as anonymous");
+                }
+            } else {
+                log.info("Optional path - No valid accessToken, proceed as anonymous");
+            }
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 2. 인증이 필요한 경로인지 확인
         if (!isRequireAuthPath(uri)) {
             // 인증이 필요하지 않은 경로 -> 바로 통과
             log.info("Public path, skipping JWT validation: {}", uri);
@@ -186,7 +224,7 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 인증이 필요한 경로 -> JWT 토큰 검증
+        // 3. 인증이 필요한 경로 -> JWT 토큰 검증 (필수)
         log.info("Protected path, validating JWT: {}", uri);
 
         String accessToken = getAccessToken(request);
@@ -221,6 +259,11 @@ public class JWTFilter extends OncePerRequestFilter {
     // 인증이 필요한 경로인지 확인
     private boolean isRequireAuthPath(String uri) {
         return REQUIRE_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
+    }
+
+    // 선택적 인증 경로인지 확인
+    private boolean isOptionalAuthPath(String uri) {
+        return OPTIONAL_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
     }
 
     private void sendErrorResponse(HttpServletResponse response,int code,  int status, String message) throws IOException{
