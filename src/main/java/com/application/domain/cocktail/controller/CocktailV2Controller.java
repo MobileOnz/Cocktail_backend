@@ -130,12 +130,25 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User customOAuth2User
     ){
 
+        // 추천 많이 받은 칵테일 top 10
         List<CocktailResponseDto> cocktails = cocktailService.getBestCocktails(customOAuth2User);
 
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("칵테일 조회 성공 (v2)", cocktails),
                 HttpStatus.OK
         );
+
+        // 지정된 추천 칵테일 top 10 (기획에 따라 아래 코드 사용)
+//        List<String> korNameList = List.of(
+//                "피나 콜라다", "모히또", "시 브리즈", "벨리니", "쿠바 리브레", "샴페인 칵테일", "키르", "진 피즈", "마가리타", "가리발디"
+//        );
+//
+//        List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
+//
+//        return new ResponseEntity<>(
+//                ResponseDto.onSuccess("칵테일 목록 조회 성공 (v2)", cocktails),
+//                HttpStatus.OK
+//        );
     }
 
     /**
