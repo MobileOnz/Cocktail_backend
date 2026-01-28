@@ -346,7 +346,8 @@ public class CocktailService {
 
         // 2. 결과가 없으면 예외 처리 또는 기본 추천 (예: 랜덤)
         if (candidates.isEmpty()) {
-            throw new CustomApiException("조건에 맞는 칵테일을 찾을 수 없습니다.");
+            return null; // 오류 응답하지 않도록 수정 (결과가 없다는 팝업 띄운다고 함)
+//            throw new CustomApiException("조건에 맞는 칵테일을 찾을 수 없습니다.");
             // 또는 return getCocktailRandom(); // 랜덤 반환
         }
 
