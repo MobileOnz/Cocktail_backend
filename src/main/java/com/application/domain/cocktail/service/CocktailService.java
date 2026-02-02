@@ -232,6 +232,9 @@ public class CocktailService {
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        log.info("[북마크 로그] member: {}", member);
+        log.info("[북마크 로그] member.id: {}", member.getId());
+
         if (member == null) {
             log.warn("Member not found for credentialId: {}", credentialId);
             return cocktails.stream().map(CocktailResponseDto::from).toList();
