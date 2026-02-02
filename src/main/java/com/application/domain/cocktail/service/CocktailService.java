@@ -248,6 +248,7 @@ public class CocktailService {
      * </pre>
      * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
      */
+    @Transactional(readOnly = true)
     public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList, CustomOAuth2User user) {
 
         List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
