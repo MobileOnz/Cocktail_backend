@@ -1,3 +1,6 @@
+log:
+  path: logs
+
 spring:
   datasource:
     url: ${POSTGRE_url}
@@ -95,3 +98,29 @@ custom:
       team-id: ${APPLE_TEAM_ID}       # Apple Developer Team ID
       key-id: ${APPLE_KEY_ID}         # Key ID (P8 파일 발급 시 확인)
       private-key: ${APPLE_PRIVATE_KEY}
+
+# --- Spring Boot Admin & Actuator 설정 (로그 시각화) ---
+spring.boot.admin:
+  ui:
+    title: "Cocktail Backend 로그 모니터링"
+  context-path: /log-viewer  # Spring Boot Admin UI 경로
+  client:
+    url: http://onz-cocktail.kr  # Admin Server URL (운영 서버)
+    instance:
+      name: Cocktail-Backend
+      service-url: http://onz-cocktail.kr
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 모든 actuator 엔드포인트 노출
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: ${log.path}/Onz.log  # 로그 파일 경로
+  info:
+    env:
+      enabled: true

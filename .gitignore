@@ -1,4 +1,5 @@
 *.log
+logs/
 /build
 /.gradle
 /.idea
