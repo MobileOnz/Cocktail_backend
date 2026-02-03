@@ -18,6 +18,7 @@ import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.cocktail.service.CocktailService;
+import com.application.domain.member.entity.Member;
 import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -193,6 +194,13 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         );
 
         log.info("customOAuth2User = {}", customOAuth2User);
+
+        String credentialId = customOAuth2User.getCredentialId();
+        Member member = memberService.getMemberByCredentialId(credentialId);
+        Long memberId = member.getId();
+        log.info("credentialId = {}", credentialId);
+        log.info("member = {}", member);
+        log.info("memberId = {}", memberId);
 
         List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 
