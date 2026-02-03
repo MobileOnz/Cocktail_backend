@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableJpaAuditing
 @EnableCaching
-@EnableAdminServer
+// @EnableAdminServer  // Context-path와 호환 문제로 비활성화
 public class Application {
 
 	public static void main(String[] args) {

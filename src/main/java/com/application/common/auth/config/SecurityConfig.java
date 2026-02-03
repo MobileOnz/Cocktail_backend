@@ -31,7 +31,10 @@ public class SecurityConfig {
 
     private static final String[] ACTUATOR_URLS = {
             "/actuator/**",     // Spring Boot Actuator (로그 확인용)
-            "/instances/**",    // Spring Boot Admin
+            "/instances/**",    // Spring Boot Admin Server API
+            "/instances",       // Spring Boot Admin Server API (POST 등록)
+            "/applications/**", // Spring Boot Admin Server Applications API
+            "/applications",    // Spring Boot Admin Server Applications API
             "/assets/**",       // Spring Boot Admin 정적 리소스
             "/log-viewer/**"    // Spring Boot Admin UI
     };

@@ -102,15 +102,11 @@ custom:
       private-key: ${APPLE_PRIVATE_KEY}     # Key ID (P8 파일 발급 시 확인)
 
 # --- Spring Boot Admin & Actuator 설정 (로그 시각화) ---
+# Spring Boot Admin은 context-path와 호환 문제로 비활성화
+# Actuator API로 로그 확인 가능: /onz/actuator/logfile
 spring.boot.admin:
-  ui:
-    title: "Cocktail Backend 로그 모니터링"
-  context-path: /log-viewer  # Spring Boot Admin UI 경로
   client:
-    url: http://localhost:8080  # Admin Server URL (자기 자신)
-    instance:
-      name: Cocktail-Backend
-      service-url: http://localhost:8080
+    enabled: false  # Admin Client 비활성화
 
 management:
   endpoints:

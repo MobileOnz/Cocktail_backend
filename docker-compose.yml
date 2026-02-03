@@ -7,6 +7,8 @@ services:
     container_name: cocktail-api
     ports:
       - "80:8080" # 외부 80 -> 내부 8080
+    volumes:
+      - ./logs:/app/logs  # 로그 디렉토리 마운트 (컨테이너 재시작 시에도 유지)
     environment:
       # 🚨 API 서버가 도커 내부의 'db' 서비스에 접속하도록 설정
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
