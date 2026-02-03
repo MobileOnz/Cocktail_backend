@@ -33,6 +33,9 @@ services:
       - APPLE_TEAM_ID=${APPLE_TEAM_ID}
       - APPLE_KEY_ID=${APPLE_KEY_ID}
       - APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY}
+      - APPLE_AUDIENCE=${APPLE_AUDIENCE}
+      - APPLE_PUBLIC_KEY_URL=${APPLE_PUBLIC_KEY_URL}
+      - APPLE_TOKEN_URL=${APPLE_TOKEN_URL}
 
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
