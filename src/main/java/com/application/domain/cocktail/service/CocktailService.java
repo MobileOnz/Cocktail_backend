@@ -256,20 +256,33 @@ public class CocktailService {
 
         List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
 
+        System.out.println("1.user = " + user);
+        log.info("[특정 칵테일 조회] user: {}", user);
+
         if(user == null) {
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
 
         String credentialId = user.getCredentialId();
+
+        System.out.println("2.credentialId = " + credentialId);
+        log.info("[특정 칵테일 조회] credentialId: {}", credentialId);
+
         if (credentialId == null) {
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+
+        System.out.println("3.member = " + member);
+        log.info("[특정 칵테일 조회] member: {}", member);
+
         if (member == null) {
             log.warn("Member not found for credentialId: {}", credentialId);
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
+
+        log.info("[특정 칵테일 조회] member id: {}", member.getId());
 
         return cocktails.stream()
                 .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
