@@ -59,12 +59,12 @@ public class OAuth2PropertiesValue {
     @Value("${APPLE_TEAM_ID}")
     private String appleTeamId;
 
-//    @Value("${spring.security.oauth2.client.audience}")
+    @Value("${APPLE_AUDIENCE}")
     private String appleAudience;
 
-//    @Value("${spring.security.oauth2.client.auth.public.key}")
+    @Value("${APPLE_PUBLIC_KEY_URL}")
     private String applePublicKeyUrl;
 
-//    @Value("${spring.security.oauth2.client.auth.token}")
+    @Value("${APPLE_TOKEN_URL}")
     private String appleTokenUrl;
 }
