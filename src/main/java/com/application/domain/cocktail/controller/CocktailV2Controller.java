@@ -193,14 +193,9 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
                 "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
         );
 
-        log.info("customOAuth2User = {}", customOAuth2User);
-
         String credentialId = customOAuth2User.getCredentialId();
         Member member = memberService.getMemberByCredentialId(credentialId);
         Long memberId = member.getId();
-        log.info("credentialId = {}", credentialId);
-        log.info("member = {}", member);
-        log.info("memberId = {}", memberId);
 
         List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 
