@@ -18,6 +18,7 @@ import com.application.domain.cocktail.enums.TasteLevel;
 
 import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.cocktail.service.CocktailService;
+import com.application.domain.member.entity.Member;
 import com.application.domain.member.service.MemberService;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v2/cocktails")
 @RequiredArgsConstructor
@@ -189,6 +192,15 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs{
         List<String> korNameList = List.of(
                 "진 바질 스매시", "네이키드 앤 페이머스", "토미스 마가리타", "옐로 버드", "마가리타", "프렌치 마티니", "미셔너리즈 다운폴"
         );
+
+        log.info("customOAuth2User = {}", customOAuth2User);
+
+        String credentialId = customOAuth2User.getCredentialId();
+        Member member = memberService.getMemberByCredentialId(credentialId);
+        Long memberId = member.getId();
+        log.info("credentialId = {}", credentialId);
+        log.info("member = {}", member);
+        log.info("memberId = {}", memberId);
 
         List<CocktailResponseDto> cocktails = cocktailService.getSpecificCocktailsV2(korNameList, customOAuth2User);
 

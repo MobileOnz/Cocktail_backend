@@ -232,6 +232,9 @@ public class CocktailService {
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+        log.info("[북마크 로그] member: {}", member);
+        log.info("[북마크 로그] member.id: {}", member.getId());
+
         if (member == null) {
             log.warn("Member not found for credentialId: {}", credentialId);
             return cocktails.stream().map(CocktailResponseDto::from).toList();
@@ -248,24 +251,38 @@ public class CocktailService {
      * </pre>
      * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
      */
+    @Transactional(readOnly = true)
     public List<CocktailResponseDto> getSpecificCocktailsV2(List<String> korNameList, CustomOAuth2User user) {
 
         List<Cocktail> cocktails = cocktailRepository.getSpecificCocktails(korNameList);
+
+        System.out.println("1.user = " + user);
+        log.info("[특정 칵테일 조회] user: {}", user);
 
         if(user == null) {
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
 
         String credentialId = user.getCredentialId();
+
+        System.out.println("2.credentialId = " + credentialId);
+        log.info("[특정 칵테일 조회] credentialId: {}", credentialId);
+
         if (credentialId == null) {
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
 
         Member member = memberRepository.findByCredentialId(credentialId);
+
+        System.out.println("3.member = " + member);
+        log.info("[특정 칵테일 조회] member: {}", member);
+
         if (member == null) {
             log.warn("Member not found for credentialId: {}", credentialId);
             return cocktails.stream().map(CocktailResponseDto::from).toList();
         }
+
+        log.info("[특정 칵테일 조회] member id: {}", member.getId());
 
         return cocktails.stream()
                 .map(cocktail -> CocktailResponseDto.from(cocktail, member.getId()))
