@@ -185,15 +185,12 @@ public class Cocktail {
     // ⭐️ [편의 메서드] 특정 사용자가 이 칵테일을 북마크했는지 확인
     public boolean isBookmarkedBy(Long userId) {
         if (userId == null) {
-            log.info("디버그: userId가 null이라 false 반환");
             return false;
         }
 
         // 내 북마크 리스트를 순회하며 userId가 일치하는지 확인
 //        return this.bookmarks.stream()
 //                .anyMatch(bookmark -> bookmark.getMember().getId().equals(userId));
-
-        log.info("디버그: 현재 칵테일 ID: {}, 북마크 리스트 크기: {}", this.id, this.bookmarks.size());
 
         return this.bookmarks.stream()
                 .anyMatch(bookmark -> {

@@ -111,12 +111,17 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/api/v2/cocktails/recent$",               // 최근 칵테일 조회 (북마크 여부 포함)
             "^/api/v2/cocktails/specific$",             // 특정 칵테일 조회 (북마크 여부 포함)
             "^/api/v2/cocktails/refresh$",              // 상큼한 칵테일 추천 (북마크 여부 포함)
+            "^/api/v2/cocktails/beginner$",             // 입문자용 칵테일 (북마크 여부 포함)
+            "^/api/v2/cocktails/intermediate$",         // 중급자용 칵테일 (북마크 여부 포함)
+
             "^/onz/api/v2/cocktails$",                  // 칵테일 목록 조회 (onz 경로)
             "^/onz/api/v2/cocktails/detail$",           // 칵테일 상세 조회 (onz 경로)
             "^/onz/api/v2/cocktails/best$",             // BEST 칵테일 조회 (onz 경로)
             "^/onz/api/v2/cocktails/recent$",           // 최근 칵테일 조회 (onz 경로)
             "^/onz/api/v2/cocktails/specific$",         // 특정 칵테일 조회 (onz 경로)
-            "^/onz/api/v2/cocktails/refresh$"           // 상큼한 칵테일 추천 (onz 경로)
+            "^/onz/api/v2/cocktails/refresh$",           // 상큼한 칵테일 추천 (onz 경로)
+            "^/api/v2/cocktails/beginner$",             // 입문자용 칵테일 (onz 경로)
+            "^/api/v2/cocktails/intermediate$"         // 중급자용 칵테일 (onz 경로)
     );
 
     // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]
