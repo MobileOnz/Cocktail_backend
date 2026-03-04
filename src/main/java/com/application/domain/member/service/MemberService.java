@@ -4,12 +4,15 @@ import com.application.common.Constant;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.domain.member.dto.MemberUpdateDto;
 import com.application.domain.member.entity.Member;
+import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
 import com.application.domain.member.repository.MemberRepository;
+import com.application.domain.monitoring.repository.MonitoringRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,6 +30,7 @@ import java.util.UUID;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MonitoringRepository monitoringRepository;
 
     public void saveMember(Member member){
         memberRepository.save(member);
@@ -50,7 +54,9 @@ public class MemberService {
         memberRepository.save(member);
     }
 
+    @Transactional
     public void deleteMember(Long memberId){
+        monitoringRepository.deleteByMemberId(memberId);
         memberRepository.deleteById(memberId);
     }
 

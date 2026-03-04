@@ -6,7 +6,7 @@ services:
     build: . # 현재 디렉토리의 Dockerfile을 사용해 이미지를 빌드
     container_name: cocktail-api
     ports:
-      - "8080:8080" # VM(호스트)의 8080 포트를 컨테이너 8080으로 연결
+      - "80:8080" # 외부 80 -> 내부 8080
     environment:
       # 🚨 API 서버가 도커 내부의 'db' 서비스에 접속하도록 설정
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
@@ -20,16 +20,22 @@ services:
       # --- OAuth 설정 ---
       - KAKAO_ID=${KAKAO_ID}
       - KAKAO_SECRET=${KAKAO_SECRET}
-      - KAKAO_URI=${KAKAO_URI}
+      - KAKAO_REDIRECT_URI=${KAKAO_REDIRECT_URI}
       - NAVER_ID=${NAVER_ID}
       - NAVER_SECRET=${NAVER_SECRET}
+      - NAVER_REDIRECT_URI=${NAVER_REDIRECT_URI}
       - GOOGLE_ID=${GOOGLE_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}
       - APPLE_SERVICE_ID=${APPLE_SERVICE_ID}
       - APPLE_CLIENT_ID=${APPLE_CLIENT_ID}
+      - APPLE_REDIRECT_URI=${APPLE_REDIRECT_URI}
       - APPLE_TEAM_ID=${APPLE_TEAM_ID}
       - APPLE_KEY_ID=${APPLE_KEY_ID}
       - APPLE_PRIVATE_KEY=${APPLE_PRIVATE_KEY}
+      - APPLE_AUDIENCE=${APPLE_AUDIENCE}
+      - APPLE_PUBLIC_KEY_URL=${APPLE_PUBLIC_KEY_URL}
+      - APPLE_TOKEN_URL=${APPLE_TOKEN_URL}
 
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨

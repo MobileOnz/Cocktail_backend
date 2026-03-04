@@ -1,5 +1,6 @@
 package com.application.domain.cocktail.repository.custom;
 
+import com.application.domain.cocktail.dto.request.CocktailRecommendationDto;
 import com.application.domain.cocktail.dto.request.CocktailSearchConditionDto;
 import com.application.domain.cocktail.entity.Cocktail;
 import org.springframework.data.domain.Page;
@@ -12,4 +13,6 @@ public interface CocktailRepositoryCustom {
     Page<Cocktail> getCocktails(CocktailSearchConditionDto condition, Pageable pageable);
 
     List<Cocktail> getSpecificCocktails(List<String> korNameList);
+
+    List<Cocktail> findRecommendedCocktails(CocktailRecommendationDto dto);
 }

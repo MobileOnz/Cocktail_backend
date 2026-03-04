@@ -1,6 +1,8 @@
 package com.application.common.auth.config;
 
 import com.application.common.auth.JWTAccessTokenBlackListService;
+import com.application.common.auth.jwt.JWTFilter;
+import com.application.common.auth.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
@@ -26,11 +29,11 @@ public class SecurityConfig {
             "/v3/api-docs/**"   // API 설계도(JSON)
     };
 
-    // private final JWTUtil jwtUtil; // 1. jwtUtil 필드 주석 처리
+    private final JWTUtil jwtUtil;
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
-    public SecurityConfig(/*JWTUtil jwtUtil,*/ JWTAccessTokenBlackListService jwtAccessTokenBlackListService){ // 2. 생성자에서 jwtUtil 파라미터 주석 처리
-        // this.jwtUtil = jwtUtil; // 3. 생성자에서 jwtUtil 주입 로직 주석 처리
+    public SecurityConfig(JWTUtil jwtUtil, JWTAccessTokenBlackListService jwtAccessTokenBlackListService){
+        this.jwtUtil = jwtUtil;
         this.jwtAccessTokenBlackListService = jwtAccessTokenBlackListService;
     }
 
@@ -70,25 +73,26 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        // 4. JWTFilter를 추가하는 라인 주석 처리 (jwtUtil을 사용하기 때문)
-        // http
-        //        .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
-
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil, jwtAccessTokenBlackListService), UsernamePasswordAuthenticationFilter.class);
 
         http
                 .authorizeHttpRequests((auth)->auth
 //                        .requestMatchers("/test/**").permitAll() // 로그인 무시하고 api 요청 테스트 하기 위한
                         .requestMatchers("/api/auth/refresh", "/api/auth/social-login", "/api/auth/**").permitAll()
-                        .requestMatchers("/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao").permitAll()
-                        .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token").permitAll()
-                        .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url").permitAll()
+                        .requestMatchers("/onz/api/auth/refresh", "/onz/api/auth/social-login", "/onz/api/auth/**").permitAll()
+                        .requestMatchers("/login/oauth2/code/google", "/login/oauth2/code/naver", "/login/oauth2/code/kakao", "/login/oauth2/code/apple").permitAll()
+                        .requestMatchers("/onz/login/oauth2/code/google", "/onz/login/oauth2/code/naver", "/onz/login/oauth2/code/kakao", "/onz/login/oauth2/code/apple").permitAll()
+                        .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token", "/api/auth/apple/token").permitAll()
+                        .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url", "/api/auth/apple/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
                         .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
                         // swagger
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
-                        // onz_v2
+                        // onz_v2 - JWT 필터 화이트리스트 방식에 맞춰 v2 API는 기본 허용
                         .requestMatchers("/api/v2/**").permitAll()
+                        .requestMatchers("/onz/api/v2/**").permitAll()
                         .anyRequest().authenticated());
 
         http

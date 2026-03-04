@@ -34,7 +34,8 @@ public class OAuth2CodeController {
 
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
-        String url = "http://localhost:8080/api/auth/social-login"; // 실제 엔드포인트로 변경 필요
+//        String url = "http://localhost:8080/api/auth/social-login";
+        String url = "http://onz-cocktail.kr/onz/api/auth/social-login";
         ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
 
         return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
@@ -54,7 +55,8 @@ public class OAuth2CodeController {
 
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
-        String url = "http://localhost:8080/api/auth/social-login";
+//        String url = "http://localhost:8080/api/auth/social-login";
+        String url = "http://onz-cocktail.kr/onz/api/auth/social-login";
         ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
 
         return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());
@@ -73,7 +75,8 @@ public class OAuth2CodeController {
 
         HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
-        String url = "http://localhost:8080/api/auth/social-login";
+//        String url = "http://localhost:8080/api/auth/social-login";
+        String url = "http://onz-cocktail.kr/onz/api/auth/social-login";
         ResponseEntity<Map> responseEntity = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
 
         return ResponseEntity.status(responseEntity.getStatusCode()).body(responseEntity.getBody());

@@ -4,6 +4,7 @@ import com.application.domain.cocktail.entity.Cocktail;
 import com.application.domain.cocktail.entity.CocktailFlavor;
 import com.application.domain.cocktail.entity.CocktailMood;
 import com.application.domain.cocktail.enums.AbvLevel;
+import com.application.domain.cocktail.enums.ReactionType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Arrays;
@@ -51,11 +52,33 @@ public record CocktailResponseDto(
 
         // 분위기 태그 리스트
         @Schema(description = "분위기 태그 목록", example = "[\"파티\", \"데이트\"]")
-        List<String> moods
+        List<String> moods,
+
+        @Schema(description = "즐겨찾기 여부", example = "true")
+        boolean isBookmarked,
+
+        // 반응 정보 추가
+        @Schema(description = "현재 나의 반응 상태 (null이면 아무것도 안 누름)", example = "RECOMMEND")
+        ReactionType myReaction,
+
+        @Schema(description = "추천해요 총 개수", example = "15")
+        Integer recommendCount,
+
+        @Schema(description = "어려워요 총 개수", example = "3")
+        Integer hardCount
 
 ) {
-    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
     public static CocktailResponseDto from(Cocktail cocktail) {
+        return from(cocktail, null, null, null, null);
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드는 record에서도 유효합니다.
+    public static CocktailResponseDto from(Cocktail cocktail, Long userId) {
+        return from(cocktail, userId, null, null, null);
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (반응 정보 포함)
+    public static CocktailResponseDto from(Cocktail cocktail, Long userId, ReactionType myReaction, Integer recommendCount, Integer hardCount) {
 
 //        String rawGlassType = cocktail.getGlassType();
 //        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
@@ -105,7 +128,121 @@ public record CocktailResponseDto(
 
                 cocktail.getMoods().stream()
                         .map(CocktailMood::getMoodName)
-                        .toList()
+                        .toList(),
+
+                cocktail.isBookmarkedBy(userId),
+
+                // 반응 정보
+                myReaction,
+                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                hardCount != null ? hardCount : cocktail.getHardCount()
+        );
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (반응 정보 + 북마크 여부 직접 지정)
+    public static CocktailResponseDto from(Cocktail cocktail, ReactionType myReaction, Integer recommendCount, Integer hardCount, boolean isBookmarked) {
+
+        // 재료 리스트로 전달하도록 수정
+        String rawIngredientsText = cocktail.getIngredientsText();
+        List<String> ingredients = (rawIngredientsText != null && !rawIngredientsText.isEmpty())
+                ? Arrays.stream(rawIngredientsText.split(","))
+                .map(String::trim) // 공백 제거
+                .toList()
+                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        return new CocktailResponseDto(
+                cocktail.getId(),
+                cocktail.getKorName(),
+                cocktail.getEngName(),
+                cocktail.getAbvBand(),
+                cocktail.getMaxAlcohol(),
+                cocktail.getMinAlcohol(),
+                cocktail.getOriginText(),
+                cocktail.getSeason(),
+                ingredients,
+                cocktail.getStyle(),
+                cocktail.getGlassType(),
+                cocktail.getGlassImageUrl(),
+                cocktail.getBase(),
+                cocktail.getImageUrl(),
+
+                // [매핑 로직] Entity List -> String List 변환
+                cocktail.getFlavors().stream()
+                        .map(CocktailFlavor::getFlavorName)
+                        .toList(),
+
+                cocktail.getMoods().stream()
+                        .map(CocktailMood::getMoodName)
+                        .toList(),
+
+                isBookmarked, // ⭐️ 북마크 여부를 직접 전달받음
+
+                // 반응 정보
+                myReaction,
+                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                hardCount != null ? hardCount : cocktail.getHardCount()
+        );
+    }
+
+    // 엔티티를 DTO로 변환하는 정적 팩토리 메서드 (북마크 여부만 지정)
+    public static CocktailResponseDto from(Cocktail cocktail, boolean isBookmarked) {
+
+//        String rawGlassType = cocktail.getGlassType();
+//        // glassType 문자열을 '/' 기준으로 분리하여 List로 변환
+//        List<String> splitGlassTypes = (rawGlassType != null && !rawGlassType.isEmpty())
+//                ? Arrays.stream(rawGlassType.split("/"))
+//                .map(String::trim) // 공백 제거
+//                .toList()
+//                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        // 재료 리스트로 전달하도록 수정
+        String rawIngredientsText = cocktail.getIngredientsText();
+        List<String> ingredients = (rawIngredientsText != null && !rawIngredientsText.isEmpty())
+                ? Arrays.stream(rawIngredientsText.split(","))
+                .map(String::trim) // 공백 제거
+                .toList()
+                : List.of(); // 값이 없으면 빈 리스트 반환
+
+        return new CocktailResponseDto(
+                cocktail.getId(),
+                cocktail.getKorName(),
+                cocktail.getEngName(),
+                cocktail.getAbvBand(),         // Enum 필드
+                cocktail.getMaxAlcohol(),
+                cocktail.getMinAlcohol(),
+                cocktail.getOriginText(),
+                cocktail.getSeason(),
+
+                // 재료 list로 변경에 따른 수정
+                ingredients,
+//                cocktail.getIngredientsText(),
+
+                cocktail.getStyle(),
+
+                cocktail.getGlassType(), // 잔 list로 변경에 따른 수정 -> 원복
+//                splitGlassTypes,
+
+                cocktail.getGlassImageUrl(),
+                cocktail.getBase(),
+
+                cocktail.getImageUrl(),
+
+                // [매핑 로직] Entity List -> String List 변환
+                // application.properties의 batch_fetch_size 덕분에 여기서 성능 저하 없이 조회됨
+                cocktail.getFlavors().stream()
+                        .map(CocktailFlavor::getFlavorName)
+                        .toList(),
+
+                cocktail.getMoods().stream()
+                        .map(CocktailMood::getMoodName)
+                        .toList(),
+
+                isBookmarked,
+
+                // 반응 정보 (기본값)
+                null,
+                cocktail.getRecommendCount(),
+                cocktail.getHardCount()
         );
     }
 }

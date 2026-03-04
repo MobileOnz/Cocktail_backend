@@ -1,11 +1,16 @@
 package com.application.domain.member.entity;
 
 import com.application.common.time.BaseTimeEntity;
+import com.application.domain.member.enums.AgeRange;
 import com.application.domain.member.enums.Gender;
 import com.application.domain.member.enums.Role;
 import com.application.domain.member.enums.SocialLogin;
+import com.application.domain.monitoring.entity.Monitoring;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -43,6 +48,9 @@ public class Member extends BaseTimeEntity {
     @Column(name="age")
     private Integer age;
 
+    @Column(name="age_range")
+    private AgeRange ageRange;
+
     @Column(name="profile")
     private String profile;
 
@@ -63,6 +71,9 @@ public class Member extends BaseTimeEntity {
 
     @Column(name="ad_term")
     private Boolean adTerm;
+
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Monitoring> monitorings = new ArrayList<>();
 
     @Builder
     public Member(String credentialId, String name, String nickname, String email, SocialLogin socialLogin, String profile, Role role

@@ -11,6 +11,7 @@ import com.application.domain.member.entity.Member;
 import com.application.domain.member.entity.ParsedMember;
 import com.application.domain.member.enums.Role;
 import com.application.domain.member.service.MemberService;
+import com.application.domain.monitoring.service.MonitoringService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -31,6 +32,7 @@ public class OAuth2Service {
 
     private final SocialLoginFactory factory;
     private final MemberService memberService;
+    private final MonitoringService monitoringService;
     private final CacheManager cacheManager;
 
 
@@ -43,7 +45,7 @@ public class OAuth2Service {
         }
 
         ParsedMember parsedMember = strategy.parse(userInfo);
-        return handleMemberLoginFlow(parsedMember);
+        return handleMemberLoginFlow(parsedMember, reqSocialLoginDto.getDeviceNumber());
     }
 
     /**
@@ -74,6 +76,10 @@ public class OAuth2Service {
                 .build();
 
         memberService.saveMember(newMember);
+
+        // 모니터링 데이터와 회원 매핑
+        monitoringService.mapToMember(reqSignupDto.getDeviceNumber(), newMember);
+
         cache.evict(reqSignupDto.getCode());
 
         return createJWTToken(newMember);
@@ -122,13 +128,17 @@ public class OAuth2Service {
     /**
      * 로그인을 시도한 회원이 기존 회원인지 확인
      */
-    private ResSocialLoginDto handleMemberLoginFlow(ParsedMember parsedMember) {
+    private ResSocialLoginDto handleMemberLoginFlow(ParsedMember parsedMember, String deviceNumber) {
         Member member = memberService.getMemberByCredentialId(parsedMember.getCredentialId());
         if(member == null){
             // [신규 회원] DB에 없으면 -> '회원가입 대기 상태'
             return createCode(parsedMember);
         }else{
-            // [기존 회원] DB에 있으면 -> 바로 로그인 성공 (JWT 토큰 발급)
+            // [기존 회원] DB에 있으면 -> 기기-회원 매핑 후 로그인 성공 (JWT 토큰 발급)
+            if (deviceNumber != null && !deviceNumber.isBlank()) {
+                monitoringService.mapToMember(deviceNumber, member);
+                log.info("[LOGIN] Device {} mapped to member {}", deviceNumber, member.getId());
+            }
             return createJWTToken(member);
         }
     }

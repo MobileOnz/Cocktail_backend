@@ -6,6 +6,7 @@ import com.application.domain.cocktail.enums.Season;
 import com.application.domain.cocktail.enums.TasteLevel;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -112,11 +114,16 @@ public class Cocktail {
     private Integer hardCount = 0;
 
     @CreationTimestamp
-    @Column(updatable = false)
+    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    // ⭐️ [추가] 이 칵테일을 즐겨찾기한 내역들 (양방향 매핑)
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CocktailBookmark> bookmarks = new ArrayList<>();
 
     // v1에서 사용
     private String cocktailEN;
@@ -174,5 +181,25 @@ public class Cocktail {
 //        this.tags       = tags;
 //    }
 //
+
+    // ⭐️ [편의 메서드] 특정 사용자가 이 칵테일을 북마크했는지 확인
+    public boolean isBookmarkedBy(Long userId) {
+        if (userId == null) {
+            return false;
+        }
+
+        // 내 북마크 리스트를 순회하며 userId가 일치하는지 확인
+//        return this.bookmarks.stream()
+//                .anyMatch(bookmark -> bookmark.getMember().getId().equals(userId));
+
+        return this.bookmarks.stream()
+                .anyMatch(bookmark -> {
+                    Long dbMemberId = bookmark.getMember().getId();
+                    boolean match = dbMemberId.equals(userId);
+                    log.info("디버그: DB유저ID({}) vs 요청유저ID({}) -> 결과: {}", dbMemberId, userId, match);
+                    return match;
+                });
+
+    }
 
 }

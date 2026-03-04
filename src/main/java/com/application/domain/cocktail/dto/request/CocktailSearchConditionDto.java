@@ -1,7 +1,10 @@
 package com.application.domain.cocktail.dto.request;
 
 import com.application.domain.cocktail.enums.AbvLevel;
+import com.application.domain.cocktail.enums.FlavorSearchType;
 import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.List;
 
 /**
  * 클라이언트가 검색/필터링을 위해 전달하는 조건 DTO (record)
@@ -21,10 +24,15 @@ public record CocktailSearchConditionDto(
         @Schema(description = "스타일", example = "스트롱")
         String style,
 
-        // TODO flavor
+        // 검색 필터용 맛 카테고리 (다중 선택)
+        @Schema(description = "맛 카테고리 필터링 (과일, 쌉쌀함 등)", example = "[\"FRUIT\", \"SWEET\"]")
+        List<FlavorSearchType> flavor,
 
-        @Schema(description = "베이스", example = "보드카")
-        String base,
+        // [25.12.22] base 다중 선택 가능하도록 변경
+//        @Schema(description = "베이스", example = "보드카")
+//        String base,
+        @Schema(description = "베이스 주류 필터링 (다중 선택 가능)", example = "[\"진\", \"보드카\"]")
+        List<String> base,
 
         @Schema(description = "최소 알코올 도수", example = "0")
         Integer minAbv
