@@ -42,3 +42,19 @@ out/
 
 CLAUDE.md
 .claude
+
+### Monitoring & Load Testing ###
+# Log files directory
+/logs/
+
+# Load test results
+/loadtest/results/
+*.json.gz
+
+# Grafana data (managed by Docker volumes)
+/monitoring/grafana/data/
+
+# Prometheus data
+/monitoring/prometheus/data/
+
+docs/
