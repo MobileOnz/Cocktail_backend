@@ -8,6 +8,9 @@ HELP.md
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### QueryDSL ###
+/src/main/generated/
+
 ### STS ###
 .apt_generated
 .classpath
