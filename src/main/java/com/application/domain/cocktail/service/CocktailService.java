@@ -127,17 +127,16 @@ public class CocktailService {
     /**
      * <pre>
      * 칵테일 전체 조회: 페이징, 검색, 필터링을 적용합니다.
-     * Redis 캐싱 적용 (이슈 #5)
      * </pre>
      * @param condition 검색 및 필터링 조건
      * @param pageable 페이징 정보 (페이지 번호, 크기, 정렬)
      * @return 조건에 맞는 칵테일 목록과 페이징 메타데이터를 포함한 Page 객체
      */
-    @org.springframework.cache.annotation.Cacheable(
-            value = "cocktail:list",
-            key = "#condition.toString() + '_' + #pageable.pageNumber + '_' + #pageable.pageSize + '_' + (#user != null ? #user.credentialId : 'anonymous')",
-            unless = "#result == null || #result.isEmpty()"
-    )
+//    @org.springframework.cache.annotation.Cacheable(
+//            value = "cocktail:list",
+//            key = "#condition.toString() + '_' + #pageable.pageNumber + '_' + #pageable.pageSize + '_' + (#user != null ? #user.credentialId : 'anonymous')",
+//            unless = "#result == null || #result.isEmpty()"
+//    )
     public Page<CocktailResponseDto> getCocktailsV2(
             CocktailSearchConditionDto condition,
             Pageable pageable,
