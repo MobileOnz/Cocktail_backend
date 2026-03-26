@@ -1,0 +1,73 @@
+# ===================================================
+# Prometheus Configuration for ONZ Cocktail API
+# This config works for both local and production
+# Only the targets change (localhost vs AWS endpoints)
+# ===================================================
+
+global:
+  scrape_interval: 15s # Default scrape interval
+  evaluation_interval: 15s # Default evaluation interval
+  external_labels:
+    cluster: 'local'
+    env: 'development'
+
+# Alertmanager configuration (optional, for production)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - 'alertmanager:9093'
+
+# Rule files (for alerting rules)
+# rule_files:
+#   - 'alerts/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # ==========================================
+  # Prometheus itself
+  # ==========================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # ==========================================
+  # Spring Boot Application (ONZ Cocktail API)
+  # ==========================================
+  - job_name: 'cocktail-api'
+    metrics_path: '/onz/actuator/prometheus'
+    scrape_interval: 10s
+    static_configs:
+      # For local development (host.docker.internal)
+      - targets: ['host.docker.internal:8080']
+        labels:
+          service: 'cocktail-api'
+          env: 'local'
+
+      # For production (uncomment and modify)
+      # - targets: ['api-server:8080']
+      #   labels:
+      #     service: 'cocktail-api'
+      #     env: 'production'
+
+  # ==========================================
+  # PostgreSQL Exporter (optional)
+  # Uncomment if you add postgres_exporter
+  # ==========================================
+  # - job_name: 'postgresql'
+  #   static_configs:
+  #     - targets: ['postgres-exporter:9187']
+  #       labels:
+  #         service: 'postgresql'
+
+  # ==========================================
+  # Node Exporter (for system metrics - optional)
+  # Uncomment if you add node_exporter
+  # ==========================================
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+  #       labels:
+  #         service: 'node-exporter'

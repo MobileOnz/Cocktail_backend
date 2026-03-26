@@ -1,0 +1,29 @@
+# ===================================================
+# Grafana Dashboards Auto-provisioning
+# Dashboards are automatically loaded from the specified folder
+# ===================================================
+
+apiVersion: 1
+
+providers:
+  # ==========================================
+  # Dashboard Provider Configuration
+  # ==========================================
+  - name: 'ONZ Cocktail Dashboards'
+    orgId: 1
+    folder: 'ONZ Monitoring'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/json
+      foldersFromFilesStructure: true
+
+# Place your dashboard JSON files in:
+# monitoring/grafana/provisioning/dashboards/json/
+#
+# You can export dashboards from Grafana UI or use community dashboards:
+# - Spring Boot 2.1 Statistics: https://grafana.com/grafana/dashboards/10280
+# - JVM (Micrometer): https://grafana.com/grafana/dashboards/4701
+# - Loki Dashboard: https://grafana.com/grafana/dashboards/13639

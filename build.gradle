@@ -89,6 +89,11 @@ dependencies {
 
 	//logback
 	implementation 'ch.qos.logback:logback-classic'
+	implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
+
+	//monitoring
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	//cache
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
@@ -104,6 +109,11 @@ dependencies {
 
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+
+    // Spring Boot Admin (로그 시각화)
+    implementation 'de.codecentric:spring-boot-admin-starter-server:3.4.1'
+    implementation 'de.codecentric:spring-boot-admin-starter-client:3.4.1'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }

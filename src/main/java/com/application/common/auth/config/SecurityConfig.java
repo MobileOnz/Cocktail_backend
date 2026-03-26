@@ -29,6 +29,16 @@ public class SecurityConfig {
             "/v3/api-docs/**"   // API 설계도(JSON)
     };
 
+    private static final String[] ACTUATOR_URLS = {
+            "/actuator/**",     // Spring Boot Actuator (로그 확인용)
+            "/instances/**",    // Spring Boot Admin Server API
+            "/instances",       // Spring Boot Admin Server API (POST 등록)
+            "/applications/**", // Spring Boot Admin Server Applications API
+            "/applications",    // Spring Boot Admin Server Applications API
+            "/assets/**",       // Spring Boot Admin 정적 리소스
+            "/log-viewer/**"    // Spring Boot Admin UI
+    };
+
     private final JWTUtil jwtUtil;
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
@@ -90,6 +100,8 @@ public class SecurityConfig {
                         // swagger
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
+                        // actuator & spring boot admin (로그 시각화)
+                        .requestMatchers(ACTUATOR_URLS).permitAll()
                         // onz_v2 - JWT 필터 화이트리스트 방식에 맞춰 v2 API는 기본 허용
                         .requestMatchers("/api/v2/**").permitAll()
                         .requestMatchers("/onz/api/v2/**").permitAll()

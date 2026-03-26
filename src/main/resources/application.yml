@@ -1,3 +1,6 @@
+log:
+  path: logs
+
 spring:
   datasource:
     url: ${POSTGRE_url}
@@ -97,3 +100,25 @@ custom:
       team-id: ${APPLE_TEAM_ID}       # Apple Developer Team ID
       key-id: ${APPLE_KEY_ID}
       private-key: ${APPLE_PRIVATE_KEY}     # Key ID (P8 파일 발급 시 확인)
+
+# --- Spring Boot Admin & Actuator 설정 (로그 시각화) ---
+# Spring Boot Admin은 context-path와 호환 문제로 비활성화
+# Actuator API로 로그 확인 가능: /onz/actuator/logfile
+spring.boot.admin:
+  client:
+    enabled: false  # Admin Client 비활성화
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 모든 actuator 엔드포인트 노출
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      external-file: ${log.path}/Onz.log  # 로그 파일 경로
+  info:
+    env:
+      enabled: true

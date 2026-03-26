@@ -1,0 +1,91 @@
+# ===================================================
+# Promtail Configuration for ONZ Cocktail API
+# This config works for both local and production
+# Only the file paths change
+# ===================================================
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # ==========================================
+  # JSON Logs (Production-ready format)
+  # ==========================================
+  - job_name: cocktail-api-json
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: cocktail-api
+          env: local
+          log_type: json
+          __path__: /var/log/onz/Onz-json*.log
+
+    pipeline_stages:
+      # Parse JSON logs
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            logger: logger
+            thread: thread
+            message: message
+            service_name: service_name
+
+      # Set timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+
+      # Extract labels from JSON
+      - labels:
+          level:
+          service_name:
+
+      # Output formatted message
+      - output:
+          source: message
+
+  # ==========================================
+  # Human-readable Logs (for debugging)
+  # ==========================================
+  - job_name: cocktail-api-text
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: cocktail-api
+          env: local
+          log_type: text
+          __path__: /var/log/onz/Onz-[0-9]*.log
+
+    pipeline_stages:
+      # Parse text logs
+      - regex:
+          expression: '^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<thread>[^\]]+)\] (?P<level>\w+)\s+(?P<logger>\S+) - (?P<message>.*)$'
+
+      # Set timestamp
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02 15:04:05'
+
+      # Extract labels
+      - labels:
+          level:
+          thread:
+
+      # Output message
+      - output:
+          source: message
+
+# For production: Adjust paths
+# Local: /var/log/onz/*.log
+# Production (EC2): /var/log/onz/*.log
+# Production (ECS): /var/log/containers/*.log
