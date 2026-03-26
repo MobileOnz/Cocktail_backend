@@ -84,6 +84,45 @@ public class CocktailBookmarkService {
         return bookmarkRepository.existsByMemberIdAndCocktailId(memberId, cocktailId);
     }
 
+    /**
+     * 북마크 배치 토글
+     * - 여러 칵테일을 한 번에 토글 처리
+     * - 기존에 북마크되어 있으면 해제, 없으면 추가
+     */
+    @Transactional
+    public List<Long> toggleBookmarkBatch(Long memberId, List<Long> cocktailIds) {
+        log.info("[즐겨찾기 배치 토글 시작] memberId={}, cocktailIds={}", memberId, cocktailIds);
+
+        // Member 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Cocktail 목록 조회
+        List<Cocktail> cocktails = cocktailRepository.findAllById(cocktailIds);
+        if (cocktails.size() != cocktailIds.size()) {
+            throw new IllegalArgumentException("Some cocktails not found");
+        }
+
+        for (Cocktail cocktail : cocktails) {
+            // 각 칵테일에 대해 북마크 확인
+            Optional<CocktailBookmark> existingBookmark =
+                    bookmarkRepository.findByMemberIdAndCocktailId(memberId, cocktail.getId());
+
+            if (existingBookmark.isEmpty()) {
+                // 북마크 추가
+                log.info("[배치 즐겨찾기 추가] memberId={}, cocktailId={}", memberId, cocktail.getId());
+                createBookmark(member, cocktail);
+            } else {
+                // 북마크 삭제
+                log.info("[배치 즐겨찾기 삭제] bookmarkId={}", existingBookmark.get().getId());
+                removeBookmark(existingBookmark.get());
+            }
+        }
+
+        log.info("[즐겨찾기 배치 토글 완료] memberId={}, 처리된 개수={}", memberId, cocktailIds.size());
+        return cocktailIds;
+    }
+
     // ===== Private Helper Methods =====
 
     private CocktailBookmark createBookmark(Member member, Cocktail cocktail) {

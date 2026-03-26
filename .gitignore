@@ -40,7 +40,12 @@ out/
 # 로컬 JWT 테스트용 파일
 /src/main/java/com/application/test/
 
+### Environment & Secrets ###
 .env
+.env.*
+*.env
+application-local.properties
+application-*.properties
 
-CLAUDE.md
+### Editor ###
 .claude
