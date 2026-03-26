@@ -99,8 +99,10 @@ public class JWTFilter extends OncePerRequestFilter {
             // 칵테일 북마크 API (인증 필요)
             "^/api/v2/cocktails/[0-9]+/bookmarks$",     // 칵테일 북마크 토글
             "^/api/v2/cocktails/bookmarks$",            // 내 북마크 목록 조회
+            "^/api/v2/cocktails/bookmarks/batch$",      // 칵테일 배치 북마크 토글
             "^/onz/api/v2/cocktails/[0-9]+/bookmarks$", // 칵테일 북마크 토글 (onz 경로)
-            "^/onz/api/v2/cocktails/bookmarks$"         // 내 북마크 목록 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/bookmarks$",        // 내 북마크 목록 조회 (onz 경로)
+            "^/onz/api/v2/cocktails/bookmarks/batch$"   // 칵테일 배치 북마크 토글 (onz 경로)
     );
 
     // 선택적 인증 경로 (JWT 토큰이 있으면 검증하고, 없으면 익명 사용자로 통과)
