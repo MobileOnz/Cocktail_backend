@@ -43,6 +43,10 @@ public class ReqSocialLoginDto {
 
     @Override
     public String toString(){
-        return "[DTO] Provider : " + provider +"\n[DTO] code : " + code + "\n[DTO] state : " + state +"\n[DTO] accessToken : " + accessToken + "\n[DTO] deviceNumber : " + deviceNumber;
+        return "[DTO] Provider : " + provider
+                + "\n[DTO] codeProvided : " + (code != null && !code.isBlank())
+                + "\n[DTO] stateProvided : " + (state != null && !state.isBlank())
+                + "\n[DTO] accessTokenProvided : " + (accessToken != null && !accessToken.isBlank())
+                + "\n[DTO] deviceNumber : " + deviceNumber;
     }
 }

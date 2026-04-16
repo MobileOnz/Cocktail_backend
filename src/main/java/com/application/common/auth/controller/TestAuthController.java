@@ -5,6 +5,7 @@ import com.application.common.response.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v2/test/auth")
 @RequiredArgsConstructor
+@Profile({"local", "dev", "test"})
 @Tag(name = "테스트 인증 API", description = "개발/테스트용 JWT 토큰 생성 API")
 public class TestAuthController {
 

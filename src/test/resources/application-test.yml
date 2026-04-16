@@ -19,6 +19,45 @@ spring:
     console:
       enabled: true
 
+  jwt:
+    secret: test-jwt-secret-key-for-security-tests-32chars
+
+  security:
+    oauth2:
+      client:
+        registration:
+          naver:
+            client-id: test-naver-id
+            client-secret: test-naver-secret
+            redirect-uri: http://localhost/login/oauth2/code/naver
+          google:
+            client-id: test-google-id
+            client-secret: test-google-secret
+            redirect-uri: http://localhost/login/oauth2/code/google
+          kakao:
+            client-id: test-kakao-id
+            client-secret: test-kakao-secret
+            redirect-uri: http://localhost/login/oauth2/code/kakao
+            scope: profile_nickname
+        provider:
+          naver:
+            authorization-uri: https://example.com/naver/authorize
+            token-uri: https://example.com/naver/token
+          google:
+            authorization-uri: https://example.com/google/authorize
+            token-uri: https://example.com/google/token
+          kakao:
+            authorization-uri: https://example.com/kakao/authorize
+            token-uri: https://example.com/kakao/token
+
+APPLE_PRIVATE_KEY: test-apple-private-key
+APPLE_CLIENT_ID: test-apple-client-id
+APPLE_KEY_ID: test-apple-key-id
+APPLE_TEAM_ID: test-apple-team-id
+APPLE_AUDIENCE: test-apple-audience
+APPLE_PUBLIC_KEY_URL: https://example.com/apple/keys
+APPLE_TOKEN_URL: https://example.com/apple/token
+
 logging:
   level:
     org.hibernate.SQL: DEBUG

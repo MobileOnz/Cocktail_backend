@@ -105,7 +105,9 @@ public class OAuth2Service {
     private Map<String, Object> extractUserInfo(ReqSocialLoginDto reqSocialLoginDto, SocialLoginStrategy strategy) {
         Map<String, Object> userInfo;
 
-        log.info("[SOCITAL_LOGIN] : {}", reqSocialLoginDto.getAccessToken());
+        log.info("[SOCIAL_LOGIN] Provider: {}, accessTokenProvided: {}",
+                reqSocialLoginDto.getProvider(),
+                reqSocialLoginDto.getAccessToken() != null && !reqSocialLoginDto.getAccessToken().isBlank());
 
         if(reqSocialLoginDto.getProvider().equalsIgnoreCase("apple")){
             if(reqSocialLoginDto.getAccessToken() == null || reqSocialLoginDto.getAccessToken().isBlank()){
@@ -168,9 +170,7 @@ public class OAuth2Service {
 
         jwtStoreService.save(jwtUtil.getUUID(refreshToken), refreshToken);
 
-        log.info("uuid: " + jwtUtil.getUUID(refreshToken));
-        log.info("jwtToken : " + accessToken);
-        log.info("refreshToken : " + jwtStoreService.findByKey(jwtUtil.getUUID(refreshToken)).getRefreshToken());
+        log.info("JWT token pair created. uuid: {}", jwtUtil.getUUID(refreshToken));
 
         return new ResTokenDto(accessToken, refreshToken);
     }
@@ -189,7 +189,7 @@ public class OAuth2Service {
         String uuid = UUID.randomUUID().toString();
         String newAccessToken = jwtUtil.createAccessJwt(uuid, jwtUtil.getCredentialId(refreshToken),jwtUtil.getRole(refreshToken) );
         String newRefreshToken = jwtUtil.createRefreshJwt(uuid, jwtUtil.getCredentialId(refreshToken),jwtUtil.getRole(refreshToken) );
-        log.info("new Refresh Key : " + newRefreshToken);
+        log.info("Refresh token reissued. uuid: {}", uuid);
 
         jwtStoreService.save(uuid, newRefreshToken);
 

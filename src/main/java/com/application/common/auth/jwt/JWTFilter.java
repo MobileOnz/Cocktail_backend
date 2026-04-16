@@ -115,6 +115,21 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/api/v2/cocktails/refresh$",              // 상큼한 칵테일 추천 (북마크 여부 포함)
             "^/api/v2/cocktails/beginner$",             // 입문자용 칵테일 (북마크 여부 포함)
             "^/api/v2/cocktails/intermediate$",         // 중급자용 칵테일 (북마크 여부 포함)
+            "^/api/v2/cocktails/all$",
+            "^/api/v2/cocktails/random$",
+            "^/api/v2/cocktails/recommendation$",
+            "^/api/v2/cocktails/suggestions$",
+            "^/api/v2/cocktails/names$",
+            "^/api/v2/cocktails/guide/list$",
+            "^/api/v2/cocktails/guide$",
+            "^/api/v2/auth/social-login$",
+            "^/api/v2/auth/signup$",
+            "^/api/v2/auth/reissue$",
+            "^/api/v2/auth/(naver|google|kakao)/login-url$",
+            "^/api/v2/monitoring/track$",
+            "^/api/v2/monitoring/info$",
+            "^/api/v2/monitoring/onboarding/status$",
+            "^/api/v2/monitoring/onboarding$",
 
             "^/onz/api/v2/cocktails$",                  // 칵테일 목록 조회 (onz 경로)
             "^/onz/api/v2/cocktails/detail$",           // 칵테일 상세 조회 (onz 경로)
@@ -123,7 +138,22 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/onz/api/v2/cocktails/specific$",         // 특정 칵테일 조회 (onz 경로)
             "^/onz/api/v2/cocktails/refresh$",          // 상큼한 칵테일 추천 (onz 경로)
             "^/onz/api/v2/cocktails/beginner$",         // 입문자용 칵테일 (onz 경로)
-            "^/onz/api/v2/cocktails/intermediate$"      // 중급자용 칵테일 (onz 경로)
+            "^/onz/api/v2/cocktails/intermediate$",      // 중급자용 칵테일 (onz 경로)
+            "^/onz/api/v2/cocktails/all$",
+            "^/onz/api/v2/cocktails/random$",
+            "^/onz/api/v2/cocktails/recommendation$",
+            "^/onz/api/v2/cocktails/suggestions$",
+            "^/onz/api/v2/cocktails/names$",
+            "^/onz/api/v2/cocktails/guide/list$",
+            "^/onz/api/v2/cocktails/guide$",
+            "^/onz/api/v2/auth/social-login$",
+            "^/onz/api/v2/auth/signup$",
+            "^/onz/api/v2/auth/reissue$",
+            "^/onz/api/v2/auth/(naver|google|kakao)/login-url$",
+            "^/onz/api/v2/monitoring/track$",
+            "^/onz/api/v2/monitoring/info$",
+            "^/onz/api/v2/monitoring/onboarding/status$",
+            "^/onz/api/v2/monitoring/onboarding$"
     );
 
     // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]
@@ -195,16 +225,17 @@ public class JWTFilter extends OncePerRequestFilter {
 //        return OPTIONAL_AUTH_PATH_PATTERNS.stream().anyMatch(uri::matches);
 //    }
 
-    // [새로운 방식] 기본 허용, 특정 경로만 인증 필요
+    // Authorization 헤더가 있으면 공개/보호 경로와 무관하게 인증 컨텍스트를 세팅한다.
+    // 접근 허용 여부는 SecurityConfig가 최종 판단한다.
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String uri = request.getRequestURI();
+        String accessToken = getAccessToken(request);
 
         // 1. 선택적 인증 경로 처리 (JWT 토큰이 있으면 검증, 없으면 통과)
         if (isOptionalAuthPath(uri)) {
             log.info("Optional auth path: {}", uri);
-            String accessToken = getAccessToken(request);
 
             // JWT 토큰이 있으면 검증하고 SecurityContext 설정
             if (accessToken != null && !jwtUtil.isAccessExpired(accessToken)) {
@@ -225,22 +256,15 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 2. 인증이 필요한 경로인지 확인
-        if (!isRequireAuthPath(uri)) {
-            // 인증이 필요하지 않은 경로 -> 바로 통과
-            log.info("Public path, skipping JWT validation: {}", uri);
+        if (accessToken == null) {
+            if (isRequireAuthPath(uri)) {
+                log.info("accessToken null");
+                sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_BAD_REQUEST, "Access Token 값이 헤더에 존재하지 않음");
+                return;
+            }
+
+            log.info("No Authorization header, proceed without JWT validation: {}", uri);
             filterChain.doFilter(request, response);
-            return;
-        }
-
-        // 3. 인증이 필요한 경로 -> JWT 토큰 검증 (필수)
-        log.info("Protected path, validating JWT: {}", uri);
-
-        String accessToken = getAccessToken(request);
-
-        if(accessToken == null){
-            log.info("accessToken null");
-            sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_BAD_REQUEST, "Access Token 값이 헤더에 존재하지 않음");
             return;
         }
 
@@ -285,14 +309,17 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
     private String getAccessToken(HttpServletRequest request){
-        String accessToken = request.getHeader("Authorization");
-        if (accessToken == null){
-            return accessToken;
-        }else{
-            accessToken = accessToken.substring(7);
-            return accessToken;
+        String authorization = request.getHeader("Authorization");
+        if (authorization == null || authorization.isBlank()) {
+            return null;
         }
 
+        if (!authorization.startsWith("Bearer ")) {
+            log.warn("Invalid Authorization header format");
+            return null;
+        }
+
+        return authorization.substring(7);
     }
 
 

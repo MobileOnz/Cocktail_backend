@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -177,6 +179,85 @@ class CocktailV2ControllerTest {
                 .andExpect(jsonPath("$.code").value(1))
                 .andExpect(jsonPath("$.data.id").value(cocktailId))
                 .andExpect(jsonPath("$.data.is_bookmarked").value(false)); // ⭐️ 비로그인은 항상 false
+    }
+
+    @Test
+    @DisplayName("공개 API는 인증 없이 정상 호출된다")
+    void publicApi_WithoutAuth_ReturnsOk() throws Exception {
+        mockMvc.perform(get("/api/v2/cocktails/best"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1));
+    }
+
+    @Test
+    @DisplayName("공개 API는 잘못된 Authorization 헤더가 있어도 익명 요청으로 처리된다")
+    void publicApi_WithInvalidAuthorizationHeader_ReturnsOk() throws Exception {
+        mockMvc.perform(get("/api/v2/cocktails/best")
+                        .header("Authorization", "Bearer invalid-token"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1));
+    }
+
+    @Test
+    @DisplayName("회원 API는 인증 없이 호출할 수 없다")
+    void memberApi_WithoutAuth_ReturnsClientError() throws Exception {
+        mockMvc.perform(get("/api/v2/members/get/member"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("최근 검색어 API는 인증 없이 호출할 수 없다")
+    void searchHistoryApi_WithoutAuth_ReturnsClientError() throws Exception {
+        mockMvc.perform(get("/api/v2/cocktails/search/history"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    @DisplayName("모니터링 온보딩 저장 API는 인증 없이 정상 호출된다")
+    void monitoringOnboardingApi_WithoutAuth_ReturnsOk() throws Exception {
+        mockMvc.perform(post("/api/v2/monitoring/onboarding")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "deviceNumber": "test-device-001",
+                                  "gender": "none",
+                                  "ageRange": "20_24"
+                                }
+                                """))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1));
+    }
+
+    @Test
+    @DisplayName("모니터링 온보딩 저장 API는 잘못된 Authorization 헤더가 있어도 익명 요청으로 처리된다")
+    void monitoringOnboardingApi_WithInvalidAuthorizationHeader_ReturnsOk() throws Exception {
+        mockMvc.perform(post("/api/v2/monitoring/onboarding")
+                        .header("Authorization", "Bearer invalid-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "deviceNumber": "test-device-002",
+                                  "gender": "none",
+                                  "ageRange": "20_24"
+                                }
+                                """))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(1));
+    }
+
+    @Test
+    @DisplayName("테스트 토큰 발급 API는 인증 없이 호출할 수 없다")
+    void testTokenApi_WithoutAuth_ReturnsClientError() throws Exception {
+        mockMvc.perform(get("/api/v2/test/auth/token")
+                        .param("credentialId", "test-credential-id"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

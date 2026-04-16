@@ -29,6 +29,58 @@ public class SecurityConfig {
             "/v3/api-docs/**"   // API 설계도(JSON)
     };
 
+    private static final String[] PUBLIC_V2_URLS = {
+            "/api/v2/auth/social-login",
+            "/api/v2/auth/signup",
+            "/api/v2/auth/reissue",
+            "/api/v2/auth/naver/login-url",
+            "/api/v2/auth/google/login-url",
+            "/api/v2/auth/kakao/login-url",
+            "/api/v2/cocktails",
+            "/api/v2/cocktails/all",
+            "/api/v2/cocktails/best",
+            "/api/v2/cocktails/recent",
+            "/api/v2/cocktails/refresh",
+            "/api/v2/cocktails/beginner",
+            "/api/v2/cocktails/intermediate",
+            "/api/v2/cocktails/detail",
+            "/api/v2/cocktails/random",
+            "/api/v2/cocktails/recommendation",
+            "/api/v2/cocktails/suggestions",
+            "/api/v2/cocktails/names",
+            "/api/v2/cocktails/guide/list",
+            "/api/v2/cocktails/guide",
+            "/api/v2/monitoring/track",
+            "/api/v2/monitoring/info",
+            "/api/v2/monitoring/onboarding/status",
+            "/api/v2/monitoring/onboarding",
+
+            "/onz/api/v2/auth/social-login",
+            "/onz/api/v2/auth/signup",
+            "/onz/api/v2/auth/reissue",
+            "/onz/api/v2/auth/naver/login-url",
+            "/onz/api/v2/auth/google/login-url",
+            "/onz/api/v2/auth/kakao/login-url",
+            "/onz/api/v2/cocktails",
+            "/onz/api/v2/cocktails/all",
+            "/onz/api/v2/cocktails/best",
+            "/onz/api/v2/cocktails/recent",
+            "/onz/api/v2/cocktails/refresh",
+            "/onz/api/v2/cocktails/beginner",
+            "/onz/api/v2/cocktails/intermediate",
+            "/onz/api/v2/cocktails/detail",
+            "/onz/api/v2/cocktails/random",
+            "/onz/api/v2/cocktails/recommendation",
+            "/onz/api/v2/cocktails/suggestions",
+            "/onz/api/v2/cocktails/names",
+            "/onz/api/v2/cocktails/guide/list",
+            "/onz/api/v2/cocktails/guide",
+            "/onz/api/v2/monitoring/track",
+            "/onz/api/v2/monitoring/info",
+            "/onz/api/v2/monitoring/onboarding/status",
+            "/onz/api/v2/monitoring/onboarding"
+    };
+
     private final JWTUtil jwtUtil;
     private final JWTAccessTokenBlackListService jwtAccessTokenBlackListService;
 
@@ -86,13 +138,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/naver/token", "/api/auth/google/token", "/api/auth/kakao/token", "/api/auth/apple/token").permitAll()
                         .requestMatchers("/api/auth/naver/login-url", "/api/auth/google/login-url", "/api/auth/kakao/login-url", "/api/auth/apple/login-url").permitAll()
                         .requestMatchers("/api/location/**", "/api/search/**", "/api/bar/**", "/api/item/public/**").permitAll()
-                        .requestMatchers("/api/public/**", "/.well-known/acme-challenge/**" ,"/error", "/images/**").permitAll()
+                        .requestMatchers("/api/public/**", "/.well-known/**", "/share/**" ,"/error", "/images/**").permitAll()
+                        .requestMatchers("/onz/.well-known/**", "/onz/share/**").permitAll()
                         // swagger
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .requestMatchers("/webjars/**", "/favicon.ico").permitAll()
-                        // onz_v2 - JWT 필터 화이트리스트 방식에 맞춰 v2 API는 기본 허용
-                        .requestMatchers("/api/v2/**").permitAll()
-                        .requestMatchers("/onz/api/v2/**").permitAll()
+                        // v2 공개 API만 명시적으로 허용하고, 나머지는 기본 인증 필요
+                        .requestMatchers(PUBLIC_V2_URLS).permitAll()
+                        .requestMatchers("/api/v2/**").authenticated()
+                        .requestMatchers("/onz/api/v2/**").authenticated()
                         .anyRequest().authenticated());
 
         http
