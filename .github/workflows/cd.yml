@@ -1,0 +1,23 @@
+name: CD
+
+on:
+  push:
+    branches: [ dev, main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          cd /root/cocktail-api
+          git pull origin dev
+          docker-compose down
+          docker-compose up --build -d
+          docker system prune -f
