@@ -139,7 +139,7 @@
         formData.append("file", file);
 
         try{
-            const response = await api.post("/admin/cocktail/image/upload", formData, {
+            const response = await api.post("/onz/admin/cocktail/image/upload", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -151,7 +151,7 @@
 
             const oldImage = document.getElementById("oldImageUrl").value;
             if(oldImage){
-                await api.post("/admin/cocktail/image/delete", {url : oldImage});
+                await api.post("/onz/admin/cocktail/image/delete", {url : oldImage});
             }
         }catch(error){
             console.log("이미지 업로드 실패:", error);
@@ -174,7 +174,7 @@
 
     async function loadCocktailDetail(id) {
         try {
-            const response = await api.get("/admin/cocktail/info", { cocktailId: id });
+            const response = await api.get("/onz/admin/cocktail/info", { cocktailId: id });
             if (response.code === 1) {
                 fillForm(response.data);
             } else {
@@ -256,10 +256,10 @@
         };
 
         try {
-            const url = cocktailId ? "/admin/cocktails/update" : "/admin/cocktails/save";
+            const url = cocktailId ? "/onz/admin/cocktails/update" : "/onz/admin/cocktails/save";
             const response = await api.post(url, dto, {headers: {"Content-Type": "application/json"},});
             if (response.code === 1) {
-                showToast("✅ 저장되었습니다.", "/admin/cocktails?page=0&size=10");
+                showToast("✅ 저장되었습니다.", "/onz/admin/cocktails?page=0&size=10");
             } else {
                 showToast("❌ 저장 실패");
             }
@@ -275,9 +275,9 @@
         }
         if (!confirm("정말 삭제하시겠습니까?")) return;
         try {
-            const response = await api.get("/admin/cocktails/delete", { cocktailId: cocktailId });
+            const response = await api.get("/onz/admin/cocktails/delete", { cocktailId: cocktailId });
             if (response.code === 1) {
-                showToast("삭제되었습니다.", "/admin/cocktails?page=0&size=10");
+                showToast("삭제되었습니다.", "/onz/admin/cocktails?page=0&size=10");
             } else {
                 showToast("삭제 실패");
             }
@@ -287,13 +287,13 @@
     }
 
     function goBack() {
-        window.location.href = "/admin/cocktails?page=0&size=10";
+        window.location.href = "/onz/admin/cocktails?page=0&size=10";
     }
 
     // 태그 목록 초기화
     async function initTags() {
         try {
-            const response = await api.get("/admin/cocktail/tags");
+            const response = await api.get("/onz/admin/cocktail/tags");
             if (response.code === 1) {
                 const allTags = response.data;
                 const container = document.getElementById("tagsContainer");

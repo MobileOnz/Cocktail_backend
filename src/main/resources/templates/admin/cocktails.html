@@ -104,7 +104,7 @@
      * 이벤트 핸들러
      *************************************/
      document.getElementById("btnBack").addEventListener("click", () => {
-        window.location.href = "/admin/dashboard";
+        window.location.href = "/onz/admin/dashboard";
     });
     
     document.getElementById("btnSearch").addEventListener("click", (e) => {
@@ -112,7 +112,7 @@
         loadCocktails();
     });
     document.getElementById("btnReg").addEventListener("click", () => {
-        window.location.href = "/admin/cocktail/detail";
+        window.location.href = "/onz/admin/cocktail/detail";
     });
 
     async function loadCocktails() {
@@ -129,7 +129,7 @@
             const page = 0;
             const size = 100;
             const name = document.getElementById("searchKr").value;
-            const res = await axios.get("/admin/search/cocktail", { params: { page, size, cocktailName: name } });
+            const res = await axios.get("/onz/admin/search/cocktail", { params: { page, size, cocktailName: name } });
             const rows = (res.data && res.data.code === 1 && Array.isArray(res.data.data)) ? res.data.data : [];
             // v31+ 방식
             if (window.gridApi && typeof window.gridApi.setGridOption === 'function') {
@@ -145,13 +145,13 @@
     }
 
     function openDetail(id) {
-        window.location.href = `/admin/cocktail/detail?cocktailId=${id}`;
+        window.location.href = `/onz/admin/cocktail/detail?cocktailId=${id}`;
     }
 
     async function deleteCocktail(id) {
         if (!confirm("정말 삭제하시겠습니까?")) return;
         try {
-            const res = await axios.get(`/admin/cocktails/delete?cocktailId=${id}`);
+            const res = await axios.get(`/onz/admin/cocktails/delete?cocktailId=${id}`);
             if (res.data.code === 1) {
                 alert("삭제되었습니다.");
                 loadCocktails();

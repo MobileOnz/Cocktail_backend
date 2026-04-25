@@ -102,6 +102,12 @@ dependencies {
 	//aws s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	// --- image pipeline (one-shot tool): direct AWS SDK v2 + resizer + webp encoder ---
+	implementation 'software.amazon.awssdk:s3:2.25.60'
+	implementation 'net.coobird:thumbnailator:0.4.20'
+	// Pure-java WebP encoder/decoder (registers ImageIO SPI). No native dep.
+	implementation 'org.sejda.imageio:webp-imageio:0.1.6'
+
     // swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
 

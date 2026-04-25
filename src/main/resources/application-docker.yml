@@ -1,0 +1,19 @@
+## docker-compose 프로파일 (SPRING_PROFILES_ACTIVE=docker)
+##
+## - DB: docker compose 내부 db 서비스 (db:5432)
+## - 이미지 업로드: 컨테이너 내 /app/uploads (docker-compose 의 volume 마운트로 호스트와 공유)
+## - S3 자격증명 미주입 → 로컬 파일 모드 자동 활성
+
+spring:
+  datasource:
+    # docker-compose 가 SPRING_DATASOURCE_URL 환경변수로 직접 주입하므로 여기는 비워둠.
+    # 실수로 환경변수가 빠진 채 기동되면 빈값으로 명확히 실패하게 한다 (default 평문 패스워드 박지 않음).
+    url: ${SPRING_DATASOURCE_URL:}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+
+image:
+  upload:
+    local-dir: /app/uploads
+    # 컨테이너 외부에서 접근하는 URL. nginx 앞단 없는 로컬 docker 환경 기준.
+    public-base-url: http://127.0.0.1/onz/uploads

@@ -59,6 +59,14 @@ public class Cocktail {
     @Comment("이미지 URL")
     private String imageUrl;
 
+    @Column(name = "image_url_thumb", length = 1000)
+    @Comment("이미지 URL (thumbnail variant)")
+    private String imageUrlThumb;
+
+    @Column(name = "image_url_detail", length = 1000)
+    @Comment("이미지 URL (detail variant)")
+    private String imageUrlDetail;
+
     // FIXME enum으로 변경
     private String season;
 
@@ -88,6 +96,14 @@ public class Cocktail {
     private String glassType;
 
     private String glassImageUrl;
+
+    @Column(name = "glass_image_url_thumb", length = 255)
+    @Comment("글라스 이미지 URL (thumbnail variant)")
+    private String glassImageUrlThumb;
+
+    @Column(name = "glass_image_url_detail", length = 255)
+    @Comment("글라스 이미지 URL (detail variant)")
+    private String glassImageUrlDetail;
 
     // FIXME ENUM으로 하면 좋을듯
     private String base;

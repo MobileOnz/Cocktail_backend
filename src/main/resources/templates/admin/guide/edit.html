@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>가이드 편집</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f7f9fb; margin: 0; padding: 0; color: #222; }
+        header { background-color: #4c7ef3; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h2 { margin: 0; font-size: 18px; }
+        header .actions a, header form button { background: white; border: none; color: #4c7ef3; padding: 8px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; margin-left: 8px; }
+        main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+        .card { background: white; padding: 20px 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 16px; }
+        .card h3 { margin: 0 0 16px 0; font-size: 16px; color: #333; display: flex; align-items: center; justify-content: space-between; }
+        .row { display: grid; grid-template-columns: 140px 1fr; gap: 12px 16px; align-items: start; margin-bottom: 12px; }
+        .row .label { color: #555; font-size: 13px; padding-top: 8px; font-weight: 600; }
+        input[type=text], input[type=number], textarea { width: 100%; padding: 8px 10px; border: 1px solid #d5d9e2; border-radius: 6px; font-size: 14px; box-sizing: border-box; font-family: inherit; }
+        input[readonly] { background: #f0f3fc; color: #666; }
+        textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
+        .preview { display: flex; gap: 12px; align-items: flex-start; }
+        .preview img { max-width: 120px; max-height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid #eef1f6; background: #fafbff; }
+        .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #4c7ef3; color: white; }
+        .btn-primary:hover { background: #3963d3; }
+        .btn-secondary { background: #e8ecfc; color: #4c7ef3; border: 1px solid #cdd8fa; }
+        .btn-secondary:hover { background: #d4def9; }
+        .btn-danger { background: #fdecea; color: #d93025; border: 1px solid #f5b9b3; }
+        .btn-danger:hover { background: #fbd7d3; }
+        .btn-icon { padding: 4px 8px; font-size: 12px; }
+        .btn-row { margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end; }
+        .detail-list { display: flex; flex-direction: column; gap: 10px; }
+        .detail-item { border: 1px solid #e3e7f0; border-radius: 8px; padding: 14px; background: #fafbff; position: relative; }
+        .detail-item .head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .detail-item .head .order-badge { background: #4c7ef3; color: white; font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 12px; min-width: 24px; text-align: center; }
+        .detail-item .head .order-input { width: 64px; }
+        .detail-item .head .actions { margin-left: auto; display: flex; gap: 4px; }
+        .detail-item .body-grid { display: grid; grid-template-columns: 1fr 200px; gap: 10px 16px; }
+        .detail-item .body-grid .field-label { color: #555; font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; }
+        .detail-item .body-grid .col-img { display: flex; flex-direction: column; gap: 6px; }
+        .detail-item .body-grid .col-img img { max-width: 200px; max-height: 130px; object-fit: cover; border-radius: 6px; border: 1px solid #eef1f6; background: white; }
+        .detail-item.dirty { border-color: #fbbf24; background: #fffbeb; }
+        .detail-item.new { border-color: #10b981; background: #ecfdf5; }
+        .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .helper { color: #888; font-size: 12px; }
+        .save-status { font-size: 12px; color: #888; margin-left: 8px; }
+        .save-status.saved { color: #137333; }
+        .save-status.error { color: #d93025; }
+    </style>
+</head>
+<body>
+<header>
+    <h2>📚 가이드 편집</h2>
+    <div class="actions">
+        <a href="/onz/admin/guides">목록</a>
+        <a href="/onz/admin/dashboard">대시보드</a>
+        <form th:action="@{/admin/logout}" method="post" style="display:inline">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+</header>
+
+<main>
+    <!-- mode/part 는 서버에서 전달 -->
+    <input type="hidden" id="mode" th:value="${mode}" />
+    <input type="hidden" id="initialPart" th:value="${part}" />
+
+    <!-- ========== 가이드 본체 ========== -->
+    <div class="card">
+        <h3>
+            <span id="cardTitle">가이드 정보</span>
+            <span id="guideSaveStatus" class="save-status"></span>
+        </h3>
+        <div class="row">
+            <div class="label">Part (PK) *</div>
+            <div>
+                <input type="number" id="part" placeholder="예: 101" />
+                <div class="helper">신규 등록 시에만 입력 가능. 100 단위 권장. (PK 이므로 중복 불가)</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label">제목 *</div>
+            <div><input type="text" id="title" placeholder="예: 칵테일이란?" /></div>
+        </div>
+        <div class="row">
+            <div class="label">대표 이미지 URL</div>
+            <div class="preview">
+                <input type="text" id="imageUrl" placeholder="https://..." oninput="updateGuidePreview()" />
+                <img id="imagePreview" alt="preview" style="display:none" />
+            </div>
+        </div>
+        <div class="btn-row">
+            <a href="/onz/admin/guides" class="btn btn-secondary">취소</a>
+            <button type="button" class="btn btn-primary" onclick="saveGuide()">가이드 저장</button>
+        </div>
+    </div>
+
+    <!-- ========== 세부 단계 ========== -->
+    <div class="card" id="detailsCard" style="display:none">
+        <h3>
+            세부 단계 (Detail Sections)
+            <span class="helper">↑↓ 버튼으로 순서 변경 후 [순서 저장]을 눌러야 반영됩니다.</span>
+        </h3>
+        <div class="toolbar">
+            <span class="helper" id="detailCountLabel">0개</span>
+            <div>
+                <button type="button" class="btn btn-secondary" onclick="saveOrder()">↕ 순서 저장</button>
+                <button type="button" class="btn btn-primary" onclick="addDetail()">+ 세부 단계 추가</button>
+            </div>
+        </div>
+        <div class="detail-list" id="detailList"></div>
+    </div>
+</main>
+
+<script>
+    /* ============================================================
+     *  상태
+     * ============================================================ */
+    const mode = document.getElementById('mode').value; // 'edit' | 'new'
+    const initialPart = document.getElementById('initialPart').value;
+    let currentPart = null;       // 저장된 가이드의 part (저장 후 채워짐)
+    let details = [];             // [{id, displayOrder, subtitle, description, imageUrl, _new?, _dirty?}]
+    let nextLocalId = -1;         // 신규 detail 의 임시 id (음수)
+
+    /* ============================================================
+     *  로딩
+     * ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+        if (mode === 'edit' && initialPart) {
+            document.getElementById('cardTitle').innerText = '가이드 정보 (편집: Part ' + initialPart + ')';
+            loadGuide(parseInt(initialPart, 10));
+        } else {
+            document.getElementById('cardTitle').innerText = '가이드 정보 (신규 등록)';
+            document.getElementById('part').readOnly = false;
+        }
+    });
+
+    async function loadGuide(part) {
+        try {
+            const res = await fetch('/onz/admin/guide/info?part=' + encodeURIComponent(part));
+            const body = await res.json();
+            if (body.code !== 1) {
+                alert('가이드 로드 실패: ' + body.msg);
+                window.location.href = '/onz/admin/guides';
+                return;
+            }
+            const g = body.data.guide;
+            currentPart = g.part;
+            document.getElementById('part').value = g.part;
+            document.getElementById('part').readOnly = true; // 기존 가이드의 PK 변경 차단
+            document.getElementById('title').value = g.title || '';
+            document.getElementById('imageUrl').value = g.image_url || '';
+            updateGuidePreview();
+
+            details = (body.data.details || []).map(d => ({
+                id: d.id,
+                displayOrder: d.display_order,
+                subtitle: d.subtitle || '',
+                description: d.description || '',
+                imageUrl: d.image_url || '',
+                _new: false,
+                _dirty: false
+            }));
+            renderDetails();
+            document.getElementById('detailsCard').style.display = '';
+        } catch (e) {
+            console.error(e);
+            alert('가이드 로드 중 오류 발생');
+        }
+    }
+
+    /* ============================================================
+     *  가이드 본체 저장
+     * ============================================================ */
+    function updateGuidePreview() {
+        const url = document.getElementById('imageUrl').value.trim();
+        const img = document.getElementById('imagePreview');
+        if (url) {
+            img.src = url;
+            img.style.display = '';
+            img.onerror = () => { img.style.display = 'none'; };
+        } else {
+            img.style.display = 'none';
+        }
+    }
+
+    async function saveGuide() {
+        const partVal = document.getElementById('part').value;
+        const title = document.getElementById('title').value.trim();
+        const imageUrl = document.getElementById('imageUrl').value.trim();
+        if (!partVal || !title) {
+            alert('Part, 제목은 필수입니다.');
+            return;
+        }
+        const body = {
+            part: parseInt(partVal, 10),
+            title,
+            image_url: imageUrl || null
+        };
+        const status = document.getElementById('guideSaveStatus');
+        status.className = 'save-status'; status.innerText = '저장 중...';
+        try {
+            const res = await fetch('/onz/admin/guide/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.code === 1) {
+                status.className = 'save-status saved'; status.innerText = '저장됨';
+                const wasNew = (currentPart === null);
+                currentPart = data.data.part;
+                if (wasNew) {
+                    // 신규 → edit 모드로 URL 이동 (세부단계 작성 가능하게)
+                    window.location.href = '/onz/admin/guide/edit?part=' + currentPart;
+                } else {
+                    document.getElementById('detailsCard').style.display = '';
+                }
+            } else {
+                status.className = 'save-status error'; status.innerText = '저장 실패';
+                alert(data.msg || '저장 실패');
+            }
+        } catch (e) {
+            console.error(e);
+            status.className = 'save-status error'; status.innerText = '저장 실패';
+            alert('저장 중 오류 발생');
+        }
+    }
+
+    /* ============================================================
+     *  세부 단계 렌더링
+     * ============================================================ */
+    function renderDetails() {
+        const root = document.getElementById('detailList');
+        root.innerHTML = '';
+        details.sort((a, b) => a.displayOrder - b.displayOrder);
+        details.forEach((d, idx) => root.appendChild(renderDetailItem(d, idx)));
+        document.getElementById('detailCountLabel').innerText = details.length + '개';
+    }
+
+    function renderDetailItem(d, idx) {
+        const el = document.createElement('div');
+        el.className = 'detail-item' + (d._new ? ' new' : '') + (d._dirty ? ' dirty' : '');
+        el.dataset.id = d.id;
+
+        // === head ===
+        const head = document.createElement('div');
+        head.className = 'head';
+
+        const orderBadge = document.createElement('span');
+        orderBadge.className = 'order-badge';
+        orderBadge.innerText = d.displayOrder;
+        head.appendChild(orderBadge);
+
+        const orderLabel = document.createElement('span');
+        orderLabel.innerText = 'Order:';
+        orderLabel.style.fontSize = '12px';
+        orderLabel.style.color = '#555';
+        head.appendChild(orderLabel);
+
+        const orderInput = document.createElement('input');
+        orderInput.type = 'number';
+        orderInput.className = 'order-input';
+        orderInput.value = d.displayOrder;
+        orderInput.oninput = (ev) => {
+            d.displayOrder = parseInt(ev.target.value, 10) || 0;
+            d._dirty = true;
+            orderBadge.innerText = d.displayOrder;
+            el.classList.add('dirty');
+        };
+        head.appendChild(orderInput);
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        actions.innerHTML = `
+            <button type="button" class="btn btn-secondary btn-icon" onclick="moveDetail(${idx}, -1)">↑</button>
+            <button type="button" class="btn btn-secondary btn-icon" onclick="moveDetail(${idx}, 1)">↓</button>
+            <button type="button" class="btn btn-primary btn-icon" onclick="saveDetail(${idx})">저장</button>
+            <button type="button" class="btn btn-danger btn-icon" onclick="deleteDetail(${idx})">삭제</button>
+        `;
+        head.appendChild(actions);
+
+        el.appendChild(head);
+
+        // === body ===
+        const body = document.createElement('div');
+        body.className = 'body-grid';
+        body.innerHTML = `
+            <div>
+                <label class="field-label">소제목 (subtitle)</label>
+                <input type="text" class="sub-input" value="${escapeHtml(d.subtitle)}" />
+                <label class="field-label" style="margin-top:8px">설명 (description) *</label>
+                <textarea class="desc-input">${escapeHtml(d.description)}</textarea>
+            </div>
+            <div class="col-img">
+                <label class="field-label">이미지 URL</label>
+                <input type="text" class="img-input" value="${escapeHtml(d.imageUrl)}" />
+                <img class="img-preview" alt="preview" style="${d.imageUrl ? '' : 'display:none'}" src="${escapeHtml(d.imageUrl)}" />
+            </div>
+        `;
+        // wire inputs
+        body.querySelector('.sub-input').oninput = ev => { d.subtitle = ev.target.value; d._dirty = true; el.classList.add('dirty'); };
+        body.querySelector('.desc-input').oninput = ev => { d.description = ev.target.value; d._dirty = true; el.classList.add('dirty'); };
+        const imgInput = body.querySelector('.img-input');
+        const imgPreview = body.querySelector('.img-preview');
+        imgInput.oninput = ev => {
+            d.imageUrl = ev.target.value;
+            d._dirty = true;
+            el.classList.add('dirty');
+            if (d.imageUrl) {
+                imgPreview.src = d.imageUrl;
+                imgPreview.style.display = '';
+                imgPreview.onerror = () => { imgPreview.style.display = 'none'; };
+            } else {
+                imgPreview.style.display = 'none';
+            }
+        };
+
+        el.appendChild(body);
+        return el;
+    }
+
+    function escapeHtml(s) {
+        if (s === null || s === undefined) return '';
+        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    /* ============================================================
+     *  세부 단계 동작
+     * ============================================================ */
+    function addDetail() {
+        if (currentPart === null) {
+            alert('먼저 가이드 본체를 저장해주세요.');
+            return;
+        }
+        const maxOrder = details.length > 0 ? Math.max(...details.map(d => d.displayOrder)) : 0;
+        details.push({
+            id: nextLocalId--,
+            displayOrder: maxOrder + 1,
+            subtitle: '',
+            description: '',
+            imageUrl: '',
+            _new: true,
+            _dirty: true
+        });
+        renderDetails();
+    }
+
+    function moveDetail(idx, delta) {
+        const sorted = [...details].sort((a,b) => a.displayOrder - b.displayOrder);
+        const target = sorted[idx];
+        const swap = sorted[idx + delta];
+        if (!target || !swap) return;
+        const tmp = target.displayOrder;
+        target.displayOrder = swap.displayOrder;
+        swap.displayOrder = tmp;
+        target._dirty = true;
+        swap._dirty = true;
+        renderDetails();
+    }
+
+    async function saveDetail(idx) {
+        const sorted = [...details].sort((a,b) => a.displayOrder - b.displayOrder);
+        const d = sorted[idx];
+        if (!d.description || !d.description.trim()) {
+            alert('설명(description)은 필수입니다.');
+            return;
+        }
+        const body = {
+            id: (d._new ? null : d.id),
+            guide_part: currentPart,
+            display_order: d.displayOrder,
+            subtitle: d.subtitle || null,
+            description: d.description,
+            image_url: d.imageUrl || null
+        };
+        try {
+            const res = await fetch('/onz/admin/guide/detail/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.code === 1) {
+                // 서버가 부여한 진짜 id 와 값으로 교체
+                const saved = data.data;
+                d.id = saved.id;
+                d.displayOrder = saved.display_order;
+                d.subtitle = saved.subtitle || '';
+                d.description = saved.description || '';
+                d.imageUrl = saved.image_url || '';
+                d._new = false;
+                d._dirty = false;
+                renderDetails();
+            } else {
+                alert('저장 실패: ' + (data.msg || ''));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('저장 중 오류');
+        }
+    }
+
+    async function deleteDetail(idx) {
+        const sorted = [...details].sort((a,b) => a.displayOrder - b.displayOrder);
+        const d = sorted[idx];
+        if (d._new) {
+            // 서버에 없으니 메모리에서만 제거
+            details = details.filter(x => x.id !== d.id);
+            renderDetails();
+            return;
+        }
+        if (!confirm('이 세부 단계를 삭제하시겠습니까?')) return;
+        try {
+            const res = await fetch('/onz/admin/guide/detail/delete?id=' + encodeURIComponent(d.id));
+            const data = await res.json();
+            if (data.code === 1) {
+                details = details.filter(x => x.id !== d.id);
+                renderDetails();
+            } else {
+                alert('삭제 실패: ' + (data.msg || ''));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('삭제 중 오류');
+        }
+    }
+
+    async function saveOrder() {
+        if (currentPart === null) return;
+        // 서버 저장된 detail (음수 id 가 아닌 것) 만 reorder 대상
+        const persisted = details.filter(d => d.id > 0);
+        // 동일 displayOrder 가 있으면 거부
+        const seen = new Set();
+        for (const d of persisted) {
+            if (seen.has(d.displayOrder)) {
+                alert('중복된 순서가 있습니다: ' + d.displayOrder);
+                return;
+            }
+            seen.add(d.displayOrder);
+        }
+        const body = {
+            guide_part: currentPart,
+            order: persisted.map(d => ({ id: d.id, display_order: d.displayOrder }))
+        };
+        try {
+            const res = await fetch('/onz/admin/guide/detail/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (data.code === 1) {
+                // dirty 플래그 해제
+                details.forEach(d => { if (d.id > 0) d._dirty = false; });
+                alert('순서가 저장되었습니다.');
+                renderDetails();
+            } else {
+                alert('순서 저장 실패: ' + (data.msg || ''));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('순서 저장 중 오류');
+        }
+    }
+</script>
+</body>
+</html>

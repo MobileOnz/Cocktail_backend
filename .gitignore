@@ -49,3 +49,7 @@ application-*.properties
 
 ### Editor ###
 .claude
+# 로컬 이미지 업로드 (S3 모드 아닐 때) — 절대 commit 금지
+uploads/
+!uploads/.gitkeep
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>📚 가이드 관리</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f7f9fb; margin: 0; padding: 0; color: #222; }
+        header { background-color: #4c7ef3; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h2 { margin: 0; font-size: 18px; }
+        header .actions a, header form button { background: white; border: none; color: #4c7ef3; padding: 8px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; margin-left: 8px; }
+        main { padding: 24px; }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .toolbar .meta { color: #666; font-size: 13px; }
+        .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #4c7ef3; color: white; }
+        .btn-primary:hover { background: #3963d3; }
+        .btn-secondary { background: #e8ecfc; color: #4c7ef3; }
+        .btn-danger { background: #fdecea; color: #d93025; border: 1px solid #f5b9b3; }
+        .btn-danger:hover { background: #fbd7d3; }
+        .btn-edit { background: #e8ecfc; color: #4c7ef3; border: 1px solid #cdd8fa; }
+        .btn-edit:hover { background: #d4def9; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        thead { background: #f0f3fc; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eef1f6; font-size: 14px; vertical-align: middle; }
+        td.center { text-align: center; }
+        .thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #eef1f6; background: #f5f7fb; }
+        .thumb-empty { width: 60px; height: 60px; border-radius: 6px; background: #f0f3fc; color: #aab; font-size: 11px; display: inline-flex; align-items: center; justify-content: center; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: #e8ecfc; color: #4c7ef3; font-size: 12px; font-weight: 600; }
+    </style>
+</head>
+<body>
+<header>
+    <h2>📚 가이드 관리</h2>
+    <div class="actions">
+        <a href="/onz/admin/dashboard">대시보드</a>
+        <form th:action="@{/admin/logout}" method="post" style="display:inline">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+</header>
+
+<main>
+    <div class="toolbar">
+        <span class="meta" th:text="'총 ' + ${totalCount} + '건'">총 0건</span>
+        <a href="/onz/admin/guide/new" class="btn btn-primary">+ 새 가이드 등록</a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width:80px">Part</th>
+            <th style="width:80px">썸네일</th>
+            <th>제목</th>
+            <th style="width:100px" class="center">세부 단계</th>
+            <th style="width:240px" class="center">관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="g : ${guides}">
+            <td th:text="${g.part}">101</td>
+            <td>
+                <img th:if="${g.imageUrl != null and !g.imageUrl.isEmpty()}"
+                     th:src="${g.imageUrl}" class="thumb" alt="thumb"
+                     onerror="this.outerHTML='&lt;span class=\'thumb-empty\'&gt;없음&lt;/span&gt;'" />
+                <span th:if="${g.imageUrl == null or g.imageUrl.isEmpty()}" class="thumb-empty">없음</span>
+            </td>
+            <td th:text="${g.title}">제목</td>
+            <td class="center">
+                <span class="badge" th:text="${g.detailCount}">0</span>
+            </td>
+            <td class="center">
+                <a th:href="@{/admin/guide/edit(part=${g.part})}" class="btn btn-edit">편집</a>
+                <button type="button" class="btn btn-danger"
+                        th:onclick="|deleteGuide(${g.part})|">삭제</button>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(guides)}">
+            <td colspan="5" class="empty">조회 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<script>
+    async function deleteGuide(part) {
+        if (!confirm('Part ' + part + ' 가이드를 삭제하시겠습니까?\n해당 가이드의 모든 세부 단계도 함께 삭제됩니다.')) return;
+        try {
+            const res = await fetch('/onz/admin/guide/delete?part=' + encodeURIComponent(part));
+            const data = await res.json();
+            if (data.code === 1) {
+                alert('삭제되었습니다.');
+                window.location.reload();
+            } else {
+                alert('삭제 실패: ' + (data.msg || '알 수 없는 오류'));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('삭제 요청 중 오류가 발생했습니다.');
+        }
+    }
+</script>
+</body>
+</html>

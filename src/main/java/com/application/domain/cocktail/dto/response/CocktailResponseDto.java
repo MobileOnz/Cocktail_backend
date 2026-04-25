@@ -49,11 +49,23 @@ public record CocktailResponseDto(
         @Schema(description = "글라스 이미지 URL")
         String glassImageUrl,
 
+        @Schema(description = "글라스 이미지 URL (thumbnail variant)")
+        String glassImageUrlThumb,
+
+        @Schema(description = "글라스 이미지 URL (detail variant)")
+        String glassImageUrlDetail,
+
         @Schema(description = "베이스 술", example = "진")
         String base,
 
         @Schema(description = "칵테일 이미지 URL")
         String imageUrl,
+
+        @Schema(description = "칵테일 이미지 URL (thumbnail variant)")
+        String imageUrlThumb,
+
+        @Schema(description = "칵테일 이미지 URL (detail variant)")
+        String imageUrlDetail,
 
         @Schema(description = "맛 태그 목록", example = "[\"상큼한\", \"달콤한\"]")
         List<String> flavors,
@@ -102,8 +114,12 @@ public record CocktailResponseDto(
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
                 cocktail.getGlassImageUrl(),
+                cocktail.getGlassImageUrlThumb(),
+                cocktail.getGlassImageUrlDetail(),
                 cocktail.getBase(),
                 cocktail.getImageUrl(),
+                cocktail.getImageUrlThumb(),
+                cocktail.getImageUrlDetail(),
                 parseFlavors(cocktail),
                 parseMoods(cocktail),
                 cocktail.isBookmarkedBy(userId),
@@ -129,8 +145,12 @@ public record CocktailResponseDto(
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
                 cocktail.getGlassImageUrl(),
+                cocktail.getGlassImageUrlThumb(),
+                cocktail.getGlassImageUrlDetail(),
                 cocktail.getBase(),
                 cocktail.getImageUrl(),
+                cocktail.getImageUrlThumb(),
+                cocktail.getImageUrlDetail(),
                 parseFlavors(cocktail),
                 parseMoods(cocktail),
                 isBookmarked,
@@ -156,8 +176,12 @@ public record CocktailResponseDto(
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
                 cocktail.getGlassImageUrl(),
+                cocktail.getGlassImageUrlThumb(),
+                cocktail.getGlassImageUrlDetail(),
                 cocktail.getBase(),
                 cocktail.getImageUrl(),
+                cocktail.getImageUrlThumb(),
+                cocktail.getImageUrlDetail(),
                 parseFlavors(cocktail),
                 parseMoods(cocktail),
                 isBookmarked,

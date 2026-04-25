@@ -97,3 +97,13 @@ custom:
       team-id: ${APPLE_TEAM_ID}       # Apple Developer Team ID
       key-id: ${APPLE_KEY_ID}
       private-key: ${APPLE_PRIVATE_KEY}     # Key ID (P8 파일 발급 시 확인)
+
+# --- AWS S3 (image pipeline tool) ---
+# 이 블록은 ImagePipelineProperties (@ConfigurationProperties prefix=aws.s3) 와 연결됨.
+# access-key/secret-key 가 비어 있으면 ImagePipelineRunner 가 자동으로 dry-run 모드로 전환됨.
+aws:
+  s3:
+    region: ${AWS_S3_REGION:ap-northeast-2}
+    bucket: ${S3_BUCKET:onz-cocktail-images}
+    access-key: ${AWS_S3_ACCESS_KEY:}
+    secret-key: ${AWS_S3_SECRET_KEY:}
