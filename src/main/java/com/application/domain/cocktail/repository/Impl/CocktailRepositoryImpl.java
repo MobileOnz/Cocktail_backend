@@ -56,8 +56,11 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         // --- WHERE 절 조립 ---
         BooleanBuilder builder = new BooleanBuilder();
 
-        builder.and(korNameContains(condition.korName()));
-        builder.and(engNameContains(condition.engName()));
+        // 단일 검색창 패턴: korName 또는 engName 어느 쪽으로 들어와도 둘 다 OR 매칭 (case-insensitive).
+        // 앱이 항상 korName 만 채워서 보내기 때문에 영문 검색이 안 되던 버그 대응.
+        builder.and(nameContainsBilingual(
+                StringUtils.hasText(condition.korName()) ? condition.korName() : condition.engName()
+        ));
         builder.and(abvBandEq(condition.abvBand()));
         builder.and(styleEq(condition.style()));
 //        builder.and(baseEq(condition.base())); // base 다중선택 가능하도록 변경
@@ -344,6 +347,13 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
 
     private BooleanExpression engNameContains(String engName) {
         return StringUtils.hasText(engName) ? cocktail.engName.contains(engName) : null;
+    }
+
+    /** 한국어/영어 컬럼 둘 다 case-insensitive contains 매칭 (OR). */
+    private BooleanExpression nameContainsBilingual(String term) {
+        if (!StringUtils.hasText(term)) return null;
+        return cocktail.korName.containsIgnoreCase(term)
+                .or(cocktail.engName.containsIgnoreCase(term));
     }
 
     // [추가] 도수 레벨 (예: "약함", "보통", "강함") 정확히 일치

@@ -233,11 +233,15 @@ public class CocktailService {
     }
 
     public List<String> getCocktailSuggestions(String searchText) {
-        List<CocktailRepository.CocktailNameProjection> projections =
-                cocktailRepository.findTop5ByKorNameStartingWith(searchText);
+        if (searchText == null || searchText.isBlank()) return List.of();
+        String q = searchText.trim();
+        // 한글/영어 양쪽 contains 매칭 (case-insensitive). 매칭된 쪽 이름 반환.
+        List<CocktailRepository.CocktailNamesProjection> projections =
+                cocktailRepository.findTop5SuggestionsBilingual(q);
 
+        String lowerQ = q.toLowerCase();
         return projections.stream()
-                .map(CocktailRepository.CocktailNameProjection::getKorName)
+                .map(p -> p.getKorName().toLowerCase().contains(lowerQ) ? p.getKorName() : p.getEngName())
                 .toList();
     }
 

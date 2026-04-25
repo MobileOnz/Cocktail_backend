@@ -37,6 +37,10 @@ services:
       - APPLE_PUBLIC_KEY_URL=${APPLE_PUBLIC_KEY_URL}
       - APPLE_TOKEN_URL=${APPLE_TOKEN_URL}
 
+    # 로컬 파일 이미지 저장소 (S3 키 들어오기 전엔 여기 저장됨)
+    volumes:
+      - ./uploads:/app/uploads
+
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
 
@@ -45,7 +49,7 @@ services:
     image: postgres
     container_name: postgres-cocktail
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

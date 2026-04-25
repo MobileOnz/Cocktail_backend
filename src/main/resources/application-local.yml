@@ -1,0 +1,19 @@
+## 로컬 개발 프로파일 (SPRING_PROFILES_ACTIVE=local)
+##
+## - DB: 호스트 머신의 localhost:5433 docker postgres-cocktail 컨테이너
+## - 이미지 업로드: 로컬 파일시스템 (./uploads)
+## - S3 자격증명 미주입 → ImageStorageConfig 가 자동으로 LocalFileImageStorage 선택
+
+spring:
+  datasource:
+    # 환경변수 미주입 시 도커 compose 로컬 default 적용. 운영/공유 머신에선 .env 로 덮어쓸 것.
+    url: ${POSTGRE_url:jdbc:postgresql://localhost:5433/cocktail-postgres}
+    username: ${POSTGRE_USERNAME:root}
+    password: ${POSTGRE_PASSWORD:}
+
+# 이미지 업로드 (로컬 파일 모드용 설정)
+image:
+  upload:
+    local-dir: ./uploads
+    # 같은 머신에서 호출되는 admin/RN sim 기준. 실기기에서 띄울 땐 LAN IP 로 교체.
+    public-base-url: http://127.0.0.1/onz/uploads

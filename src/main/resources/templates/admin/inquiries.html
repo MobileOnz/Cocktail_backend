@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>1:1 문의 관리</title>
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background-color: #f7f9fb; margin: 0; padding: 0; color: #222; }
+        header { background-color: #4c7ef3; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+        header h2 { margin: 0; font-size: 18px; }
+        header .actions a, header form button { background: white; border: none; color: #4c7ef3; padding: 8px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; margin-left: 8px; }
+        main { padding: 24px; }
+        .filter-bar { margin-bottom: 16px; display: flex; gap: 8px; align-items: center; }
+        .filter-bar a { padding: 6px 12px; border-radius: 6px; text-decoration: none; background: #e8ecfc; color: #4c7ef3; border: 1px solid #cdd8fa; font-size: 14px; }
+        .filter-bar a.active { background: #4c7ef3; color: white; border-color: #4c7ef3; }
+        .meta { color: #666; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        thead { background: #f0f3fc; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #eef1f6; font-size: 14px; }
+        tbody tr { cursor: pointer; }
+        tbody tr:hover { background: #fafbff; }
+        .status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; }
+        .status.NEW { background: #fdecea; color: #d93025; }
+        .status.READ { background: #fef7e0; color: #b06000; }
+        .status.REPLIED { background: #e6f4ea; color: #137333; }
+        .empty { text-align: center; padding: 40px; color: #999; }
+        .pagination { margin-top: 16px; display: flex; gap: 4px; justify-content: center; }
+        .pagination a, .pagination span { padding: 6px 10px; border-radius: 4px; background: white; border: 1px solid #ddd; color: #333; text-decoration: none; font-size: 13px; }
+        .pagination span.current { background: #4c7ef3; color: white; border-color: #4c7ef3; }
+    </style>
+</head>
+<body>
+<header>
+    <h2>🗨️ 1:1 문의 관리</h2>
+    <div class="actions">
+        <a href="/onz/admin/dashboard">대시보드</a>
+        <form th:action="@{/admin/logout}" method="post" style="display:inline">
+            <button type="submit">로그아웃</button>
+        </form>
+    </div>
+</header>
+
+<main>
+    <div class="filter-bar">
+        <strong>상태:</strong>
+        <a th:href="@{/admin/inquiries(status='ALL')}" th:classappend="${currentStatus == 'ALL'} ? 'active' : ''">전체</a>
+        <a th:href="@{/admin/inquiries(status='NEW')}" th:classappend="${currentStatus == 'NEW'} ? 'active' : ''">NEW</a>
+        <a th:href="@{/admin/inquiries(status='READ')}" th:classappend="${currentStatus == 'READ'} ? 'active' : ''">READ</a>
+        <a th:href="@{/admin/inquiries(status='REPLIED')}" th:classappend="${currentStatus == 'REPLIED'} ? 'active' : ''">REPLIED</a>
+        <span class="meta" style="margin-left:auto" th:text="'총 ' + ${totalElements} + '건'">총 0건</span>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width:60px">ID</th>
+            <th>제목</th>
+            <th style="width:220px">문의자</th>
+            <th style="width:100px">상태</th>
+            <th style="width:160px">생성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="q : ${inquiries}"
+            th:onclick="|window.location.href='/onz/admin/inquiries/${q.id}'|">
+            <td th:text="${q.id}">1</td>
+            <td th:text="${q.title}">제목</td>
+            <td>
+                <span th:if="${q.member != null}" th:text="'회원 #' + ${q.member.id}">회원 #1</span>
+                <span th:if="${q.member == null}" th:text="${q.deviceNumber ?: '-'}">device</span>
+            </td>
+            <td>
+                <span class="status" th:classappend="${q.status}" th:text="${q.status}">NEW</span>
+            </td>
+            <td th:text="${#temporals.format(q.createdAt, 'yyyy-MM-dd HH:mm')}">2026-04-23 10:00</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(inquiries)}">
+            <td colspan="5" class="empty">조회 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a th:if="${page > 0}"
+           th:href="@{/admin/inquiries(status=${currentStatus}, page=${page - 1}, size=${size})}">이전</a>
+        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <span th:if="${i == page}" class="current" th:text="${i + 1}">1</span>
+            <a th:if="${i != page}"
+               th:href="@{/admin/inquiries(status=${currentStatus}, page=${i}, size=${size})}"
+               th:text="${i + 1}">1</a>
+        </th:block>
+        <a th:if="${page < totalPages - 1}"
+           th:href="@{/admin/inquiries(status=${currentStatus}, page=${page + 1}, size=${size})}">다음</a>
+    </div>
+</main>
+</body>
+</html>
