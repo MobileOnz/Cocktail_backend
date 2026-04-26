@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Pretendard', sans-serif;
             background-color: #f7f9fb;
             margin: 0;
             padding: 0;
+            color: #222;
         }
         header {
             background-color: #4c7ef3;
@@ -18,10 +20,8 @@
             justify-content: space-between;
             align-items: center;
         }
-        main {
-            padding: 30px;
-        }
-        button {
+        header h2 { margin: 0; font-size: 18px; }
+        header form button {
             background: white;
             border: none;
             color: #4c7ef3;
@@ -29,9 +29,78 @@
             border-radius: 6px;
             cursor: pointer;
         }
-        button:hover {
-            background: #e8ecfc;
+        header form button:hover { background: #e8ecfc; }
+        main { padding: 24px; }
+
+        h3 { margin: 0 0 12px 0; font-size: 16px; color: #333; }
+
+        .menu-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
         }
+        .menu-bar a {
+            padding: 8px 14px;
+            background: white;
+            border: 1px solid #cdd8fa;
+            color: #4c7ef3;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .menu-bar a:hover { background: #e8ecfc; }
+
+        /* card grid */
+        .row {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .row.cards-4 { grid-template-columns: repeat(4, 1fr); }
+        .row.cards-3 { grid-template-columns: repeat(3, 1fr); }
+        .row.split-2 { grid-template-columns: 1fr 1fr; }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 18px 20px;
+        }
+        .stat-card .label { font-size: 13px; color: #666; margin-bottom: 6px; }
+        .stat-card .value { font-size: 28px; font-weight: 700; color: #222; }
+        .stat-card .sub { font-size: 12px; color: #999; margin-top: 4px; }
+
+        .stat-card.primary .value { color: #4c7ef3; }
+        .stat-card.warn .value { color: #d93025; }
+        .stat-card.info .value { color: #137333; }
+
+        .clickable { cursor: pointer; transition: transform 0.05s; text-decoration: none; color: inherit; display: block; }
+        .clickable:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f0f3fc; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #eef1f6; font-size: 13px; }
+        th { font-weight: 600; color: #555; }
+        tbody tr:hover { background: #fafbff; }
+
+        .empty { text-align: center; padding: 24px; color: #999; font-size: 13px; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #e8ecfc;
+            color: #4c7ef3;
+        }
+        .badge.KAKAO   { background: #fef9c3; color: #a16207; }
+        .badge.NAVER   { background: #d1fae5; color: #047857; }
+        .badge.GOOGLE  { background: #fee2e2; color: #b91c1c; }
+        .badge.APPLE   { background: #e5e7eb; color: #1f2937; }
+        .badge.UNKNOWN { background: #f3f4f6; color: #6b7280; }
+
+        canvas { width: 100% !important; max-height: 280px; }
     </style>
 </head>
 <body>
@@ -43,13 +112,232 @@
 </header>
 
 <main>
-    <h3>관리 기능</h3>
-    <ul>
-        <li><a href="/onz/admin/cocktails">🍸 칵테일 관리</a></li>
-        <li><a href="/onz/admin/cocktail/tag">🏷️ 태그 관리</a></li>
-        <li><a href="/onz/admin/guides">📚 가이드 관리</a></li>
-        <li><a href="/onz/admin/inquiries">🗨️ 1:1 문의 관리</a></li>
-    </ul>
+    <!-- 기존 메뉴 링크 4개 유지 -->
+    <div class="menu-bar">
+        <a href="/onz/admin/cocktails">🍸 칵테일 관리</a>
+        <a href="/onz/admin/cocktail/tag">🏷️ 태그 관리</a>
+        <a href="/onz/admin/guides">📚 가이드 관리</a>
+        <a href="/onz/admin/inquiries">🗨️ 1:1 문의 관리</a>
+    </div>
+
+    <!-- Row 1: 핵심 지표 카드 4개 -->
+    <div class="row cards-4">
+        <div class="card stat-card primary">
+            <div class="label">총 회원수</div>
+            <div class="value" th:text="${overview.totalMembers}">0</div>
+            <div class="sub">전체 가입 회원 누적</div>
+        </div>
+        <div class="card stat-card">
+            <div class="label">오늘 가입</div>
+            <div class="value" th:text="${overview.todaySignups}">0</div>
+            <div class="sub">자정 기준 신규 회원</div>
+        </div>
+        <div class="card stat-card info">
+            <div class="label">7일 활성 디바이스</div>
+            <div class="value" th:text="${overview.activeDevicesLast7d}">0</div>
+            <div class="sub" th:text="'전체 등록 디바이스 ' + ${overview.activeDevicesAllTime}">전체 디바이스</div>
+        </div>
+        <a class="clickable" href="/onz/admin/inquiries?status=NEW">
+            <div class="card stat-card warn">
+                <div class="label">미답변 문의</div>
+                <div class="value" th:text="${overview.unansweredInquiries}">0</div>
+                <div class="sub">상태 NEW 인 문의 건수</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Row 2: 가입자 추이 + 소셜 분포 -->
+    <div class="row split-2">
+        <div class="card">
+            <h3>최근 30일 가입자 / 활성 디바이스</h3>
+            <canvas id="signupTrendChart"></canvas>
+        </div>
+        <div class="card">
+            <h3>소셜 로그인 비율</h3>
+            <canvas id="socialChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Row 3: 인기 칵테일 + 인기 검색어 -->
+    <div class="row split-2">
+        <div class="card">
+            <h3>인기 칵테일 Top 10</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:40px">#</th>
+                    <th>이름</th>
+                    <th style="width:80px">추천</th>
+                    <th style="width:80px">북마크</th>
+                    <th style="width:80px">점수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="c, it : ${topCocktails}">
+                    <td th:text="${it.index + 1}">1</td>
+                    <td th:text="${c.korName}">칵테일</td>
+                    <td th:text="${c.recommendCount}">0</td>
+                    <td th:text="${c.bookmarkCount}">0</td>
+                    <td th:text="${c.score}">0</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(topCocktails)}">
+                    <td colspan="5" class="empty">데이터 없음</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h3>인기 검색어 Top 10</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:40px">#</th>
+                    <th>검색어</th>
+                    <th style="width:80px">검색 수</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t, it : ${topSearchTerms}">
+                    <td th:text="${it.index + 1}">1</td>
+                    <td th:text="${t.queryText}">term</td>
+                    <td th:text="${t.count}">0</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(topSearchTerms)}">
+                    <td colspan="3" class="empty">데이터 없음</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Row 4: 최근 가입자 -->
+    <div class="row">
+        <div class="card">
+            <h3>최근 가입자 10명</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width:60px">ID</th>
+                    <th>닉네임</th>
+                    <th style="width:120px">소셜</th>
+                    <th style="width:180px">가입일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="m : ${recentSignups}">
+                    <td th:text="${m.id}">1</td>
+                    <td th:text="${m.nickname ?: '-'}">닉네임</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${m.socialLogin ?: 'UNKNOWN'}"
+                              th:text="${m.socialLogin ?: 'UNKNOWN'}">KAKAO</span>
+                    </td>
+                    <td th:text="${m.createdAt != null} ? ${#temporals.format(m.createdAt, 'yyyy-MM-dd HH:mm')} : '-'">2026-04-23 10:00</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(recentSignups)}">
+                    <td colspan="4" class="empty">데이터 없음</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Row 5: 문의 상태별 카운트 -->
+    <div class="row cards-3">
+        <a class="clickable" href="/onz/admin/inquiries?status=NEW">
+            <div class="card stat-card warn">
+                <div class="label">문의 - NEW</div>
+                <div class="value" th:text="${inquiryStatus['NEW']}">0</div>
+                <div class="sub">미확인 신규 문의</div>
+            </div>
+        </a>
+        <a class="clickable" href="/onz/admin/inquiries?status=READ">
+            <div class="card stat-card">
+                <div class="label">문의 - READ</div>
+                <div class="value" th:text="${inquiryStatus['READ']}">0</div>
+                <div class="sub">확인 완료, 답변 대기</div>
+            </div>
+        </a>
+        <a class="clickable" href="/onz/admin/inquiries?status=REPLIED">
+            <div class="card stat-card info">
+                <div class="label">문의 - REPLIED</div>
+                <div class="value" th:text="${inquiryStatus['REPLIED']}">0</div>
+                <div class="sub">답변 완료</div>
+            </div>
+        </a>
+    </div>
 </main>
+
+<!-- Chart.js 데이터 주입 -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const dailyLabels       = /*[[${dailyLabels}]]*/ [];
+    const dailySignupCounts = /*[[${dailySignupCounts}]]*/ [];
+    const dailyDeviceCounts = /*[[${dailyDeviceCounts}]]*/ [];
+    const socialLabels      = /*[[${socialLabels}]]*/ [];
+    const socialValues      = /*[[${socialValues}]]*/ [];
+
+    // 가입/디바이스 라인 차트
+    const trendCtx = document.getElementById('signupTrendChart');
+    if (trendCtx) {
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: dailyLabels,
+                datasets: [
+                    {
+                        label: '신규 가입',
+                        data: dailySignupCounts,
+                        borderColor: '#4c7ef3',
+                        backgroundColor: 'rgba(76,126,243,0.15)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '활성 디바이스',
+                        data: dailyDeviceCounts,
+                        borderColor: '#137333',
+                        backgroundColor: 'rgba(19,115,51,0.10)',
+                        tension: 0.3,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } },
+                scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+            }
+        });
+    }
+
+    // 소셜 로그인 도넛
+    const socialCtx = document.getElementById('socialChart');
+    if (socialCtx) {
+        new Chart(socialCtx, {
+            type: 'doughnut',
+            data: {
+                labels: socialLabels,
+                datasets: [{
+                    data: socialValues,
+                    backgroundColor: [
+                        '#FEE500', // KAKAO
+                        '#03C75A', // NAVER
+                        '#EA4335', // GOOGLE
+                        '#000000', // APPLE
+                        '#9CA3AF'  // 기타
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+    /*]]>*/
+</script>
 </body>
 </html>

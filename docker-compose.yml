@@ -1,9 +1,27 @@
 version: '3.8'
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Image source
+#
+#   Production (EC2)
+#     docker compose pull api-server      # pulls ghcr.io/mobileonz/cocktail-api:latest
+#     docker compose up -d api-server     # starts the pulled image
+#
+#   Local dev (rebuild from source)
+#     docker compose up --build api-server
+#       └ `build: .` is honored only when --build is passed (or image is missing locally).
+#         `docker compose pull` ignores services with a `build:` block IF no `image:` is set,
+#         so we keep BOTH: `image:` is the registry coordinate, `build:` is the local Dockerfile.
+#
+#   Tag override (deploy a specific commit)
+#     COCKTAIL_API_TAG=<sha> docker compose up -d api-server
+# ─────────────────────────────────────────────────────────────────────────────
+
 services:
   # 1. API 서버 (Spring Boot) 서비스
   api-server:
-    build: . # 현재 디렉토리의 Dockerfile을 사용해 이미지를 빌드
+    image: ghcr.io/mobileonz/cocktail-api:${COCKTAIL_API_TAG:-latest}
+    build: . # 로컬 개발 시 --build 플래그로만 사용됨
     container_name: cocktail-api
     ports:
       - "80:8080" # 외부 80 -> 내부 8080
