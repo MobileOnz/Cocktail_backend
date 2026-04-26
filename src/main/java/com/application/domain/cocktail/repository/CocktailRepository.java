@@ -17,11 +17,22 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
     /**
      * <pre>
      *     [JpaRepository 메서드 쿼리]
-     *     특정 문자열로 시작하는 칵테일 최대 5개 조회
+     *     특정 문자열로 시작하는 칵테일 최대 5개 조회 (한글 이름)
      * </pre>
      * @param searchText 검색어
      */
     List<CocktailNameProjection> findTop5ByKorNameStartingWith(String searchText);
+
+    /**
+     * 한국어/영어 이름 어느 쪽이든 contains (case-insensitive) 매칭. 최대 5개.
+     * 영문 검색을 지원하기 위해 추가됨.
+     */
+    @Query(value = "SELECT c.kor_name AS korName, c.eng_name AS engName FROM cocktail c " +
+            "WHERE LOWER(c.kor_name) LIKE LOWER(CONCAT('%', :q, '%')) " +
+            "   OR LOWER(c.eng_name) LIKE LOWER(CONCAT('%', :q, '%')) " +
+            "ORDER BY c.kor_name ASC LIMIT 5",
+            nativeQuery = true)
+    List<CocktailNamesProjection> findTop5SuggestionsBilingual(@Param("q") String q);
 
     /**
      * <pre>

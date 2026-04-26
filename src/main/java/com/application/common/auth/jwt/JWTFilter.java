@@ -102,7 +102,13 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/api/v2/cocktails/bookmarks/batch$",      // 칵테일 배치 북마크 토글
             "^/onz/api/v2/cocktails/[0-9]+/bookmarks$", // 칵테일 북마크 토글 (onz 경로)
             "^/onz/api/v2/cocktails/bookmarks$",        // 내 북마크 목록 조회 (onz 경로)
-            "^/onz/api/v2/cocktails/bookmarks/batch$"   // 칵테일 배치 북마크 토글 (onz 경로)
+            "^/onz/api/v2/cocktails/bookmarks/batch$",  // 칵테일 배치 북마크 토글 (onz 경로)
+
+            // 1:1 문의 API (mine 목록 / 단건 조회는 인증 필요, POST는 optional)
+            "^/api/v2/inquiry/mine$",                   // 내 문의 목록
+            "^/api/v2/inquiry/[0-9]+$",                 // 문의 단건 조회
+            "^/onz/api/v2/inquiry/mine$",               // 내 문의 목록 (onz 경로)
+            "^/onz/api/v2/inquiry/[0-9]+$"              // 문의 단건 조회 (onz 경로)
     );
 
     // 선택적 인증 경로 (JWT 토큰이 있으면 검증하고, 없으면 익명 사용자로 통과)
@@ -123,7 +129,11 @@ public class JWTFilter extends OncePerRequestFilter {
             "^/onz/api/v2/cocktails/specific$",         // 특정 칵테일 조회 (onz 경로)
             "^/onz/api/v2/cocktails/refresh$",          // 상큼한 칵테일 추천 (onz 경로)
             "^/onz/api/v2/cocktails/beginner$",         // 입문자용 칵테일 (onz 경로)
-            "^/onz/api/v2/cocktails/intermediate$"      // 중급자용 칵테일 (onz 경로)
+            "^/onz/api/v2/cocktails/intermediate$",     // 중급자용 칵테일 (onz 경로)
+
+            // 1:1 문의 등록 (로그인 사용자 / 비로그인 사용자 모두 가능)
+            "^/api/v2/inquiry$",                        // 문의 등록
+            "^/onz/api/v2/inquiry$"                     // 문의 등록 (onz 경로)
     );
 
     // [기존 방식 : jwt 예외 필터 적용 - 주석 처리]

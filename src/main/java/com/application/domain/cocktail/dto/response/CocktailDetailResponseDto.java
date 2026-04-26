@@ -30,8 +30,12 @@ public record CocktailDetailResponseDto(
         String style,
         String glassType,
         String glassImageUrl,
+        String glassImageUrlThumb,
+        String glassImageUrlDetail,
         String base,
         String imageUrl,
+        String imageUrlThumb,
+        String imageUrlDetail,
 
         @Schema(description = "맛 태그 목록", example = "[\"상큼한\", \"달콤한\"]")
         List<String> flavors,
@@ -63,8 +67,12 @@ public record CocktailDetailResponseDto(
                 cocktail.getStyle(),
                 cocktail.getGlassType(),
                 cocktail.getGlassImageUrl(),
+                cocktail.getGlassImageUrlThumb(),
+                cocktail.getGlassImageUrlDetail(),
                 cocktail.getBase(),
                 cocktail.getImageUrl(),
+                cocktail.getImageUrlThumb(),
+                cocktail.getImageUrlDetail(),
                 cocktail.getFlavors().stream()
                         .map(CocktailFlavor::getFlavorName)
                         .toList(),
