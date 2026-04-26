@@ -35,6 +35,16 @@ services:
       # --- JWT 설정 ---
       - JWT_SECRET=${JWT_SECRET}
 
+      # --- Admin 계정 (운영에선 .env 로 강한 값 덮어쓸 것) ---
+      - ADMIN_USERNAME=${ADMIN_USERNAME:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin1!}
+
+      # --- AWS S3 (이미지 저장소) ---
+      - AWS_S3_REGION=${AWS_S3_REGION:-ap-northeast-2}
+      - AWS_S3_ACCESS_KEY=${AWS_S3_ACCESS_KEY:-}
+      - AWS_S3_SECRET_KEY=${AWS_S3_SECRET_KEY:-}
+      - S3_BUCKET=${S3_BUCKET:-onz-cocktail-images}
+
       # --- OAuth 설정 ---
       - KAKAO_ID=${KAKAO_ID}
       - KAKAO_SECRET=${KAKAO_SECRET}

@@ -3,6 +3,7 @@ package com.application.common.auth.config;
 import com.application.common.auth.JWTAccessTokenBlackListService;
 import com.application.common.auth.jwt.JWTFilter;
 import com.application.common.auth.jwt.JWTUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -105,9 +106,22 @@ public class SecurityConfig {
     }
 
 
+    /**
+     * Admin 계정 자격증명을 환경변수에서 읽어옴.
+     * - ADMIN_USERNAME (default: "admin")
+     * - ADMIN_PASSWORD (default: "admin1!" — 운영에선 반드시 .env 로 덮어쓸 것)
+     * 운영 EC2 의 .env 에서 덮어쓰면 컨테이너 재시작 시 즉시 반영.
+     */
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        var admin = User.withUsername("admin").password(passwordEncoder.encode("admin1!")).roles("ADMIN").build();
+    public UserDetailsService userDetailsService(
+            PasswordEncoder passwordEncoder,
+            @Value("${admin.username:admin}") String adminUsername,
+            @Value("${admin.password:admin1!}") String adminPassword
+    ) {
+        var admin = User.withUsername(adminUsername)
+                .password(passwordEncoder.encode(adminPassword))
+                .roles("ADMIN")
+                .build();
         return new InMemoryUserDetailsManager(admin);
     }
 
