@@ -5,8 +5,8 @@ services:
   api-server:
     build: . # 현재 디렉토리의 Dockerfile을 사용해 이미지를 빌드
     container_name: cocktail-api
-    ports:
-      - "80:8080" # 외부 80 -> 내부 8080
+    expose:
+      - "8080" # 내부 전용. nginx 가 프록시
     environment:
       # 🚨 API 서버가 도커 내부의 'db' 서비스에 접속하도록 설정
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
@@ -39,6 +39,21 @@ services:
 
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
+
+  # 1.5. Nginx (reverse proxy + /uploads/* 정적 webp 서빙)
+  #   - 80 포트 owner. /uploads/* 는 /var/onz/uploads 에서, 그 외는 api-server:8080 으로 프록시
+  #   - /var/onz/uploads 는 EC2 호스트 디렉토리 (운영). 로컬 dev 는 mkdir 또는 .env 로 오버라이드.
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-onz
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx-onz.conf:/etc/nginx/conf.d/default.conf:ro
+      - /var/onz/uploads:/var/onz/uploads:ro
+    depends_on:
+      - api-server
+    restart: unless-stopped
 
   # 2. PostgreSQL 서비스
   db:
