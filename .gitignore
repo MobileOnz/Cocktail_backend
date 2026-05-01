@@ -4,6 +4,9 @@
 /.idea
 /out
 HELP.md
+
+# 로컬 이미지 저장소 (운영은 EC2 의 /var/onz/uploads, 로컬 dev 산출물은 무시)
+/uploads/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
