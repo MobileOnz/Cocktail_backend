@@ -1,0 +1,48 @@
+name: Auto Assign Author
+
+# PR/이슈가 열릴 때 assignee가 비어있으면 작성자를 자동으로 assignee로 등록한다.
+# (컨벤션: 이슈/PR에 Assignees를 등록해 작업 중임을 표시 → 중복 작업 방지)
+#
+# 보안 메모: fork에서 올라온 PR에도 assignee를 달 수 있도록 pull_request_target 사용.
+#           PR 코드를 checkout 하지 않고 assignee API만 호출하므로 untrusted 코드 실행 없음.
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign author when no assignee
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const isPR = !!context.payload.pull_request;
+            const obj = isPR ? context.payload.pull_request : context.payload.issue;
+
+            // 이미 assignee가 있으면 그대로 둔다.
+            if (obj.assignees && obj.assignees.length > 0) {
+              core.info(`이미 assignee 있음 (#${obj.number}). 건너뜀.`);
+              return;
+            }
+
+            const author = obj.user.login;
+            try {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: obj.number,
+                assignees: [author],
+              });
+              core.info(`#${obj.number} 작성자(${author})를 assignee로 등록했습니다.`);
+            } catch (e) {
+              // 작성자가 collaborator가 아니면 등록되지 않을 수 있음(GitHub 제약). 실패해도 워크플로는 통과.
+              core.warning(`assignee 등록 실패 (${author}, #${obj.number}): ${e.message}`);
+            }
