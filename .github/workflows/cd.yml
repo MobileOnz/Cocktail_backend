@@ -1,0 +1,104 @@
+# =============================================================================
+# CD (Continuous Deployment) 워크플로우
+# 목적: main 브랜치 push 시 EC2에 자동 배포
+# 보안: 배포 중에만 SSH 포트 열고, 완료 후 자동으로 닫음
+#
+# 중요: 어떤 방식으로 실행해도 항상 main 브랜치 최신 코드가 배포됩니다.
+# =============================================================================
+name: CD
+
+# -----------------------------------------------------------------------------
+# 트리거:
+# 1. main 브랜치에 push 시 자동 실행
+# 2. GitHub Actions 탭에서 수동 실행 (Run workflow 버튼)
+#
+# ※ 수동 실행 시 브랜치 선택과 무관하게 main 브랜치가 배포됩니다.
+# -----------------------------------------------------------------------------
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 수동 실행 활성화
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # -----------------------------------------------------------------------
+      # Step 1: 현재 GitHub Actions 러너의 IP 확인
+      # -----------------------------------------------------------------------
+      - name: 러너 IP 확인
+        id: ip
+        run: echo "ipv4=$(curl -s https://api.ipify.org)" >> $GITHUB_OUTPUT
+
+      # -----------------------------------------------------------------------
+      # Step 2: AWS CLI 설정
+      # -----------------------------------------------------------------------
+      - name: AWS 자격 증명 설정
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2  # 서울 리전
+
+      # -----------------------------------------------------------------------
+      # Step 3: EC2 보안 그룹에 현재 IP로 SSH(22) 포트 열기
+      # -----------------------------------------------------------------------
+      - name: SSH 포트 열기
+        run: |
+          aws ec2 authorize-security-group-ingress \
+            --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.ip.outputs.ipv4 }}/32 \
+            --tag-specifications 'ResourceType=security-group-rule,Tags=[{Key=Name,Value=github-actions-temp}]'
+
+      # -----------------------------------------------------------------------
+      # Step 4: EC2에 SSH 접속하여 배포 실행
+      # -----------------------------------------------------------------------
+      - name: EC2 배포 실행
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            sudo bash -lc '
+              set -e
+
+              # 1. root 계정의 기존 배포 폴더로 이동
+              cd /root/cocktail-api
+
+              # 2. main 브랜치 최신 코드로 동기화
+              git fetch origin main
+              git checkout main
+              git pull --ff-only origin main
+
+              # 3. Gradle 권한 부여
+              chmod +x gradlew
+
+              # 4. 기존 컨테이너 종료
+              docker-compose down
+
+              # 5. 다시 빌드 및 실행
+              docker-compose up -d --build
+
+              # 6. 불필요한 이미지 정리
+              docker image prune -f
+            '
+
+      # -----------------------------------------------------------------------
+      # Step 5: 배포 완료 후 SSH 포트 닫기 (항상 실행)
+      # -----------------------------------------------------------------------
+      - name: SSH 포트 닫기
+        if: always()  # 성공/실패 상관없이 항상 실행
+        run: |
+          aws ec2 revoke-security-group-ingress \
+            --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} \
+            --protocol tcp \
+            --port 22 \
+            --cidr ${{ steps.ip.outputs.ipv4 }}/32
