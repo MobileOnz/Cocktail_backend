@@ -67,23 +67,29 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # 1. 프로젝트 폴더로 이동
-            cd ~/cocktail-api
+            sudo bash -lc '
+              set -e
 
-            # 2. 최신 코드 받기
-            git pull origin main
+              # 1. root 계정의 기존 배포 폴더로 이동
+              cd /root/cocktail-api
 
-            # 3. Gradle 권한 부여
-            chmod +x gradlew
+              # 2. main 브랜치 최신 코드로 동기화
+              git fetch origin main
+              git checkout main
+              git pull --ff-only origin main
 
-            # 4. 기존 컨테이너 종료
-            docker-compose down
+              # 3. Gradle 권한 부여
+              chmod +x gradlew
 
-            # 5. 다시 빌드 및 실행
-            docker-compose up -d --build
+              # 4. 기존 컨테이너 종료
+              docker-compose down
 
-            # 6. 불필요한 이미지 정리
-            docker image prune -f
+              # 5. 다시 빌드 및 실행
+              docker-compose up -d --build
+
+              # 6. 불필요한 이미지 정리
+              docker image prune -f
+            '
 
       # -----------------------------------------------------------------------
       # Step 5: 배포 완료 후 SSH 포트 닫기 (항상 실행)
