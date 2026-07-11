@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<tbody th:fragment="rows" id="bar-rows">
+    <tr th:each="b : ${bars}">
+        <td th:text="${b.id}">1</td>
+        <td th:text="${b.slug}">slug</td>
+        <td th:text="${b.name_ko}">이름</td>
+        <td th:text="${b.address}">주소</td>
+        <td th:text="${b.status}">ACTIVE</td>
+        <td th:text="${b.menu_count}">0</td>
+        <td th:text="${b.visit_count}">0</td>
+        <td>
+            <a th:href="@{/admin/bars/{id}/edit(id=${b.id})}"><button class="ghost">수정</button></a>
+            <a th:href="@{/admin/bars/{id}/menu(id=${b.id})}"><button class="ghost">메뉴</button></a>
+            <a th:href="@{/admin/bars/{id}/qr(id=${b.id})}"><button>QR</button></a>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(bars)}"><td colspan="8" class="muted">등록된 바가 없습니다.</td></tr>
+</tbody>
+</body>
+</html>

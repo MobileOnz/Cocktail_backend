@@ -40,6 +40,7 @@ public class AdminViewController {
     private static final DateTimeFormatter DAY_LABEL = DateTimeFormatter.ofPattern("MM-dd");
 
     private final AdminDashboardService adminDashboardService;
+    private final com.application.domain.admin.service.ContentMetricsService contentMetricsService;
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error,
@@ -80,6 +81,11 @@ public class AdminViewController {
         model.addAttribute("socialLabels", new ArrayList<>(social.keySet()));
         model.addAttribute("socialValues", new ArrayList<>(social.values()));
 
+        // T-20 콘텐츠 지표: 무결과 검색어 top50 (1급 지표) + 스텝 없는 인기 칵테일 + 운영 스냅샷
+        model.addAttribute("noResultSearches", contentMetricsService.getNoResultSearchTop(50));
+        model.addAttribute("popularMissingSteps", contentMetricsService.getPopularCocktailsMissingSteps(20));
+        model.addAttribute("opsSnapshot", contentMetricsService.getOpsSnapshot());
+
         return "admin/dashboard";
     }
 
@@ -100,6 +106,17 @@ public class AdminViewController {
         body.put("inquiryStatus", adminDashboardService.getInquiryStatusBreakdown());
         body.put("recentSignups", adminDashboardService.getRecentSignups(10));
         return body;
+    }
+
+    /** T-20 콘텐츠 디렉터 탭 — 무결과 검색어 top50 등. */
+    @GetMapping("/dashboard/content")
+    public String contentMetrics(Model model) {
+        model.addAttribute("noResultSearches", contentMetricsService.getNoResultSearchTop(50));
+        model.addAttribute("popularMissingSteps", contentMetricsService.getPopularCocktailsMissingSteps(20));
+        model.addAttribute("ops", contentMetricsService.getOpsSnapshot());
+        model.addAttribute("barVisitTop", contentMetricsService.getBarVisitTop(15));
+        model.addAttribute("chatActivity", contentMetricsService.getChatActivity());
+        return "admin/content";
     }
 
     @GetMapping("/cocktails")

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 대시보드</title>
+    <link rel="icon" href="data:,"><!-- favicon 404 억제 (QA P3-2) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -112,12 +113,17 @@
 </header>
 
 <main>
-    <!-- 기존 메뉴 링크 4개 유지 -->
+    <!-- 관리 메뉴. @{...} 로 context-path(/onz) 자동 접두. QA P2-4: 바/뉴스/QR/신고/콘텐츠 링크 추가. -->
     <div class="menu-bar">
-        <a href="/onz/admin/cocktails">🍸 칵테일 관리</a>
-        <a href="/onz/admin/cocktail/tag">🏷️ 태그 관리</a>
-        <a href="/onz/admin/guides">📚 가이드 관리</a>
-        <a href="/onz/admin/inquiries">🗨️ 1:1 문의 관리</a>
+        <a th:href="@{/admin/cocktails}">🍸 칵테일 관리</a>
+        <a th:href="@{/admin/cocktail/tag}">🏷️ 태그 관리</a>
+        <a th:href="@{/admin/guides}">📚 가이드 관리</a>
+        <a th:href="@{/admin/news}">📰 뉴스 관리</a>
+        <a th:href="@{/admin/bars}">🍸 바 관리</a>
+        <a th:href="@{/admin/bars}">🔳 QR 발급</a>
+        <a th:href="@{/admin/reports}">🚩 신고 큐</a>
+        <a th:href="@{/admin/dashboard/content}">📊 콘텐츠 지표</a>
+        <a th:href="@{/admin/inquiries}">🗨️ 1:1 문의 관리</a>
     </div>
 
     <!-- Row 1: 핵심 지표 카드 4개 -->

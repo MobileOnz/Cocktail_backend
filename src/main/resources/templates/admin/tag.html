@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>🏷️ Tag Management</title>
+    <link rel="icon" href="data:," /><!-- favicon 404 억제 (QA P3-2) -->
 
     <!-- Common CSS -->
     <link rel="stylesheet" th:href="@{/admin/css/common.css}" />
@@ -53,7 +54,7 @@
         await loadTags();
     });
     document.getElementById("btnBack").addEventListener("click", () => {
-        window.location.href = "/admin/dashboard";
+        window.location.href = CONTEXT_PATH + "/admin/dashboard";
     });
 
     async function loadTags() {
@@ -158,7 +159,7 @@
     }
 
     function goBack() {
-        window.location.href = "/admin/dashboard";
+        window.location.href = CONTEXT_PATH + "/admin/dashboard";
     }
 </script>
 </body>

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>🍸 Cocktail Management</title>
+    <link rel="icon" href="data:," /><!-- favicon 404 억제 (QA P3-2) -->
 
     <!-- ag-Grid -->
 <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css" />-->
@@ -104,7 +105,7 @@
      * 이벤트 핸들러
      *************************************/
      document.getElementById("btnBack").addEventListener("click", () => {
-        window.location.href = "/admin/dashboard";
+        window.location.href = CONTEXT_PATH + "/admin/dashboard";
     });
     
     document.getElementById("btnSearch").addEventListener("click", (e) => {
@@ -112,7 +113,7 @@
         loadCocktails();
     });
     document.getElementById("btnReg").addEventListener("click", () => {
-        window.location.href = "/admin/cocktail/detail";
+        window.location.href = CONTEXT_PATH + "/admin/cocktail/detail";
     });
 
     async function loadCocktails() {
@@ -145,7 +146,7 @@
     }
 
     function openDetail(id) {
-        window.location.href = `/admin/cocktail/detail?cocktailId=${id}`;
+        window.location.href = `${CONTEXT_PATH}/admin/cocktail/detail?cocktailId=${id}`;
     }
 
     async function deleteCocktail(id) {

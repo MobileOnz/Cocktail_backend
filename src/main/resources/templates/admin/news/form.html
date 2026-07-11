@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('뉴스 편집 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav><a th:href="@{/admin/news}">← 뉴스 목록</a></nav>
+    <h1 th:text="${mode == 'create'} ? '새 뉴스' : '뉴스 수정'">뉴스</h1>
+
+    <!-- 생성이면 POST /admin/news, 수정이면 POST /admin/news/{id}. htmx로 제출 후 목록으로. -->
+    <form class="card"
+          th:attr="hx-post=${mode == 'create'} ? @{/admin/news} : @{/admin/news/{id}(id=${news['id']})}"
+          hx-target="#result" hx-swap="innerHTML">
+        <p><label>제목<br/><input type="text" name="title" style="width:100%"
+                                 th:value="${news['title']}" required/></label></p>
+        <p><label>요약<br/><input type="text" name="summary" style="width:100%"
+                                 th:value="${news['summary']}"/></label></p>
+        <p><label>카테고리
+            <select name="category">
+                <option th:each="c : ${ {'TREND','BEGINNER','EXPERT','WHISKY','CARTOON'} }"
+                        th:value="${c}" th:text="${c}"
+                        th:selected="${news['category'] != null and news['category'] == c}">TREND</option>
+            </select></label>
+            &nbsp;<label>출처 <input type="text" name="source" th:value="${news['source']}"/></label>
+        </p>
+        <p><label>예약 발행일시 (비우면 지금)
+            <input type="datetime-local" name="publishedAt"/></label>
+            <span class="muted">미래로 두면 예약 발행</span></p>
+        <p><label>본문 (마크다운)<br/>
+            <textarea name="content_" th:text="${news['content']}"></textarea></label></p>
+        <button type="submit" th:text="${mode == 'create'} ? '생성' : '저장'">저장</button>
+    </form>
+    <div id="result"></div>
+</div>
+</body>
+</html>

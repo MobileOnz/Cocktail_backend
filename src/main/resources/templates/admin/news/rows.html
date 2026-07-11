@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<tbody th:fragment="rows" id="news-rows">
+    <tr th:each="n : ${newsList}">
+        <td th:text="${n.id}">1</td>
+        <td th:text="${n.title}">제목</td>
+        <td th:text="${n.category}">TREND</td>
+        <td th:text="${n.published_at}">2026-07-10</td>
+        <td th:text="${n.view_count}">0</td>
+        <td>
+            <a th:href="@{/admin/news/{id}/edit(id=${n.id})}"><button class="ghost">수정</button></a>
+            <button class="danger"
+                    th:attr="hx-delete=@{/admin/news/{id}(id=${n.id})}"
+                    hx-target="#news-rows" hx-swap="outerHTML"
+                    hx-confirm="이 뉴스를 삭제할까요?">삭제</button>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(newsList)}"><td colspan="6" class="muted">등록된 뉴스가 없습니다.</td></tr>
+</tbody>
+</body>
+</html>

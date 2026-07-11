@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>🍸 Cocktail Detail</title>
+    <link rel="icon" href="data:," /><!-- favicon 404 억제 (QA P3-2) -->
 
     <!-- Common CSS -->
     <link rel="stylesheet" th:href="@{/admin/css/common.css}" />
@@ -259,7 +260,7 @@
             const url = cocktailId ? "/admin/cocktails/update" : "/admin/cocktails/save";
             const response = await api.post(url, dto, {headers: {"Content-Type": "application/json"},});
             if (response.code === 1) {
-                showToast("✅ 저장되었습니다.", "/admin/cocktails?page=0&size=10");
+                showToast("✅ 저장되었습니다.", CONTEXT_PATH + "/admin/cocktails?page=0&size=10");
             } else {
                 showToast("❌ 저장 실패");
             }
@@ -277,7 +278,7 @@
         try {
             const response = await api.get("/admin/cocktails/delete", { cocktailId: cocktailId });
             if (response.code === 1) {
-                showToast("삭제되었습니다.", "/admin/cocktails?page=0&size=10");
+                showToast("삭제되었습니다.", CONTEXT_PATH + "/admin/cocktails?page=0&size=10");
             } else {
                 showToast("삭제 실패");
             }
@@ -287,7 +288,7 @@
     }
 
     function goBack() {
-        window.location.href = "/admin/cocktails?page=0&size=10";
+        window.location.href = CONTEXT_PATH + "/admin/cocktails?page=0&size=10";
     }
 
     // 태그 목록 초기화

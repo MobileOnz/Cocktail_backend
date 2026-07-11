@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('뉴스 관리 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/news}">뉴스</a>
+        <a th:href="@{/admin/guides}">가이드</a>
+        <a th:href="@{/admin/logout}" data-th-remove="all">로그아웃</a>
+    </nav>
+    <h1>뉴스 관리</h1>
+
+    <p th:unless="${newsAvailable}" class="muted">
+        ⚠️ news 테이블이 아직 없습니다(s1 V4 미적용). 마이그레이션 적용 후 표시됩니다.
+    </p>
+
+    <div th:if="${newsAvailable}">
+        <a th:href="@{/admin/news/new}"><button>+ 새 뉴스</button></a>
+        <table>
+            <thead>
+            <tr><th>ID</th><th>제목</th><th>카테고리</th><th>발행일</th><th>조회</th><th>작업</th></tr>
+            </thead>
+            <tbody id="news-rows" th:replace="admin/news/rows :: rows"></tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

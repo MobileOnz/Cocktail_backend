@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('QR 플래카드 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav><a th:href="@{/admin/bars}">← 바 목록</a></nav>
+    <h1><span th:text="${bar['name_ko']}">바</span> · QR 플래카드</h1>
+
+    <!-- 부분 갱신 대상(htmx): 활성 플래카드 + 발급/회전 버튼. in-place 로 한 번만 렌더되고,
+         컨트롤러는 'admin/qr/list :: activeBlock' 로 이 조각만 반환한다. 예전엔 fragment 정의를
+         .wrap 밖에 따로 두고 th:replace 로 또 삽입해 두 번 렌더됐다(QA P2-2). -->
+    <div th:fragment="activeBlock" id="active-block">
+        <div class="card">
+            <div th:if="${active != null}">
+                <p>현재 활성 버전 <span class="big" th:text="${active.key_version}">1</span></p>
+                <p class="muted">서명 페이로드 (앱 스캔 계약 <code>slug.keyVersion.HMAC</code>):</p>
+                <p><textarea readonly style="width:100%;min-height:60px" th:text="${payload}"></textarea></p>
+                <a th:href="@{/admin/bars/{id}/qr/placard(id=${bar['id']})}" target="_blank">
+                    <button type="button">🖨 인쇄용 플래카드 (PDF 저장)</button></a>
+            </div>
+            <p th:if="${active == null}" class="muted">아직 발급된 활성 플래카드가 없습니다.</p>
+
+            <form style="margin-top:12px"
+                  th:attr="hx-post=@{/admin/bars/{id}/qr/rotate(id=${bar['id']})}"
+                  hx-target="#active-block" hx-swap="outerHTML"
+                  hx-confirm="발급/회전 시 기존 인쇄물은 무효화됩니다. 진행할까요?">
+                <label>라벨 <input type="text" name="label" placeholder="테이블 A"/></label>
+                <button type="submit" th:text="${active != null} ? '🔄 회전(재발급)' : '+ 발급'">발급</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>발급 이력</h2>
+    <table>
+        <thead><tr><th>버전</th><th>라벨</th><th>발급</th><th>폐기</th><th>스캔</th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${placards}">
+            <td th:text="${p.key_version}">1</td>
+            <td th:text="${p.label}">-</td>
+            <td th:text="${p.issued_at}">-</td>
+            <td th:text="${p.revoked_at} ?: '(활성)'">-</td>
+            <td th:text="${p.scan_count}">0</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(placards)}"><td colspan="5" class="muted">발급 이력 없음</td></tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('바 관리 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/bars}">바</a>
+        <a th:href="@{/admin/reports}">신고 큐</a>
+        <a th:href="@{/admin/news}">뉴스</a>
+    </nav>
+    <h1>바 관리</h1>
+    <a th:href="@{/admin/bars/new}"><button>+ 새 바</button></a>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>slug</th><th>이름</th><th>주소</th><th>상태</th><th>메뉴</th><th>방문</th><th>작업</th></tr>
+        </thead>
+        <tbody id="bar-rows" th:replace="~{admin/bar/rows :: rows}"></tbody>
+    </table>
+</div>
+</body>
+</html>
