@@ -3,23 +3,22 @@ package com.application.common.auth.config;
 import com.application.common.auth.JWTAccessTokenBlackListService;
 import com.application.common.auth.jwt.JWTFilter;
 import com.application.common.auth.jwt.JWTUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @Configuration
 @EnableWebSecurity
+@Slf4j
 public class SecurityConfig {
 
     private static final String[] SWAGGER_URLS = {
@@ -41,8 +40,11 @@ public class SecurityConfig {
     @Order(1)
     public SecurityFilterChain adminSecurity(HttpSecurity http) throws Exception {
         http
-                .csrf((auth) -> auth.disable())
+                // F-27: admin 체인 CSRF 재활성화. 세션+formLogin 이므로 CSRF 토큰이 필수다.
+                // Thymeleaf th:action / htmx(configRequest 훅)가 토큰을 자동 첨부한다.
+                // 정적 리소스(css/js)만 CSRF 무시 — GET이라 어차피 무관하지만 명시.
                 .securityMatcher("/admin/**")
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/admin/css/**", "/admin/js/**"))
                 .formLogin((auth) -> auth.loginPage("/admin/login")
                         .loginProcessingUrl("/admin/login-process")
                         .defaultSuccessUrl("/admin/dashboard", true)
@@ -53,7 +55,8 @@ public class SecurityConfig {
                         .permitAll())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/login", "/admin/login-process", "/admin/css/**", "/admin/js/**").permitAll()
-                        .anyRequest().authenticated()
+                        // 모든 admin 화면/쓰기 경로는 ROLE_ADMIN 강제 (admin_user 기반)
+                        .anyRequest().hasRole("ADMIN")
                 )
                 .sessionManagement((auth) -> auth.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
 
@@ -104,11 +107,11 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        var admin = User.withUsername("admin").password(passwordEncoder.encode("admin1!")).roles("ADMIN").build();
-        return new InMemoryUserDetailsManager(admin);
-    }
+    // 관리자 인증은 admin_user 테이블 기반(AdminUserDetailsService, BCrypt)으로 전환했다(F-03).
+    // 과거의 InMemoryUserDetailsManager(admin/admin1! 하드코딩)는 제거.
+    // 시드 관리자는 ADMIN_USERNAME/ADMIN_PASSWORD env 로 AdminUserBootstrap 이 부팅 시 생성한다.
+    // Spring Boot 는 유일한 UserDetailsService 빈 + PasswordEncoder 로 DaoAuthenticationProvider 를
+    // 자동 구성하므로 admin 체인 formLogin 이 그대로 동작한다.
 
     @Bean
     public PasswordEncoder passwordEncoder() {
