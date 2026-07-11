@@ -91,6 +91,9 @@ public class CocktailService {
         return cocktailDtos;
     }
 
+    // OSIV off: 직렬화가 트랜잭션 밖에서 일어나면 CocktailResponseDto.from 의 lazy 접근(flavors/moods)이 터진다.
+    // 이 메서드는 addSearchHistory(검색기록 쓰기)를 호출하므로 readOnly 가 아닌 일반 @Transactional 로 묶는다.
+    @Transactional
     public Page<CocktailResponseDto> getCocktailsV2(
             CocktailSearchConditionDto condition,
             Pageable pageable,
@@ -125,16 +128,22 @@ public class CocktailService {
         return bookmarkRepository.findCocktailIdsByMemberId(member.getId());
     }
 
+    // OSIV off: convertToCocktailResponseDtos → CocktailResponseDto.from 이 lazy 컬렉션(flavors/moods)을
+    // 만지므로, 직렬화 이전에 트랜잭션 안에서 초기화가 끝나도록 readOnly 트랜잭션으로 묶는다.
+    // (sibling getSpecificCocktailsV2/getCocktailV2 와 동일 패턴. OSIV 재활성화로 회피하지 않음.)
+    @Transactional(readOnly = true)
     public List<CocktailResponseDto> getAllCocktails(CustomOAuth2User user) {
         List<Cocktail> cocktails = cocktailRepository.findAll();
         return convertToCocktailResponseDtos(cocktails, user);
     }
 
+    @Transactional(readOnly = true)
     public List<CocktailResponseDto> getBestCocktails(CustomOAuth2User user) {
         List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByRecommendCountDesc();
         return convertToCocktailResponseDtos(cocktails, user);
     }
 
+    @Transactional(readOnly = true)
     public List<CocktailResponseDto> getRecentCocktails(CustomOAuth2User user) {
         List<Cocktail> cocktails = cocktailRepository.findTop10ByOrderByUpdatedAtDesc();
         return convertToCocktailResponseDtos(cocktails, user);
@@ -177,7 +186,8 @@ public class CocktailService {
         }
 
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
-                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+                // QA P3-1: 리소스 부재는 404. NoSuchElementException 는 전역 핸들러가 404 로 매핑한다.
+                () -> new NoSuchElementException("칵테일이 존재하지 않습니다.")
         );
 
         if (user == null) {
@@ -215,10 +225,13 @@ public class CocktailService {
         }
 
         return cocktailRepository.findById(cocktailId).orElseThrow(
-                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+                // QA P3-1: 리소스 부재는 404. NoSuchElementException 는 전역 핸들러가 404 로 매핑한다.
+                () -> new NoSuchElementException("칵테일이 존재하지 않습니다.")
         );
     }
 
+    // OSIV off: 반환 DTO(CocktailResponseDto.from)가 lazy(flavors/moods)를 만지므로 readOnly 트랜잭션으로 묶는다.
+    @Transactional(readOnly = true)
     public CocktailResponseDto getRecommendation(CocktailRecommendationDto dto) {
         List<Cocktail> candidates = cocktailRepository.findRecommendedCocktails(dto);
 
@@ -272,7 +285,8 @@ public class CocktailService {
 
     public CocktailDto getCocktailInfo(Long cocktailId) {
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
-                () -> new CustomApiException("칵테일이 존재하지 않습니다.")
+                // QA P3-1: 리소스 부재는 404. NoSuchElementException 는 전역 핸들러가 404 로 매핑한다.
+                () -> new NoSuchElementException("칵테일이 존재하지 않습니다.")
         );
         return CocktailMapper.toDto(cocktail);
     }

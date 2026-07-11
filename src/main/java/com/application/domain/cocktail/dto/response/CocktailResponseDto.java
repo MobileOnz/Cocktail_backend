@@ -108,7 +108,7 @@ public record CocktailResponseDto(
                 parseMoods(cocktail),
                 cocktail.isBookmarkedBy(userId),
                 myReaction,
-                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                clampNonNegative(recommendCount != null ? recommendCount : cocktail.getRecommendCount()),
                 hardCount != null ? hardCount : cocktail.getHardCount(),
                 cocktail.getCreatedAt(),
                 cocktail.getUpdatedAt()
@@ -135,7 +135,7 @@ public record CocktailResponseDto(
                 parseMoods(cocktail),
                 isBookmarked,
                 myReaction,
-                recommendCount != null ? recommendCount : cocktail.getRecommendCount(),
+                clampNonNegative(recommendCount != null ? recommendCount : cocktail.getRecommendCount()),
                 hardCount != null ? hardCount : cocktail.getHardCount(),
                 cocktail.getCreatedAt(),
                 cocktail.getUpdatedAt()
@@ -162,7 +162,7 @@ public record CocktailResponseDto(
                 parseMoods(cocktail),
                 isBookmarked,
                 null,
-                cocktail.getRecommendCount(),
+                clampNonNegative(cocktail.getRecommendCount()),
                 cocktail.getHardCount(),
                 cocktail.getCreatedAt(),
                 cocktail.getUpdatedAt()
@@ -188,5 +188,10 @@ public record CocktailResponseDto(
         return cocktail.getMoods().stream()
                 .map(CocktailMood::getMoodName)
                 .toList();
+    }
+
+    /** 추천수는 음수로 노출되면 안 된다(QA P3-7). null 은 0, 음수는 0 으로 하한. */
+    private static Integer clampNonNegative(Integer count) {
+        return count == null ? 0 : Math.max(0, count);
     }
 }
