@@ -8,11 +8,23 @@ spring:
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    # OSIV 비활성화(배포 차단 결함 수정): 기본 true 는 요청 수명 내내 JDBC 커넥션을 붙든다.
+    # SSE 채팅 연결(수명 30분)이 커넥션 1개씩 30분 점유 → Hikari 풀(10) 고갈 → 동시 11명에서 전체 마비.
+    # REST 는 JSON 직렬화가 서비스 트랜잭션 안에서 끝나므로 안전. (근거: .workbench/done_T11_T13_T14.md §8)
+    open-in-view: false
     hibernate:
-      ddl-auto: update # 개발 단계 추천, 운영 시 validate 또는 none
+      # 스키마 소유권은 Flyway(V1__baseline)로 이관. Hibernate는 검증만 한다.
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
+
+  # Flyway: baseline 마이그레이션으로 스키마 소유. 모든 프로파일에 상속된다.
+  flyway:
+    enabled: true
+    baseline-on-migrate: true   # 기존(비어있지 않은) DB엔 V1을 baseline으로 마킹만 하고 실행 안 함
+    baseline-version: 1
+    locations: classpath:db/migration
 
   jwt:
     secret: ${JWT_SECRET}
@@ -97,3 +109,12 @@ custom:
       team-id: ${APPLE_TEAM_ID}       # Apple Developer Team ID
       key-id: ${APPLE_KEY_ID}
       private-key: ${APPLE_PRIVATE_KEY}     # Key ID (P8 파일 발급 시 확인)
+
+# --- Admin 자격증명 외부화 (핸드오프용) ---
+# SecurityConfig.java 가 현재 'admin'/'admin1!' 를 하드코딩 중.
+# Java 세션이 아래 프로퍼티를 @Value 로 읽도록 배선하면 하드코딩이 제거된다.
+# 기본값은 두지 않는다 — 환경변수 미주입 시 노출을 막기 위함.
+app:
+  admin:
+    username: ${ADMIN_USERNAME}
+    password: ${ADMIN_PASSWORD}

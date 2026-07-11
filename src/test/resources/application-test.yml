@@ -15,6 +15,12 @@ spring:
       hibernate:
         format_sql: true
 
+  # Flyway 비활성화(테스트 프로파일): 마이그레이션은 Postgres 문법이라 H2에서 실행 시
+  # JdbcSQLSyntaxError 로 컨텍스트 로딩이 깨진다. 테스트는 ddl-auto:create-drop 로 스키마를
+  # Hibernate 가 생성하므로 Flyway 가 불필요. (application.yml 의 flyway.enabled:true 를 오버라이드)
+  flyway:
+    enabled: false
+
   h2:
     console:
       enabled: true

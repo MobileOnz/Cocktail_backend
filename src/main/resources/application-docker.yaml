@@ -7,9 +7,8 @@ spring:
 
   jpa:
     hibernate:
-      # (주의!) EC2 운영 환경에서는 'validate' 또는 'none'을 권장
-      # 'update'는 개발 중에만 사용
-      ddl-auto: update
+      # 스키마 소유권은 Flyway(V1__baseline)로 이관. Hibernate는 검증만.
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
