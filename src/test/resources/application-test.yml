@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
+    # H2 in-memory. INIT: Bar.hours 는 columnDefinition="jsonb" 라 H2 가 JSONB 타입을 모른다.
+    # 스키마 생성(create-drop) 전에 JSONB 를 JSON 으로 별칭 도메인 등록해 컨텍스트 로딩을 통과시킨다.
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE DOMAIN IF NOT EXISTS JSONB AS JSON"
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -28,3 +30,42 @@ spring:
 logging:
   level:
     org.hibernate.SQL: DEBUG
+
+# ---------------------------------------------------------------------------
+# 테스트 전용 더미 시크릿/설정값.
+# 운영은 시크릿을 환경변수로 외부화(${JWT_SECRET} 등)했기 때문에, @SpringBootTest 가
+# 전체 컨텍스트를 부팅하려면 이 플레이스홀더들이 해석되어야 한다. 실제 값이 아닌
+# 명백한 더미이며 테스트 리소스에만 존재한다. (실제 시크릿은 절대 커밋하지 않는다)
+# ---------------------------------------------------------------------------
+JWT_SECRET: test-only-jwt-secret-do-not-use-in-production-0123456789abcdef
+
+POSTGRE_url: jdbc:h2:mem:testdb
+POSTGRE_USERNAME: sa
+POSTGRE_PASSWORD: ""
+
+ADMIN_USERNAME: admin
+ADMIN_PASSWORD: admin
+
+KAKAO_ID: test-kakao-id
+KAKAO_SECRET: test-kakao-secret
+KAKAO_REDIRECT_URI: http://localhost/onz/login/oauth2/code/kakao
+
+NAVER_ID: test-naver-id
+NAVER_SECRET: test-naver-secret
+NAVER_REDIRECT_URI: http://localhost/onz/login/oauth2/code/naver
+
+GOOGLE_ID: test-google-id
+GOOGLE_SECRET: test-google-secret
+GOOGLE_REDIRECT_URI: http://localhost/onz/login/oauth2/code/google
+
+APPLE_SERVICE_ID: test.apple.service.id
+APPLE_CLIENT_ID: test.apple.client.id
+APPLE_TEAM_ID: TESTTEAMID
+APPLE_KEY_ID: TESTKEYID
+APPLE_PRIVATE_KEY: test-apple-private-key
+APPLE_SECRET_KEY: test-apple-secret-key
+APPLE_KEY_SECRET: test-apple-key-secret
+APPLE_REDIRECT_URI: http://localhost/onz/login/oauth2/code/apple
+APPLE_AUDIENCE: https://appleid.apple.com
+APPLE_PUBLIC_KEY_URL: https://appleid.apple.com/auth/keys
+APPLE_TOKEN_URL: https://appleid.apple.com/auth/token
