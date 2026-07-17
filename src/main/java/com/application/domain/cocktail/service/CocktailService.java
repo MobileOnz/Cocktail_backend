@@ -270,7 +270,8 @@ public class CocktailService {
 
     @Transactional(readOnly = true)
     public List<GuideListResponseDto> getCocktailGuideList() {
-        return guideRepository.findAll().stream()
+        // part 순 고정 — FE 카테고리 탭이 응답 등장 순서로 만들어지므로 순서가 흔들리면 탭 순서도 흔들린다.
+        return guideRepository.findAll(org.springframework.data.domain.Sort.by("part")).stream()
                 .map(GuideListResponseDto::from)
                 .collect(Collectors.toList());
     }

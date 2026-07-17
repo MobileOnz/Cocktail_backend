@@ -5,6 +5,7 @@
     <tr th:each="g : ${guides}">
         <td th:text="${g.part}">1</td>
         <td th:text="${g.title}">제목</td>
+        <td th:text="${g.category}">카테고리</td>
         <td th:text="${g.detail_count}">0</td>
         <td>
             <button class="danger"
@@ -13,7 +14,7 @@
                     hx-confirm="가이드와 하위 상세를 모두 삭제할까요?">삭제</button>
         </td>
     </tr>
-    <tr th:if="${#lists.isEmpty(guides)}"><td colspan="4" class="muted">가이드가 없습니다.</td></tr>
+    <tr th:if="${#lists.isEmpty(guides)}"><td colspan="5" class="muted">가이드가 없습니다.</td></tr>
 </tbody>
 </body>
 </html>

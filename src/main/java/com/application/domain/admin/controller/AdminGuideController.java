@@ -38,8 +38,9 @@ public class AdminGuideController {
     public String create(@RequestParam int part,
                          @RequestParam String title,
                          @RequestParam(required = false) String imageUrl,
+                         @RequestParam(required = false) String category,
                          Model model) {
-        content.createGuide(part, title, imageUrl);
+        content.createGuide(part, title, imageUrl, category);
         audit.log("CREATE", "guide", part, null, Map.of("part", part, "title", title));
         return rows(model);
     }
@@ -48,9 +49,10 @@ public class AdminGuideController {
     public String update(@PathVariable int part,
                          @RequestParam String title,
                          @RequestParam(required = false) String imageUrl,
+                         @RequestParam(required = false) String category,
                          Model model) {
         Map<String, Object> before = content.getGuide(part);
-        content.updateGuide(part, title, imageUrl);
+        content.updateGuide(part, title, imageUrl, category);
         audit.log("UPDATE", "guide", part, before, Map.of("title", title));
         return rows(model);
     }

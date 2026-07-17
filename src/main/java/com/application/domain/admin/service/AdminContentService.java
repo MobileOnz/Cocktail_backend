@@ -79,7 +79,7 @@ public class AdminContentService {
 
     public List<Map<String, Object>> listGuides() {
         return jdbc.queryForList(
-                "SELECT g.part, g.title, g.image_url, " +
+                "SELECT g.part, g.title, g.image_url, g.category, " +
                 "  (SELECT COUNT(*) FROM guide_detail d WHERE d.guide_part = g.part) AS detail_count " +
                 "FROM guide g ORDER BY g.part");
     }
@@ -93,12 +93,12 @@ public class AdminContentService {
                 "SELECT id, subtitle, display_order FROM guide_detail WHERE guide_part = ? ORDER BY display_order", part);
     }
 
-    public void createGuide(int part, String title, String imageUrl) {
-        jdbc.update("INSERT INTO guide (part, title, image_url) VALUES (?, ?, ?)", part, title, imageUrl);
+    public void createGuide(int part, String title, String imageUrl, String category) {
+        jdbc.update("INSERT INTO guide (part, title, image_url, category) VALUES (?, ?, ?, ?)", part, title, imageUrl, category);
     }
 
-    public void updateGuide(int part, String title, String imageUrl) {
-        jdbc.update("UPDATE guide SET title=?, image_url=? WHERE part=?", title, imageUrl, part);
+    public void updateGuide(int part, String title, String imageUrl, String category) {
+        jdbc.update("UPDATE guide SET title=?, image_url=?, category=? WHERE part=?", title, imageUrl, category, part);
     }
 
     @Transactional

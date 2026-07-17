@@ -15,11 +15,12 @@
         <label>part(정수) <input type="number" name="part" required style="width:80px"/></label>
         <label>제목 <input type="text" name="title" required/></label>
         <label>이미지URL <input type="text" name="imageUrl"/></label>
+        <label>카테고리 <input type="text" name="category" placeholder="입문/만들기/실전 등" style="width:140px"/></label>
         <button type="submit">추가</button>
     </form>
 
     <table>
-        <thead><tr><th>part</th><th>제목</th><th>상세 수</th><th>작업</th></tr></thead>
+        <thead><tr><th>part</th><th>제목</th><th>카테고리</th><th>상세 수</th><th>작업</th></tr></thead>
         <tbody id="guide-rows" th:replace="admin/guide/rows :: rows"></tbody>
     </table>
 </div>

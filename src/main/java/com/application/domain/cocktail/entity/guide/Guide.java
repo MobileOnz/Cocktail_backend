@@ -31,6 +31,10 @@ public class Guide {
     @Comment("가이드 대표 이미지 URL")
     private String imageUrl;
 
+    @Column(length = 50)
+    @Comment("가이드 카테고리(탭 라벨). NULL 이면 FE 가 기타로 묶는다")
+    private String category;
+
     // [관계 설정] GuideDetail과의 1:N 관계 (순서 보장을 위해 List 사용)
     // Part가 삭제되면 세부 내용도 함께 삭제됩니다.
     @Builder.Default
