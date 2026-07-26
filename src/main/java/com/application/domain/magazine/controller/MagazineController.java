@@ -2,8 +2,8 @@ package com.application.domain.magazine.controller;
 
 import com.application.common.Constant;
 import com.application.common.response.ResponseDto;
-import com.application.domain.magazine.dto.MagazineCard;
 import com.application.domain.magazine.dto.MagazineDetail;
+import com.application.domain.magazine.dto.MagazineFeedResponse;
 import com.application.domain.magazine.service.MagazineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,9 +26,9 @@ public class MagazineController {
 
     private final MagazineService magazineService;
 
-    @Operation(summary = "매거진 목록", description = "발행분 최신순. category 필터(ALL=전체).")
+    @Operation(summary = "매거진 목록", description = "발행분 최신순. category 필터(ALL=전체). 뉴스 피드와 동일 봉투.")
     @GetMapping
-    public ResponseEntity<ResponseDto<List<MagazineCard>>> list(
+    public ResponseEntity<ResponseDto<MagazineFeedResponse>> list(
             @RequestParam(required = false, defaultValue = "ALL") String category) {
         return new ResponseEntity<>(
                 ResponseDto.onSuccess("매거진 목록 조회 성공", magazineService.list(category)), HttpStatus.OK);

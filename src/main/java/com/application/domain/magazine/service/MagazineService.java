@@ -2,6 +2,7 @@ package com.application.domain.magazine.service;
 
 import com.application.domain.magazine.dto.MagazineCard;
 import com.application.domain.magazine.dto.MagazineDetail;
+import com.application.domain.magazine.dto.MagazineFeedResponse;
 import com.application.domain.magazine.entity.MagazineArticle;
 import com.application.domain.magazine.repository.MagazineArticleRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,11 @@ public class MagazineService {
 
     /** 발행분 목록(최신순). category 지정 시 필터(대문자 정규화). */
     @Transactional(readOnly = true)
-    public List<MagazineCard> list(String category) {
+    public MagazineFeedResponse list(String category) {
         List<MagazineArticle> rows = (category == null || category.isBlank() || "ALL".equalsIgnoreCase(category))
                 ? repository.findByStatusOrderByPublishedAtDesc(PUBLISHED)
                 : repository.findByStatusAndCategoryOrderByPublishedAtDesc(PUBLISHED, category.toUpperCase());
-        return rows.stream().map(this::toCard).toList();
+        return new MagazineFeedResponse(rows.stream().map(this::toCard).toList(), null);
     }
 
     @Transactional(readOnly = true)
@@ -40,8 +41,17 @@ public class MagazineService {
     }
 
     private MagazineCard toCard(MagazineArticle a) {
-        return new MagazineCard(a.getId(), a.getSlug(), a.getTitle(), a.getDek(),
-                a.getSubcategory(), a.getThumbnail(), a.getPublishedAt(),
+        return new MagazineCard(
+                a.getId(),
+                a.getTitle(),
+                a.getDek(),
+                a.getCategory(),
+                a.getSubcategory(),
+                a.getThumbnail(),
+                a.getAuthorName(),
+                null,
+                a.getPublishedAt(),
+                a.getViewCount(),
                 repository.findTagNames(a.getId()));
     }
 
