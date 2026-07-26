@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('매거진 관리 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/news}">뉴스</a>
+        <a th:href="@{/admin/magazine}">매거진</a>
+        <a th:href="@{/admin/logout}" data-th-remove="all">로그아웃</a>
+    </nav>
+    <h1>매거진 관리</h1>
+
+    <p th:if="${param.saved}" class="muted">✅ 저장됨 (id <span th:text="${param.saved}"></span>)</p>
+
+    <a th:href="@{/admin/magazine/new}"><button>+ JSON 붙여넣기</button></a>
+    <table>
+        <thead>
+        <tr><th>ID</th><th>제목</th><th>slug</th><th>카테고리</th><th>상태</th><th>발행일</th><th>조회</th><th>작업</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${articles}">
+            <td th:text="${a.id}"></td>
+            <td th:text="${a.title}"></td>
+            <td th:text="${a.slug}"></td>
+            <td th:text="${a.category}"></td>
+            <td th:text="${a.status}"></td>
+            <td th:text="${a.publishedAt}"></td>
+            <td th:text="${a.viewCount}"></td>
+            <td>
+                <form th:action="@{'/admin/magazine/' + ${a.id} + '/delete'}" method="post"
+                      onsubmit="return confirm('삭제할까요?');" style="display:inline">
+                    <button type="submit">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
