@@ -73,6 +73,11 @@ public final class EndpointAuthorizationPolicy {
             "^/api/v2/news/[0-9]+$",
             "^/api/v2/news/[0-9]+/read$",               // T-08 조회수 증가(POST) — PUBLIC
 
+            // 매거진 (블록형 콘텐츠, 개인화 없는 순수 공개 조회 + 조회수)
+            "^/api/v2/magazine$",
+            "^/api/v2/magazine/[0-9]+$",
+            "^/api/v2/magazine/[0-9]+/read$",
+
             // 온보딩 / 모니터링 (로그인 전 호출)
             "^/api/v2/monitoring/track$",
             "^/api/v2/monitoring/onboarding$",
