@@ -6,6 +6,7 @@ import com.application.domain.magazine.dto.MagazineDetail;
 import com.application.domain.magazine.dto.MagazineFeedResponse;
 import com.application.domain.magazine.service.MagazineService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,12 +27,20 @@ public class MagazineController {
 
     private final MagazineService magazineService;
 
-    @Operation(summary = "매거진 목록", description = "발행분 최신순. category 필터(ALL=전체). 뉴스 피드와 동일 봉투.")
+    @Operation(summary = "매거진 목록",
+            description = "발행분 최신순. category 필터(ALL=전체). 커서 페이지네이션 — 응답의 nextCursor 를 "
+                    + "다음 요청 cursor 로 넘긴다. nextCursor 가 null 이면 마지막 페이지.")
     @GetMapping
     public ResponseEntity<ResponseDto<MagazineFeedResponse>> list(
-            @RequestParam(required = false, defaultValue = "ALL") String category) {
+            @Parameter(description = "카테고리 필터. ALL 이면 전체")
+            @RequestParam(required = false, defaultValue = "ALL") String category,
+            @Parameter(description = "이전 응답의 nextCursor. 생략하면 첫 페이지")
+            @RequestParam(required = false) String cursor,
+            @Parameter(description = "페이지 크기(1~50)")
+            @RequestParam(required = false, defaultValue = "20") Integer size) {
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("매거진 목록 조회 성공", magazineService.list(category)), HttpStatus.OK);
+                ResponseDto.onSuccess("매거진 목록 조회 성공", magazineService.list(category, cursor, size)),
+                HttpStatus.OK);
     }
 
     @Operation(summary = "매거진 상세", description = "id 로 단건 조회. 블록 content 반환.")

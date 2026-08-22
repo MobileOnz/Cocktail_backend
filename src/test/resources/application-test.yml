@@ -1,8 +1,12 @@
 spring:
   datasource:
-    # H2 in-memory. INIT: Bar.hours 는 columnDefinition="jsonb" 라 H2 가 JSONB 타입을 모른다.
-    # 스키마 생성(create-drop) 전에 JSONB 를 JSON 으로 별칭 도메인 등록해 컨텍스트 로딩을 통과시킨다.
-    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE DOMAIN IF NOT EXISTS JSONB AS JSON"
+    # H2 in-memory. INIT 로 두 가지를 미리 만든다.
+    #  1) JSONB 도메인 — Bar.hours 등이 columnDefinition="jsonb" 라 H2 가 타입을 모른다.
+    #     스키마 생성(create-drop) 전에 JSON 별칭으로 등록해 컨텍스트 로딩을 통과시킨다.
+    #  2) tag / magazine_article_tag — @Entity 가 없고 네이티브 쿼리로만 접근하는 조인 테이블이라
+    #     ddl-auto 가 만들어 주지 않는다. 운영에선 Flyway 가 만들지만 여기선 Flyway 를 끈다.
+    #     없으면 매거진 목록 조회가 "Table MAGAZINE_ARTICLE_TAG not found" 로 터진다.
+    url: "jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;INIT=CREATE DOMAIN IF NOT EXISTS JSONB AS JSON\\;CREATE TABLE IF NOT EXISTS tag(id BIGINT PRIMARY KEY, name VARCHAR(255))\\;CREATE TABLE IF NOT EXISTS magazine_article_tag(article_id BIGINT NOT NULL, tag_id BIGINT NOT NULL)"
     username: sa
     password:
     driver-class-name: org.h2.Driver
