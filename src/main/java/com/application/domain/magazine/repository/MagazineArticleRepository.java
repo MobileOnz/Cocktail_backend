@@ -54,6 +54,44 @@ public interface MagazineArticleRepository extends JpaRepository<MagazineArticle
             nativeQuery = true)
     List<String> findTagNames(@Param("articleId") Long articleId);
 
+    // ── 태그 필터 (네이티브) ─────────────────────────────────────────────────
+    // magazine_article_tag / tag 는 @Entity 가 없는 조인 테이블이라 JPQL 로 못 건다.
+    // 태그가 주어진 경우에만 쓰며, 정렬·키셋 조건은 JPQL 판과 동일하게 유지한다.
+    // :category 는 널일 수 있어 CAST 로 타입을 못박는다(Postgres 가 널 파라미터 타입을 못 정한다).
+
+    @Query(value = "SELECT m.* FROM magazine_article m " +
+            "WHERE m.status = :status AND m.published_at IS NOT NULL " +
+            "AND (CAST(:category AS varchar) IS NULL OR m.category = CAST(:category AS varchar)) " +
+            "AND EXISTS (SELECT 1 FROM magazine_article_tag mat JOIN tag t ON t.id = mat.tag_id " +
+            "            WHERE mat.article_id = m.id AND t.name = :tag) " +
+            "ORDER BY m.published_at DESC, m.id DESC LIMIT :size", nativeQuery = true)
+    List<MagazineArticle> findFirstPageByTag(@Param("status") String status,
+                                             @Param("category") String category,
+                                             @Param("tag") String tag,
+                                             @Param("size") int size);
+
+    @Query(value = "SELECT m.* FROM magazine_article m " +
+            "WHERE m.status = :status AND m.published_at IS NOT NULL " +
+            "AND (CAST(:category AS varchar) IS NULL OR m.category = CAST(:category AS varchar)) " +
+            "AND EXISTS (SELECT 1 FROM magazine_article_tag mat JOIN tag t ON t.id = mat.tag_id " +
+            "            WHERE mat.article_id = m.id AND t.name = :tag) " +
+            "AND (m.published_at < :cursorAt OR (m.published_at = :cursorAt AND m.id < :cursorId)) " +
+            "ORDER BY m.published_at DESC, m.id DESC LIMIT :size", nativeQuery = true)
+    List<MagazineArticle> findNextPageByTag(@Param("status") String status,
+                                            @Param("category") String category,
+                                            @Param("tag") String tag,
+                                            @Param("cursorAt") LocalDateTime cursorAt,
+                                            @Param("cursorId") Long cursorId,
+                                            @Param("size") int size);
+
+    /** 발행분에 실제로 붙어 있는 태그를 많이 쓰인 순으로. 목록 화면의 필터 칩 재료. */
+    @Query(value = "SELECT t.name FROM magazine_article_tag mat " +
+            "JOIN tag t ON t.id = mat.tag_id " +
+            "JOIN magazine_article m ON m.id = mat.article_id " +
+            "WHERE m.status = 'PUBLISHED' AND m.published_at IS NOT NULL " +
+            "GROUP BY t.name ORDER BY count(*) DESC, t.name ASC", nativeQuery = true)
+    List<String> findPublishedTagNames();
+
     @Modifying
     @Query(value = "DELETE FROM magazine_article_tag WHERE article_id = :articleId", nativeQuery = true)
     void clearTags(@Param("articleId") Long articleId);

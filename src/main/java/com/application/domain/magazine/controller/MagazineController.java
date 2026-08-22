@@ -34,13 +34,21 @@ public class MagazineController {
     public ResponseEntity<ResponseDto<MagazineFeedResponse>> list(
             @Parameter(description = "카테고리 필터. ALL 이면 전체")
             @RequestParam(required = false, defaultValue = "ALL") String category,
+            @Parameter(description = "해시태그 필터. 생략하면 전체")
+            @RequestParam(required = false) String tag,
             @Parameter(description = "이전 응답의 nextCursor. 생략하면 첫 페이지")
             @RequestParam(required = false) String cursor,
             @Parameter(description = "페이지 크기(1~50)")
             @RequestParam(required = false, defaultValue = "20") Integer size) {
         return new ResponseEntity<>(
-                ResponseDto.onSuccess("매거진 목록 조회 성공", magazineService.list(category, cursor, size)),
+                ResponseDto.onSuccess("매거진 목록 조회 성공", magazineService.list(category, tag, cursor, size)),
                 HttpStatus.OK);
+    }
+
+    @Operation(summary = "매거진 태그 목록", description = "발행분에 실제로 붙어 있는 해시태그를 많이 쓰인 순으로.")
+    @GetMapping("/tags")
+    public ResponseEntity<ResponseDto<List<String>>> tags() {
+        return new ResponseEntity<>(ResponseDto.onSuccess("태그 조회 성공", magazineService.tags()), HttpStatus.OK);
     }
 
     @Operation(summary = "매거진 상세", description = "id 로 단건 조회. 블록 content 반환.")

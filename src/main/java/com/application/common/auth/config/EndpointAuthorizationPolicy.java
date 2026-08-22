@@ -75,6 +75,7 @@ public final class EndpointAuthorizationPolicy {
 
             // 매거진 (블록형 콘텐츠, 개인화 없는 순수 공개 조회 + 조회수)
             "^/api/v2/magazine$",
+            "^/api/v2/magazine/tags$",
             "^/api/v2/magazine/[0-9]+$",
             "^/api/v2/magazine/[0-9]+/read$",
 

@@ -48,6 +48,12 @@ public class MagazineService {
      */
     @Transactional(readOnly = true)
     public MagazineFeedResponse list(String category, String cursor, Integer size) {
+        return list(category, null, cursor, size);
+    }
+
+    /** tag 를 주면 그 태그가 붙은 발행분만. 정렬·커서 규칙은 동일하다. */
+    @Transactional(readOnly = true)
+    public MagazineFeedResponse list(String category, String tag, String cursor, Integer size) {
         int limit = (size == null) ? DEFAULT_SIZE : Math.min(Math.max(size, 1), MAX_SIZE);
         String cat = (category == null || category.isBlank() || "ALL".equalsIgnoreCase(category))
                 ? null
@@ -55,9 +61,18 @@ public class MagazineService {
 
         // limit + 1 을 읽어 "다음 페이지가 있는지"를 별도 count 쿼리 없이 판단한다.
         Pageable page = PageRequest.of(0, limit + 1);
-        List<MagazineArticle> rows = (cursor == null || cursor.isBlank())
-                ? repository.findFirstPage(PUBLISHED, cat, page)
-                : nextPage(cat, cursor, page);
+        String tagName = (tag == null || tag.isBlank() || "ALL".equalsIgnoreCase(tag)) ? null : tag.trim();
+        boolean first = (cursor == null || cursor.isBlank());
+
+        List<MagazineArticle> rows;
+        if (tagName == null) {
+            rows = first ? repository.findFirstPage(PUBLISHED, cat, page) : nextPage(cat, cursor, page);
+        } else if (first) {
+            rows = repository.findFirstPageByTag(PUBLISHED, cat, tagName, limit + 1);
+        } else {
+            Cursor c = decodeCursor(cursor);
+            rows = repository.findNextPageByTag(PUBLISHED, cat, tagName, c.at(), c.id(), limit + 1);
+        }
 
         boolean hasMore = rows.size() > limit;
         List<MagazineArticle> pageRows = hasMore ? rows.subList(0, limit) : rows;
@@ -104,6 +119,12 @@ public class MagazineService {
             // 나노 자리가 범위를 벗어나면 DateTimeException 이 난다 — 이것도 잘못된 커서다.
             throw new CustomApiException("잘못된 커서입니다.");
         }
+    }
+
+    /** 목록 화면 태그 필터 칩. 실제로 글이 붙어 있는 태그만 내려간다. */
+    @Transactional(readOnly = true)
+    public List<String> tags() {
+        return repository.findPublishedTagNames();
     }
 
     @Transactional(readOnly = true)

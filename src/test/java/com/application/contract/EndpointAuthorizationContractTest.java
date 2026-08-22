@@ -70,6 +70,7 @@ class EndpointAuthorizationContractTest {
         // 매거진(V10~V12). 런타임 화이트리스트(EndpointAuthorizationPolicy)에는 이미 PUBLIC 으로
         // 올라가 있었는데 이 표에만 빠져 있어서 계약 테스트가 계속 빨간 상태였다.
         m.put("/api/v2/magazine", Tier.PUBLIC);
+        m.put("/api/v2/magazine/tags", Tier.PUBLIC);
         m.put("/api/v2/magazine/1", Tier.PUBLIC);
         m.put("/api/v2/magazine/1/read", Tier.PUBLIC);          // POST, 조회수
         m.put("/api/v2/monitoring/track", Tier.PUBLIC);
