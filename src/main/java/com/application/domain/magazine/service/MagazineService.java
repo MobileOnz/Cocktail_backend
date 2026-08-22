@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -62,27 +63,37 @@ public class MagazineService {
         return repository.findNextPage(PUBLISHED, category, c.at(), c.id(), page);
     }
 
-    /** 커서는 정렬 키(publishedAt, id) 를 그대로 담는다. 밀리초_id 형태. */
+    /**
+     * 커서는 정렬 키(publishedAt, id) 를 그대로 담는다. "초_나노_id" 형태.
+     *
+     * 처음엔 밀리초로 담았는데, published_at 은 마이크로초까지 저장된다(예: 07:26:32.412269).
+     * 밀리초로 자르면 커서가 .412 가 되어 실제 값 .412269 보다 앞서고,
+     * 다음 페이지 조건 `publishedAt < .412` 도 `publishedAt = .412` 도 그 행들을 못 잡는다.
+     * 같은 시각에 발행된 나머지가 통째로 건너뛰어졌다(GUIDE 12건 중 5건만 도달).
+     * → 초와 나노를 따로 담아 무손실로 왕복시킨다.
+     */
     private record Cursor(LocalDateTime at, Long id) {}
 
     private static String encodeCursor(MagazineArticle a) {
-        return a.getPublishedAt().toInstant(ZoneOffset.UTC).toEpochMilli() + "_" + a.getId();
+        Instant at = a.getPublishedAt().toInstant(ZoneOffset.UTC);
+        return at.getEpochSecond() + "_" + at.getNano() + "_" + a.getId();
     }
 
     private static Cursor decodeCursor(String cursor) {
         // 앱이 커서를 임의로 만들어 보내면 여기서 걸러 400 으로 돌려준다.
         // 조용히 첫 페이지로 되돌리면 앱이 같은 페이지를 무한히 다시 받는다.
         String[] parts = cursor.split("_");
-        if (parts.length != 2) {
+        if (parts.length != 3) {
             throw new CustomApiException("잘못된 커서입니다.");
         }
         try {
             LocalDateTime at = LocalDateTime.ofEpochSecond(
-                    Long.parseLong(parts[0]) / 1000,
-                    (int) (Long.parseLong(parts[0]) % 1000) * 1_000_000,
+                    Long.parseLong(parts[0]),
+                    Integer.parseInt(parts[1]),
                     ZoneOffset.UTC);
-            return new Cursor(at, Long.parseLong(parts[1]));
-        } catch (NumberFormatException e) {
+            return new Cursor(at, Long.parseLong(parts[2]));
+        } catch (NumberFormatException | java.time.DateTimeException e) {
+            // 나노 자리가 범위를 벗어나면 DateTimeException 이 난다 — 이것도 잘못된 커서다.
             throw new CustomApiException("잘못된 커서입니다.");
         }
     }

@@ -32,7 +32,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MagazineServicePaginationTest {
 
     private static final int TOTAL = 25;
-    private static final LocalDateTime TIE_AT = LocalDateTime.of(2026, 3, 1, 12, 0, 0);
+    // 마이크로초까지 넣는다. 예전엔 초 단위(.000)만 써서 커서의 밀리초 절삭 버그를 놓쳤다.
+    // 운영 데이터의 published_at 은 실제로 07:26:32.412269 같은 값이다.
+    private static final LocalDateTime TIE_AT =
+            LocalDateTime.of(2026, 3, 1, 12, 0, 0).withNano(412_269_000);
 
     @Autowired
     private MagazineService magazineService;
@@ -141,12 +144,33 @@ class MagazineServicePaginationTest {
     }
 
     @Test
+    @DisplayName("발행시각에 마이크로초가 있어도 한 건도 잃지 않는다")
+    void survivesSubMillisecondPrecision() {
+        // 회귀 방지: 커서를 밀리초로 절삭하면 .412269 인 행들이 `< .412` 에도 `= .412` 에도
+        // 걸리지 않아 통째로 사라졌다. 동점 5건을 페이지 경계에 걸치도록 size=2 로 훑는다.
+        List<MagazineCard> all = drain("ALL", 2);
+
+        assertThat(all).hasSize(TOTAL);
+        assertThat(all.stream().map(MagazineCard::id).distinct().count()).isEqualTo(TOTAL);
+
+        // 동점 구간(앞 5건)이 전부 살아 있어야 한다.
+        long tied = all.stream().filter(c -> TIE_AT.equals(c.publishedAt())).count();
+        assertThat(tied).as("같은 시각 발행분이 커서에서 유실됨").isEqualTo(5);
+    }
+
+    @Test
     @DisplayName("잘못된 커서는 조용히 첫 페이지로 되돌지 않고 400 으로 거절한다")
     void rejectsMalformedCursor() {
         // 조용히 첫 페이지를 돌려주면 앱이 같은 페이지를 무한히 다시 받는다.
         assertThatThrownBy(() -> magazineService.list("ALL", "이건커서가아니다", 10))
                 .isInstanceOf(CustomApiException.class);
         assertThatThrownBy(() -> magazineService.list("ALL", "abc_def", 10))
+                .isInstanceOf(CustomApiException.class);
+        // 옛 2토막(밀리초_id) 형식도 이제는 거절 대상이다.
+        assertThatThrownBy(() -> magazineService.list("ALL", "1785050792412_205", 10))
+                .isInstanceOf(CustomApiException.class);
+        // 나노 자리가 범위를 벗어난 경우
+        assertThatThrownBy(() -> magazineService.list("ALL", "1785050792_999999999999_205", 10))
                 .isInstanceOf(CustomApiException.class);
     }
 
