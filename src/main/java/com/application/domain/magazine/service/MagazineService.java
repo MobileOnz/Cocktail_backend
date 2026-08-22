@@ -1,6 +1,8 @@
 package com.application.domain.magazine.service;
 
 import com.application.common.exception.custom.CustomApiException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.application.domain.magazine.dto.MagazineCard;
 import com.application.domain.magazine.dto.MagazineDetail;
 import com.application.domain.magazine.dto.MagazineFeedResponse;
@@ -28,6 +30,12 @@ public class MagazineService {
     private static final int MAX_SIZE = 50;
 
     private final MagazineArticleRepository repository;
+
+    /** content(JSONB 원본 문자열) 에서 첫 문단을 꺼낼 때만 쓴다. */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    /** 카드 요약 폴백 길이. 앱 카드가 2줄을 넘기지 않는 선. */
+    private static final int SUMMARY_MAX = 80;
 
     /**
      * 발행분 목록(최신순). category 지정 시 필터(대문자 정규화).
@@ -113,7 +121,7 @@ public class MagazineService {
         return new MagazineCard(
                 a.getId(),
                 a.getTitle(),
-                a.getDek(),
+                summaryOf(a),
                 a.getCategory(),
                 a.getSubcategory(),
                 a.getThumbnail(),
@@ -122,6 +130,63 @@ public class MagazineService {
                 a.getPublishedAt(),
                 a.getViewCount(),
                 repository.findTagNames(a.getId()));
+    }
+
+    /**
+     * 목록 카드에 쓸 요약.
+     *
+     * dek 이 있으면 그대로 쓴다. 가이드에서 넘어온 글들은 dek 이 비어 있는데(V12 마이그레이션이
+     * 채우지 않았다), 그러면 카드에 제목 한 줄만 남아 25장이 서로 구별되지 않는다.
+     * 그 경우 본문 첫 문단 앞부분을 잘라 쓴다 — 편집자가 쓴 리드문만은 못해도,
+     * 빈 카드보다는 글을 고르는 데 도움이 된다. dek 이 채워지면 자동으로 그쪽이 이긴다.
+     */
+    private String summaryOf(MagazineArticle a) {
+        if (a.getDek() != null && !a.getDek().isBlank()) {
+            return a.getDek();
+        }
+        return firstParagraphSnippet(a.getContent());
+    }
+
+    private static String firstParagraphSnippet(String contentJson) {
+        if (contentJson == null || contentJson.isBlank()) {
+            return null;
+        }
+        try {
+            JsonNode blocks = MAPPER.readTree(contentJson);
+            if (!blocks.isArray()) {
+                return null;
+            }
+            for (JsonNode block : blocks) {
+                if (!block.isObject()) {
+                    continue;
+                }
+                if (!"paragraph".equals(block.path("type").asText())) {
+                    continue;
+                }
+                String text = block.path("text").asText("").trim();
+                if (text.isEmpty()) {
+                    continue;
+                }
+                return truncate(text);
+            }
+            return null;
+        } catch (Exception e) {
+            // 목록 조회가 본문 파싱 때문에 실패하면 안 된다. 요약만 포기한다.
+            return null;
+        }
+    }
+
+    /** 낱말 중간에서 자르지 않는다. */
+    private static String truncate(String text) {
+        if (text.length() <= SUMMARY_MAX) {
+            return text;
+        }
+        String cut = text.substring(0, SUMMARY_MAX);
+        int lastSpace = cut.lastIndexOf(' ');
+        if (lastSpace > SUMMARY_MAX / 2) {
+            cut = cut.substring(0, lastSpace);
+        }
+        return cut.stripTrailing() + "…";
     }
 
     private MagazineDetail toDetail(MagazineArticle a) {
