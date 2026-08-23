@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('메뉴 편집 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav><a th:href="@{/admin/bars}">← 바 목록</a></nav>
+    <h1><span th:text="${bar['name_ko']}">바</span> · 메뉴</h1>
+
+    <h2>카테고리 추가</h2>
+    <form class="card" th:attr="hx-post=@{/admin/bars/{id}/menu/categories(id=${bar['id']})}"
+          hx-target="#items-block" hx-swap="outerHTML">
+        <label>이름(한글) <input type="text" name="nameKo" required/></label>
+        <label>이름(영문) <input type="text" name="nameEn"/></label>
+        <label>정렬 <input type="number" step="1" name="priority" value="0"/></label>
+        <button type="submit">+ 카테고리</button>
+    </form>
+
+    <h2>아이템 추가</h2>
+    <form class="card" th:attr="hx-post=@{/admin/bars/{id}/menu/items(id=${bar['id']})}"
+          hx-target="#items-block" hx-swap="outerHTML">
+        <p><label>카테고리
+            <select name="categoryId">
+                <option value="">(없음)</option>
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name_ko}">카테고리</option>
+            </select></label></p>
+        <p><label>이름 <input type="text" name="name" required/></label>
+            &nbsp;<label>영문 <input type="text" name="nameEn"/></label></p>
+        <p><label>가격 <input type="text" name="price" placeholder="18,000원 / 시가" required/></label>
+            <span class="muted">숫자만 자동 추출해 price_amount 저장</span></p>
+        <p><label>설명 <input type="text" name="description" style="width:60%"/></label></p>
+        <p><label><input type="checkbox" name="available" value="true" checked/> 판매중</label></p>
+        <button type="submit">+ 아이템</button>
+    </form>
+
+    <!-- 부분 갱신 대상(htmx): 카테고리 + 아이템 목록. 이 div 하나가 in-place 로 렌더되고,
+         컨트롤러는 'admin/bar/menu :: itemsBlock' 로 이 조각만 반환한다. 예전엔 fragment 정의를
+         .wrap 밖에 따로 두고 th:replace 로 또 삽입해 두 번 렌더됐다(QA P2-2). -->
+    <div th:fragment="itemsBlock" id="items-block">
+    <h2>카테고리</h2>
+    <table>
+        <thead><tr><th>ID</th><th>이름</th><th>영문</th><th>정렬</th></tr></thead>
+        <tbody>
+        <tr th:each="c : ${categories}">
+            <td th:text="${c.id}">1</td><td th:text="${c.name_ko}">이름</td>
+            <td th:text="${c.name_en}">en</td><td th:text="${c.priority}">0</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(categories)}"><td colspan="4" class="muted">카테고리 없음</td></tr>
+        </tbody>
+    </table>
+
+    <h2>아이템</h2>
+    <table>
+        <thead><tr><th>ID</th><th>이름</th><th>카테고리</th><th>가격</th><th>금액</th><th>판매</th><th>작업</th></tr></thead>
+        <tbody>
+        <tr th:each="i : ${items}">
+            <td th:text="${i.id}">1</td>
+            <td th:text="${i.name}">이름</td>
+            <td th:text="${i.category}">카테고리</td>
+            <td th:text="${i.price}">18,000원</td>
+            <td th:text="${i.price_amount}">18000</td>
+            <td th:text="${i.is_available} ? '판매중' : '중지'">판매중</td>
+            <td>
+                <button class="danger"
+                        th:attr="hx-delete=@{/admin/bars/{bid}/menu/items/{iid}(bid=${bar['id']},iid=${i.id})}"
+                        hx-target="#items-block" hx-swap="outerHTML"
+                        hx-confirm="이 아이템을 삭제할까요?">삭제</button>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(items)}"><td colspan="7" class="muted">아이템 없음</td></tr>
+        </tbody>
+    </table>
+    </div><!-- /itemsBlock -->
+</div><!-- /wrap -->
+</body>
+</html>

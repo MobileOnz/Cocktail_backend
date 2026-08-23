@@ -15,6 +15,7 @@ public class GuideListResponseDto {
     private Integer part;
     private String title;
     private String imageUrl;
+    private String category;
 
     @Getter
     @Builder
@@ -39,6 +40,7 @@ public class GuideListResponseDto {
                 .part(guide.getPart())
                 .title(guide.getTitle())
                 .imageUrl(guide.getImageUrl())
+                .category(guide.getCategory())
                 .build();
     }
 }

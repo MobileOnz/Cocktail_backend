@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<tbody th:fragment="rows" id="report-rows">
+    <tr th:each="r : ${reports}" th:with="overdue=${r.hours_open != null and r.hours_open >= 24}">
+        <td th:text="${r.id}">1</td>
+        <td th:text="${r.bar_name}">바</td>
+        <td th:text="${r.author_ref}">author</td>
+        <td th:text="${r.content}">내용</td>
+        <td th:text="${r.report_count}">1</td>
+        <td th:text="${r.reasons}">SPAM</td>
+        <td th:style="${overdue} ? 'color:#e03131;font-weight:700' : ''"
+            th:text="${#numbers.formatDecimal(r.hours_open, 1, 1)} + 'h'">2.0h</td>
+        <td>
+            <button class="ghost"
+                    th:attr="hx-post=@{/admin/reports/{id}/hide(id=${r.id})}"
+                    hx-target="#report-rows" hx-swap="outerHTML"
+                    hx-confirm="이 메시지를 숨길까요?">숨김</button>
+            <button class="danger"
+                    th:attr="hx-post=@{/admin/reports/{id}/block(id=${r.id})}"
+                    hx-target="#report-rows" hx-swap="outerHTML"
+                    hx-confirm="이 작성자의 해당 바 메시지를 전부 숨길까요?">작성자 차단</button>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(reports)}"><td colspan="8" class="muted">미처리 신고가 없습니다. 👍</td></tr>
+</tbody>
+</body>
+</html>

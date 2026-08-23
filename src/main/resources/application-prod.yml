@@ -9,7 +9,8 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update # 실제 서비스 시 validate
+      # 스키마 소유권은 Flyway(V1__baseline)로 이관. Hibernate는 검증만.
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true

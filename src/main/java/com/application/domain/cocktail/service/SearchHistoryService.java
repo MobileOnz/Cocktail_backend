@@ -33,6 +33,12 @@ public class SearchHistoryService {
 
         String trimmedQuery = queryText.trim();
 
+        // QA P3-5: 인기/무결과 검색어 집계에 한 글자·특수문자 쓰레기(아, ., ㅇ)가 노출되지 않도록
+        // 최소 길이(2자 이상) + 최소 한 글자 이상의 문자/숫자 포함을 집계 기록 조건으로 강제한다.
+        if (trimmedQuery.length() < 2 || !trimmedQuery.matches(".*[\\p{L}\\p{N}].*")) {
+            return;
+        }
+
         if (user == null) {
             return;
         }
@@ -43,12 +49,12 @@ public class SearchHistoryService {
         if (member == null) return;
 
 
-        // 중복 검색어가 있다면 먼저 삭제
+        // 중복 검색어가 있다면 먼저 삭제(정규화된 trimmedQuery 기준으로 저장·삭제를 일치시킨다)
         searchHistoryRepository.deleteByUserIdAndQueryText(member.getId(), trimmedQuery);
 
         searchHistoryRepository.save(SearchHistory.builder()
                 .userId(member.getId())
-                .queryText(queryText)
+                .queryText(trimmedQuery)
                 .build());
     }
 

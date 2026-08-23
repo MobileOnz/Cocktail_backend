@@ -190,8 +190,9 @@ class CocktailV2ControllerTest {
                         .param("cocktailId", String.valueOf(nonExistentCocktailId))
                         .header("Authorization", "Bearer " + accessToken))
                 .andDo(print())
-                .andExpect(status().isBadRequest()) // CustomApiException은 400 BAD_REQUEST 반환
+                // QA P3-1: 리소스 부재는 404 NOT_FOUND(NoSuchElementException → 전역 핸들러). 봉투 code=-1.
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value(-1))
-                .andExpect(jsonPath("$.msg").value("잘못된 요청"));
+                .andExpect(jsonPath("$.msg").value("요청하신 리소스를 찾을 수 없습니다."));
     }
 }

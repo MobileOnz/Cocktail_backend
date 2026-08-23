@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('제조 단계 편집 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav><a th:href="@{/admin/dashboard}">← 대시보드</a></nav>
+    <h1>칵테일 <span th:text="${cocktailId}">1</span> — 제조 단계</h1>
+
+    <p th:unless="${stepsAvailable}" class="muted">
+        ⚠️ cocktail_step 테이블이 아직 없습니다(s1 V3 미적용).
+    </p>
+
+    <div th:if="${stepsAvailable}">
+        <form class="card"
+              th:attr="hx-post=@{/admin/cocktails/{id}/steps(id=${cocktailId})}"
+              hx-target="#step-rows" hx-swap="outerHTML">
+            <strong>단계 추가</strong><br/>
+            <label>지시문 <input type="text" name="instruction" required style="width:50%"/></label>
+            <label>팁 <input type="text" name="tip"/></label>
+            <label>초 <input type="number" name="durationSec" style="width:70px"/></label>
+            <button type="submit">추가</button>
+        </form>
+
+        <table>
+            <thead><tr><th>순서</th><th>지시문</th><th>팁</th><th>초</th><th>이동/삭제</th></tr></thead>
+            <tbody id="step-rows" th:replace="admin/cocktail/steps :: rows"></tbody>
+        </table>
+    </div>
+</div>
+
+<tbody th:fragment="rows" id="step-rows" th:remove="tag">
+    <tr th:each="s : ${steps}">
+        <td th:text="${s.step_order}">1</td>
+        <td th:text="${s.instruction}">얼음을 채운다</td>
+        <td th:text="${s.tip}"></td>
+        <td th:text="${s.duration_sec}"></td>
+        <td>
+            <button class="ghost"
+                    th:attr="hx-post=@{/admin/cocktails/{cid}/steps/{sid}/move(cid=${cocktailId},sid=${s.id})}"
+                    hx-vals='{"direction":"up"}' hx-target="#step-rows" hx-swap="outerHTML">▲</button>
+            <button class="ghost"
+                    th:attr="hx-post=@{/admin/cocktails/{cid}/steps/{sid}/move(cid=${cocktailId},sid=${s.id})}"
+                    hx-vals='{"direction":"down"}' hx-target="#step-rows" hx-swap="outerHTML">▼</button>
+            <button class="danger"
+                    th:attr="hx-delete=@{/admin/cocktails/{cid}/steps/{sid}(cid=${cocktailId},sid=${s.id})}"
+                    hx-target="#step-rows" hx-swap="outerHTML">삭제</button>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(steps)}"><td colspan="5" class="muted">단계가 없습니다.</td></tr>
+</tbody>
+</body>
+</html>

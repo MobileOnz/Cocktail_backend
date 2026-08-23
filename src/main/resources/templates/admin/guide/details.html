@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<tbody th:fragment="details" id="guide-details">
+    <tr th:each="d : ${details}">
+        <td th:text="${d.display_order}">1</td>
+        <td th:text="${d.subtitle}">소제목</td>
+        <td th:text="${d.id}">10</td>
+    </tr>
+</tbody>
+</body>
+</html>

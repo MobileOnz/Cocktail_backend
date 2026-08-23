@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>QR 플래카드 인쇄 · ONZ</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; text-align: center; padding: 40px; }
+        .placard { border: 2px solid #1b1b1b; border-radius: 16px; padding: 48px 32px; max-width: 480px; margin: 0 auto; }
+        .bar-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .hint { color: #555; font-size: 15px; margin-bottom: 24px; }
+        .payload { font-family: monospace; font-size: 12px; word-break: break-all; background: #f2f3f5;
+                   padding: 14px; border-radius: 8px; margin-top: 24px; }
+        .note { color: #999; font-size: 11px; margin-top: 20px; }
+        @media print { button { display: none; } }
+    </style>
+</head>
+<body>
+<div class="placard">
+    <div class="bar-name" th:text="${bar['name_ko']}">바 이름</div>
+    <div class="hint">ONZ 앱으로 QR을 스캔하면 체크인됩니다</div>
+    <div th:if="${active != null}">
+        <p>버전 <strong th:text="${active.key_version}">1</strong></p>
+        <!-- QR 이미지 렌더 라이브러리(zxing) 추가 시 이 자리에 <img> 삽입 -->
+        <div class="payload" th:text="${payload}">payload</div>
+        <p class="note">※ QR 이미지 렌더링은 zxing 의존성 추가 후 활성화. 현재는 서명 페이로드 텍스트 노출.</p>
+    </div>
+    <p th:if="${active == null}" class="hint">활성 플래카드가 없습니다. 먼저 발급하세요.</p>
+    <button onclick="window.print()">🖨 인쇄 / PDF 저장</button>
+</div>
+</body>
+</html>

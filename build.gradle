@@ -69,6 +69,11 @@ dependencies {
     // Postgresql
     runtimeOnly 'org.postgresql:postgresql'
 
+    // Flyway (스키마 소유권을 baseline 마이그레이션으로 고정 — Hibernate ddl-auto 대체)
+    // 버전은 Spring Boot 3.4.1 BOM(10.20.1)이 관리
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+
     // H2 (테스트용 인메모리 DB)
     testRuntimeOnly 'com.h2database:h2'
 

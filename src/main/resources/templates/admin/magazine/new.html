@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('매거진 JSON 주입 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/magazine}">매거진</a>
+        <a th:href="@{/admin/logout}" data-th-remove="all">로그아웃</a>
+    </nav>
+    <h1>매거진 JSON 붙여넣기</h1>
+
+    <p th:if="${error}" style="color:#c0392b" th:text="'⚠️ ' + ${error}"></p>
+    <p class="muted">글 JSON 을 그대로 붙여넣으세요. slug 기준으로 생성/갱신됩니다. 필수: slug · title · category · content(배열).</p>
+
+    <form th:action="@{/admin/magazine}" method="post">
+        <textarea name="json" rows="28" style="width:100%;font-family:monospace;font-size:13px"
+                  th:text="${json}" placeholder='{ "slug": "...", "title": "...", "category": "story", "content": [ ... ] }'></textarea>
+        <p>
+            <label><input type="checkbox" name="publish" checked> 즉시 발행(PUBLISHED)</label>
+        </p>
+        <button type="submit">저장</button>
+        <a th:href="@{/admin/magazine}"><button type="button">취소</button></a>
+    </form>
+</div>
+</body>
+</html>

@@ -43,6 +43,11 @@ public class ReqSocialLoginDto {
 
     @Override
     public String toString(){
-        return "[DTO] Provider : " + provider +"\n[DTO] code : " + code + "\n[DTO] state : " + state +"\n[DTO] accessToken : " + accessToken + "\n[DTO] deviceNumber : " + deviceNumber;
+        // 값이 아니라 "왔는지 여부"만 남긴다. toString 은 어디서 로그로 새어나갈지 알 수 없다.
+        return "[DTO] provider : " + provider
+                + "\n[DTO] codeProvided : " + (code != null && !code.isBlank())
+                + "\n[DTO] stateProvided : " + (state != null && !state.isBlank())
+                + "\n[DTO] accessTokenProvided : " + (accessToken != null && !accessToken.isBlank())
+                + "\n[DTO] deviceNumber : " + deviceNumber;
     }
 }

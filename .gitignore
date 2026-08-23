@@ -49,3 +49,11 @@ application-*.properties
 
 ### Editor ###
 .claude
+
+### Local-only (로컬 E2E 하네스 / 개발 전용 — 커밋 금지) ###
+/uploads/
+docker-compose.local.yml
+docker-compose.local-admin.yml
+/hurl/
+/scripts/e2e_local.sh
+/scripts/00_init_role.sql

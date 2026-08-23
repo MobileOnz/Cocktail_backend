@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('가이드 관리 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/news}">뉴스</a>
+        <a th:href="@{/admin/guides}">가이드</a>
+    </nav>
+    <h1>가이드 관리</h1>
+
+    <form class="card" th:attr="hx-post=@{/admin/guides}" hx-target="#guide-rows" hx-swap="outerHTML">
+        <strong>새 가이드 파트</strong><br/>
+        <label>part(정수) <input type="number" name="part" required style="width:80px"/></label>
+        <label>제목 <input type="text" name="title" required/></label>
+        <label>이미지URL <input type="text" name="imageUrl"/></label>
+        <label>카테고리 <input type="text" name="category" placeholder="입문/만들기/실전 등" style="width:140px"/></label>
+        <button type="submit">추가</button>
+    </form>
+
+    <table>
+        <thead><tr><th>part</th><th>제목</th><th>카테고리</th><th>상세 수</th><th>작업</th></tr></thead>
+        <tbody id="guide-rows" th:replace="admin/guide/rows :: rows"></tbody>
+    </table>
+</div>
+</body>
+</html>

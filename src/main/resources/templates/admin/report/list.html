@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('채팅 신고 큐 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/bars}">바</a>
+        <a th:href="@{/admin/reports}">신고 큐</a>
+    </nav>
+    <h1>채팅 신고 큐</h1>
+    <p class="muted">최초 신고 후 <strong>24시간</strong>이 지난 미처리 건은 <span style="color:#e03131">빨간색</span>(SLA 초과)으로 표시됩니다.</p>
+    <table>
+        <thead>
+        <tr><th>메시지ID</th><th>바</th><th>작성자</th><th>내용</th><th>신고수</th><th>사유</th><th>경과</th><th>처리</th></tr>
+        </thead>
+        <tbody id="report-rows" th:replace="~{admin/report/rows :: rows}"></tbody>
+    </table>
+</div>
+</body>
+</html>

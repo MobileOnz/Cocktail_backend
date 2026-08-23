@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 로그인</title>
+    <!-- 빈 favicon 으로 /favicon.ico 404 콘솔 에러 억제 (QA P3-2) -->
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <style>
         body {
             font-family: 'Pretendard', sans-serif;
@@ -55,8 +58,8 @@
     <h2>ONZ Cocktail ADMIN</h2>
 
     <form th:action="@{/admin/login-process}" method="post">
-        <input type="text" name="username" placeholder="아이디" required>
-        <input type="password" name="password" placeholder="비밀번호" required>
+        <input type="text" name="username" placeholder="아이디" autocomplete="username" required>
+        <input type="password" name="password" placeholder="비밀번호" autocomplete="current-password" required>
         <button type="submit">로그인</button>
     </form>
 

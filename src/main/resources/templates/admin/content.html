@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="admin/fragments/head :: head('콘텐츠 지표 · ONZ Admin')"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/news}">뉴스</a>
+        <a th:href="@{/admin/guides}">가이드</a>
+    </nav>
+    <h1>콘텐츠 디렉터 지표</h1>
+
+    <h2>운영 스냅샷</h2>
+    <div class="card">
+        <span class="muted">최근 7일 검색량</span>
+        <div class="big" th:text="${ops.searchVolume7d}">0</div>
+        <span class="muted">무결과 고유 쿼리 수</span>
+        <div class="big" th:text="${ops.noResultDistinctQueries}">0</div>
+        <span class="muted">미처리 문의 · 최근 7일 관리자 쓰기</span>
+        <div th:text="${ops.openInquiries} + ' 건 / ' + ${ops.adminWrites7d} + ' 회'">-</div>
+        <p class="muted">엔드포인트별 p95·에러율은 Micrometer/actuator 도입(F-17, s1) 후 추가됩니다.</p>
+    </div>
+
+    <h2>⭐ 무결과 검색어 top 50 — "다음에 만들 콘텐츠"</h2>
+    <p class="muted">검색됐지만 매칭되는 칵테일이 없는 쿼리. (search_history.result_count 도입 전 NOT EXISTS 근사)</p>
+    <table>
+        <thead><tr><th>#</th><th>검색어</th><th>횟수</th></tr></thead>
+        <tbody>
+            <tr th:each="q, it : ${noResultSearches}">
+                <td th:text="${it.count}">1</td>
+                <td th:text="${q.query}">미도리 사워</td>
+                <td th:text="${q.count}">20</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(noResultSearches)}">
+                <td colspan="3" class="muted">무결과 검색어가 없습니다 (search_history 가 비었거나 모두 매칭됨).</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>제조 단계 없는 인기 칵테일 top 20 — 작업 큐</h2>
+    <table>
+        <thead><tr><th>칵테일</th><th>추천수</th></tr></thead>
+        <tbody>
+            <tr th:each="c : ${popularMissingSteps}">
+                <td th:text="${c.name}">진토닉</td>
+                <td th:text="${c.count}">10</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(popularMissingSteps)}">
+                <td colspan="2" class="muted">cocktail_step 테이블이 없거나 모든 인기 칵테일에 단계가 있습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>바 채팅 활동 (최근 7일)</h2>
+    <div class="card" th:if="${chatActivity != null}">
+        <span class="muted">메시지 수 / 활성 바 수</span>
+        <div th:text="${chatActivity.messages7d} + ' 건 / ' + ${chatActivity.activeBars7d} + ' 곳'">-</div>
+        <span class="muted">미처리 신고 · 숨김 메시지</span>
+        <div th:text="${chatActivity.openReports} + ' 건 / ' + ${chatActivity.hiddenMessages} + ' 건'">-</div>
+        <p class="muted"><a th:href="@{/admin/reports}">→ 신고 큐로 이동</a></p>
+    </div>
+
+    <h2>바 방문(체크인) top 15</h2>
+    <table>
+        <thead><tr><th>바</th><th>방문수</th></tr></thead>
+        <tbody>
+            <tr th:each="b : ${barVisitTop}">
+                <td th:text="${b.name}">앨리스 청담</td>
+                <td th:text="${b.count}">42</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(barVisitTop)}">
+                <td colspan="2" class="muted">bar_visit 테이블이 없거나 체크인 기록이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

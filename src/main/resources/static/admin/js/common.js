@@ -3,7 +3,19 @@
    - Axios 기본 설정 + REST API helper 함수
    =============================================== */
 
+// ✅ 컨텍스트 패스(/onz) 자동 감지 — 절대경로 "/admin/..." 요청이 context-path 를 빼먹어 404 나던
+//    문제(QA P1-2) 해결. 어드민 페이지는 "/onz/admin/..." 로 서빙되므로 "/admin" 앞부분을 컨텍스트로 잡는다.
+//    axios.defaults.baseURL 에 넣으면 이후 모든 axios/api 요청의 "/admin/..." 앞에 자동으로 붙는다.
+//    window.location.href 같은 순수 이동은 axios 를 안 타므로 window.CONTEXT_PATH 로 직접 붙인다.
+const CONTEXT_PATH = (() => {
+    const p = window.location.pathname;
+    const i = p.indexOf("/admin");
+    return i > 0 ? p.substring(0, i) : "";
+})();
+window.CONTEXT_PATH = CONTEXT_PATH;
+
 // ✅ Axios 기본 설정
+axios.defaults.baseURL = CONTEXT_PATH;
 axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 axios.defaults.headers.post["Content-Type"] = "application/json; charset=utf-8";
 

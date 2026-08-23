@@ -70,11 +70,13 @@ public class MonitoringController {
                     """
     )
     @GetMapping("/onboarding/status")
-    public ResponseEntity<OnboardingStatusRes> getOnboardingStatus(
+    public ResponseEntity<ResponseDto<OnboardingStatusRes>> getOnboardingStatus(
             @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
             @RequestParam String deviceNumber) {
+        // QA P2-1: 다른 모든 엔드포인트처럼 {code,msg,data} 봉투로 감싼다(앱 공통 파서 호환).
         OnboardingStatusRes response = monitoringService.getOnboardingStatus(deviceNumber);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(
+                new ResponseDto<>(Constant.SUCCESS_CODE, "온보딩 상태 조회 성공", response), HttpStatus.OK);
     }
 
     @Operation(

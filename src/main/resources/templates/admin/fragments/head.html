@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--
+  공용 head fragment. CSRF 메타 + htmx 로드 + htmx 요청에 CSRF 헤더 자동 첨부.
+  사용: <head th:replace="admin/fragments/head :: head('제목')"></head>
+-->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${title}">ONZ Admin</title>
+    <!-- 빈 favicon 으로 /favicon.ico 404 콘솔 에러 억제 (QA P3-2) -->
+    <link rel="icon" href="data:,"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:src="@{/admin/js/htmx.min.js}"></script>
+    <script th:inline="javascript">
+        // 모든 htmx 요청에 CSRF 헤더를 자동 첨부 (admin 체인 CSRF 재활성화 대응)
+        document.addEventListener('htmx:configRequest', function (evt) {
+            var token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            var header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            evt.detail.headers[header] = token;
+        });
+    </script>
+    <style>
+        body { font-family: -apple-system, sans-serif; margin: 0; background: #f5f6f8; color: #1b1b1b; }
+        .wrap { max-width: 1000px; margin: 0 auto; padding: 24px; }
+        h1 { font-size: 22px; } h2 { font-size: 17px; margin-top: 28px; }
+        nav a { margin-right: 14px; color: #3b5bdb; text-decoration: none; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 10px; }
+        th, td { border: 1px solid #e3e5e8; padding: 8px 10px; text-align: left; font-size: 13px; }
+        th { background: #eef0f3; }
+        input, textarea, select { padding: 6px 8px; border: 1px solid #cbd0d6; border-radius: 4px; font-size: 13px; }
+        textarea { width: 100%; min-height: 120px; font-family: monospace; }
+        button { padding: 6px 12px; border: 0; border-radius: 4px; background: #3b5bdb; color: #fff; cursor: pointer; font-size: 13px; }
+        button.danger { background: #e03131; } button.ghost { background: #868e96; }
+        .card { background:#fff; border:1px solid #e3e5e8; border-radius:8px; padding:16px; margin-top:12px; }
+        .muted { color:#868e96; font-size:12px; }
+        .big { font-size: 26px; font-weight: 700; }
+    </style>
+</head>
+<body></body>
+</html>
