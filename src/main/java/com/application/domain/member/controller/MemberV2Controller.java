@@ -78,14 +78,19 @@ public class MemberV2Controller implements MemberV2ControllerDocs {
     @Override
     @GetMapping("/profile")
     public ResponseEntity<Resource> getProfile(@AuthenticationPrincipal CustomOAuth2User customOAuth2User){
-        Map<String,Object> map = memberService.getProfile(customOAuth2User.getCredentialId());
-        try {
-            return ResponseEntity.ok()
-                    .contentType((MediaType) map.get("ext"))
-                    .body(new UrlResource((URI) map.get("uri")));
-        }catch(MalformedURLException e){
-            throw new RuntimeException("no find file");
-        }
+        // 사진을 올리지 않은 회원이 다수다. 그건 오류가 아니라 '없음'이므로 204 로 답한다.
+        // 앱은 content-type 이 image/* 가 아니면 기본 아바타를 쓴다.
+        return memberService.getProfile(customOAuth2User.getCredentialId())
+                .map(map -> {
+                    try {
+                        return ResponseEntity.ok()
+                                .contentType((MediaType) map.get("ext"))
+                                .body((Resource) new UrlResource((URI) map.get("uri")));
+                    } catch (MalformedURLException e) {
+                        throw new RuntimeException("no find file");
+                    }
+                })
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
 }
