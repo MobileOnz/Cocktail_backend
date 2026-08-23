@@ -5,12 +5,15 @@ import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.request.BookmarkBatchRequest;
 import com.application.domain.cocktail.dto.response.BookmarkBatchResponse;
 import com.application.domain.cocktail.dto.response.BookmarkListResponse;
+import com.application.domain.cocktail.dto.response.CocktailResponseDto;
+import com.application.domain.cocktail.service.CocktailArchiveService;
 import com.application.domain.cocktail.dto.response.BookmarkToggleResponse;
 import com.application.domain.cocktail.dto.response.CocktailResponseDto;
 import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,7 @@ public class CocktailBookmarkController {
 
     private final CocktailBookmarkService bookmarkService;
     private final MemberService memberService;
+    private final CocktailArchiveService archiveService;
 
     /**
      * 즐겨찾기 배치 토글 (추가/삭제)
@@ -140,4 +144,39 @@ public class CocktailBookmarkController {
                 HttpStatus.OK
         );
     }
+    /**
+     * 내가 만들어본 칵테일 목록
+     * GET /api/v2/cocktails/made
+     */
+    @Operation(summary = "내가 만들어본 칵테일 목록",
+            description = "'만들어봤어요'로 기록한 칵테일을 최근 순으로 조회합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/made")
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getMyMade(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User
+    ) {
+        Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("만들어본 칵테일 조회 성공", archiveService.myMade(memberId)),
+                HttpStatus.OK);
+    }
+
+    /**
+     * 내가 남긴 반응 목록
+     * GET /api/v2/cocktails/reactions/me?type=RECOMMEND|HARD
+     */
+    @Operation(summary = "내가 남긴 반응 목록",
+            description = "좋아요(RECOMMEND) 또는 어려워요(HARD)로 표시한 칵테일을 최근 순으로 조회합니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/reactions/me")
+    public ResponseEntity<ResponseDto<List<CocktailResponseDto>>> getMyReactions(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+            @Parameter(description = "RECOMMEND 또는 HARD") @RequestParam String type
+    ) {
+        Long memberId = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId()).getId();
+        return new ResponseEntity<>(
+                ResponseDto.onSuccess("반응 목록 조회 성공", archiveService.myReactions(memberId, type)),
+                HttpStatus.OK);
+    }
+
 }

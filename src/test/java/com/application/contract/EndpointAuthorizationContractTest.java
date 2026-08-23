@@ -104,6 +104,9 @@ class EndpointAuthorizationContractTest {
         m.put("/api/v2/cocktails/1/bookmarks", Tier.AUTH_REQUIRED);
         m.put("/api/v2/cocktails/bookmarks", Tier.AUTH_REQUIRED);
         m.put("/api/v2/cocktails/1/made", Tier.AUTH_REQUIRED);  // T-07
+        // 보관함 — 내가 남긴 기록을 되읽는 목록. 개인 데이터라 인증 필수.
+        m.put("/api/v2/cocktails/made", Tier.AUTH_REQUIRED);
+        m.put("/api/v2/cocktails/reactions/me", Tier.AUTH_REQUIRED);
         m.put("/api/v2/monitoring/info", Tier.AUTH_REQUIRED);   // F-13
         m.put("/api/v2/bars/1/visit", Tier.AUTH_REQUIRED);      // T-10
         m.put("/api/v2/me/visits", Tier.AUTH_REQUIRED);
