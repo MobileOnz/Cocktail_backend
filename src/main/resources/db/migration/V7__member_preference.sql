@@ -37,4 +37,8 @@ JOIN (VALUES
     (302, '아페롤 스프리츠'), (302, '코스모폴리탄'),
     (303, '아메리카노'), (303, '진 피즈'), (303, '모히또'),
     (304, '다이키리'),   (304, '프렌치 75')
-) AS v(part, kor_name) ON c.kor_name = v.kor_name;
+) AS v(part, kor_name) ON c.kor_name = v.kor_name
+-- guide 구성은 환경마다 다르다. 실제로 없는 part 를 넣으면 FK 위반으로
+-- 마이그레이션 전체가 멈춘다(프로덕션에 205 가 없어 실제로 겪었다).
+-- 존재하는 part 만 넣어 어느 환경에서도 통과하게 한다.
+WHERE EXISTS (SELECT 1 FROM guide g WHERE g.part = v.part);
