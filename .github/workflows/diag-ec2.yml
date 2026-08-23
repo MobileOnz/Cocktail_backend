@@ -1,0 +1,55 @@
+name: Diag – EC2 배포 대상 상태 진단
+
+# 읽기 전용. 컨테이너를 건드리지 않는다.
+# 배포 전에 "지금 EC2 가 무엇을 돌리고 있고, compose 가 GHCR 이미지를 보는가"를 확인하는 용도.
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect EC2 (read-only)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "===== 실행 중 컨테이너 ====="
+            docker ps --format '{{.Names}} | {{.Image}} | {{.Status}}' || true
+
+            echo
+            echo "===== compose 파일 존재 여부 ====="
+            ls -la /root/cocktail-api/ 2>/dev/null | head -20 || echo "  /root/cocktail-api 없음"
+
+            echo
+            echo "===== compose 의 api-server 이미지 지정 (비밀값 제외) ====="
+            for f in /root/cocktail-api/docker-compose.yml /root/cocktail-api/docker-compose.yaml; do
+              if [ -f "$f" ]; then
+                echo "--- $f"
+                grep -nE '^\s{0,4}[a-z_-]+:|image:|container_name:|ports:' "$f" | head -40
+              fi
+            done
+
+            echo
+            echo "===== docker compose 바이너리 ====="
+            docker compose version 2>/dev/null || docker-compose version 2>/dev/null || echo "  없음"
+
+            echo
+            echo "===== Flyway 이력 (DB 컨테이너 자동 탐색) ====="
+            PG=$(docker ps --format '{{.Names}}' | grep -iE 'postgres|pg|db' | head -1)
+            if [ -n "$PG" ]; then
+              echo "  db container: $PG"
+              docker exec "$PG" sh -lc 'psql -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-postgres}" -tAc "select count(*) from flyway_schema_history" 2>/dev/null && \
+                psql -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-postgres}" -tAc "select version||^|^||description||^|^||success from flyway_schema_history order by installed_rank desc limit 5" 2>/dev/null' \
+                || echo "  flyway_schema_history 없음 (Flyway 미적용 DB)"
+              echo "  --- member.age_range 분포 (V9 CHECK 0..6 위반 여부) ---"
+              docker exec "$PG" sh -lc 'psql -U "${POSTGRES_USER:-postgres}" -d "${POSTGRES_DB:-postgres}" -tAc "select coalesce(age_range,-1), count(*) from member group by 1 order by 1"' 2>/dev/null || echo "  조회 실패"
+            else
+              echo "  DB 컨테이너를 못 찾음 (외부 RDS 가능성)"
+            fi
+
+            echo
+            echo "===== 디스크 ====="
+            df -h / | tail -1
