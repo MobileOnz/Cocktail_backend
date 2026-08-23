@@ -41,6 +41,13 @@ public class CocktailStep {
     @Column(name = "duration_sec")
     private Integer durationSec;
 
+    /**
+     * MANUAL(사람이 작성) / AUTO(규칙 생성 초안).
+     * 생성기는 AUTO 만 지우고 다시 쓴다 — 사람이 쓴 단계를 덮으면 안 된다.
+     */
+    @Column(nullable = false, length = 16)
+    private String source = "MANUAL";
+
     @CreationTimestamp
     @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
@@ -48,4 +55,20 @@ public class CocktailStep {
     @UpdateTimestamp
     @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    /**
+     * 규칙 생성기가 만드는 초안 단계.
+     * 세터를 열지 않기 위해 팩토리로만 만든다 — 사람이 쓴 단계는 어드민 경로로 들어온다.
+     */
+    public static CocktailStep auto(Long cocktailId, int stepOrder, String instruction,
+                                    String tip, Integer durationSec) {
+        CocktailStep s = new CocktailStep();
+        s.cocktailId = cocktailId;
+        s.stepOrder = stepOrder;
+        s.instruction = instruction;
+        s.tip = tip;
+        s.durationSec = durationSec;
+        s.source = "AUTO";
+        return s;
+    }
 }
