@@ -1,0 +1,33 @@
+name: Diag – EC2 도달성 판별
+
+# 시크릿 값은 출력하지 않는다. 포트별 도달 가능 여부만 본다.
+#   80 성공 + 22 실패  → 주소는 맞고 보안그룹이 22 를 막음
+#   둘 다 실패        → EC2_HOST 가 낡았거나 인스턴스가 죽음
+on:
+  workflow_dispatch:
+
+jobs:
+  reach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Port reachability
+        env:
+          H: ${{ secrets.EC2_HOST }}
+        run: |
+          echo "host 길이: ${#H} 자 (값은 출력하지 않음)"
+          for p in 22 80 443; do
+            if nc -z -w 8 "$H" "$p" 2>/dev/null; then
+              echo "  port $p : 열림"
+            else
+              echo "  port $p : 차단/무응답"
+            fi
+          done
+          echo
+          echo "== HTTP 응답 확인 =="
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "http://$H/onz/api/v2/cocktails/all" || echo "000")
+          echo "  http://<host>/onz/api/v2/cocktails/all → $code"
+          echo
+          echo "== 도메인과 같은 서버인가 =="
+          a=$(getent hosts "$H" | awk '{print $1}' | head -1)
+          b=$(getent hosts onz-cocktail.kr | awk '{print $1}' | head -1)
+          if [ "$a" = "$b" ]; then echo "  EC2_HOST 와 onz-cocktail.kr 이 같은 IP 를 가리킨다"; else echo "  ⚠️ 서로 다른 IP 다 (시크릿이 낡았을 수 있음)"; fi
