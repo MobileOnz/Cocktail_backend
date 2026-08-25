@@ -31,17 +31,14 @@ public class TrackingRes {
     @Schema(description = "회원 여부 (true: 회원, false: 비회원)", example = "false")
     private Boolean isMember;
 
-    @JsonProperty("memberId")
-    @Schema(description = "회원 ID (회원인 경우에만 존재)", example = "123")
-    private Long memberId;
-
+    // F-14: /track 은 인증 없이 호출되므로(비로그인 트래킹 목적), 다른 회원의 내부 memberId를
+    // 임의의 deviceNumber로 알아낼 수 있는 필드는 응답에서 제외한다. isMember 플래그만 남긴다.
     @Builder
-    public TrackingRes(String deviceNumber, Long count, Boolean isFirstAccess, LocalDateTime createdAt, Boolean isMember, Long memberId) {
+    public TrackingRes(String deviceNumber, Long count, Boolean isFirstAccess, LocalDateTime createdAt, Boolean isMember) {
         this.deviceNumber = deviceNumber;
         this.count = count;
         this.isFirstAccess = isFirstAccess;
         this.createdAt = createdAt;
         this.isMember = isMember;
-        this.memberId = memberId;
     }
 }

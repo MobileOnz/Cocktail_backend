@@ -47,11 +47,22 @@ public class AppleLoginStrategy implements SocialLoginStrategy{
 
         RSAPublicKey publicKey = getApplePublicKey(idToken);
 
-        Claims claims = Jwts.parser()
-                .verifyWith(publicKey)
-                .build()
-                .parseSignedClaims(idToken)
-                .getPayload();
+        // F-Apple-1: 서명만 확인하면 "다른 애플 앱(aud)용으로 발급된" 정상 서명 토큰을 그대로
+        // 재사용(replay)할 수 있다. 애플은 모든 릴라잉 파티에 동일한 JWKS로 서명하므로,
+        // 이 서버를 위해 발급된 토큰인지(aud)와 발급자가 진짜 애플인지(iss)를 반드시 확인한다.
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .verifyWith(publicKey)
+                    .requireIssuer("https://appleid.apple.com")
+                    .requireAudience(oAuth2PropertiesValue.getAppleClientId())
+                    .build()
+                    .parseSignedClaims(idToken)
+                    .getPayload();
+        } catch (io.jsonwebtoken.JwtException e) {
+            log.error("[Apple 로그인 실패] id_token의 aud/iss 검증 실패", e);
+            throw new CustomApiException("[소셜로그인 실패] 애플 통신 오류");
+        }
 
         String sub = claims.get("sub", String.class);
         String email = claims.get("email", String.class);

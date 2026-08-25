@@ -1,7 +1,10 @@
 package com.application.domain.monitoring.controller;
 
 import com.application.common.Constant;
+import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
 import com.application.common.response.ResponseDto;
+import com.application.domain.member.entity.Member;
+import com.application.domain.member.service.MemberService;
 import com.application.domain.monitoring.dto.response.SaveOnboardingReq;
 import com.application.domain.monitoring.dto.response.TrackingReq;
 import com.application.domain.monitoring.dto.request.MonitoringInfoRes;
@@ -15,6 +18,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class MonitoringController {
 
     private final MonitoringService monitoringService;
+    private final MemberService memberService;
 
     @Operation(
             summary = "페이지 접근 추적",
@@ -45,9 +50,11 @@ public class MonitoringController {
     )
     @GetMapping("/info")
     public ResponseEntity<MonitoringInfoRes> getMonitoringInfo(
+            @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
             @Parameter(description = "기기 고유 번호", required = true, example = "device_unique_identifier_12345")
             @RequestParam String deviceNumber) {
-        MonitoringInfoRes response = monitoringService.getMonitoringInfo(deviceNumber);
+        Member caller = memberService.getMemberByCredentialId(customOAuth2User.getCredentialId());
+        MonitoringInfoRes response = monitoringService.getMonitoringInfo(deviceNumber, caller.getId());
         return ResponseEntity.ok(response);
     }
 
