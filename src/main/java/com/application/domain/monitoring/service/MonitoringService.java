@@ -83,7 +83,6 @@ public class MonitoringService {
                     .isFirstAccess(false)
                     .createdAt(monitoring.getCreatedAt())
                     .isMember(isMember)
-                    .memberId(isMember ? member.getId() : null)
                     .build();
         } else {
             // 최초 접근: 새로운 레코드 생성
@@ -102,7 +101,6 @@ public class MonitoringService {
                     .isFirstAccess(true)
                     .createdAt(savedMonitoring.getCreatedAt())
                     .isMember(false)
-                    .memberId(null)
                     .build();
         }
     }
@@ -186,14 +184,22 @@ public class MonitoringService {
     /**
      * deviceNumber로 기기 정보, 연령, 성별 조회
      * 회원이면 회원 정보 포함, 비회원이면 기기 정보만 반환
+     *
+     * F-13: 다른 회원 소유의 기기를 조회하려는 요청은 차단한다(IDOR).
+     * 기기가 아무 회원에도 매핑되어 있지 않으면(비회원) PII가 없으므로 제한하지 않는다.
      */
     @Transactional(readOnly = true)
-    public MonitoringInfoRes getMonitoringInfo(String deviceNumber) {
+    public MonitoringInfoRes getMonitoringInfo(String deviceNumber, Long callerMemberId) {
         Monitoring monitoring = monitoringRepository.findByDeviceNumber(deviceNumber)
                 .orElseThrow(() -> new CustomApiException("해당 기기 정보를 찾을 수 없습니다."));
 
         Member member = monitoring.getMember();
         boolean isMember = (member != null);
+
+        if (isMember && !member.getId().equals(callerMemberId)) {
+            throw new CustomApiException("본인 기기 정보만 조회할 수 있습니다.");
+        }
+
         Long totalCount = isMember ? getTotalCountByMember(member) : monitoring.getCount();
 
         return MonitoringInfoRes.builder()
