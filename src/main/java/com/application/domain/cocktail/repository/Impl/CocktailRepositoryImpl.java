@@ -314,6 +314,12 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
                 case "engName":
                     orderSpecifiers.add(new OrderSpecifier(direction, cocktail.engName));
                     break;
+                // 앱의 '인기순'. 추천 수가 같으면 순서가 흔들리므로 id 로 한 번 더 고정한다
+                // (안 그러면 페이지를 넘길 때 같은 칵테일이 다시 나오거나 빠진다).
+                case "recommendCount":
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.recommendCount));
+                    orderSpecifiers.add(new OrderSpecifier(Order.DESC, cocktail.id));
+                    break;
                 default:
                     // 기본 정렬 (ID) 또는 아무 정렬도 적용하지 않음
                     orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));

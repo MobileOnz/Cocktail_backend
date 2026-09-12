@@ -347,10 +347,10 @@ public class CocktailStepGenerator {
         if (use.isEmpty()) {
             return "재료";
         }
-        if (use.size() <= 3) {
-            return String.join(", ", use);
-        }
-        return String.join(", ", use.subList(0, 3)) + " 등 " + use.size() + "가지";
+        // 4가지 이상이면 "A, B, C 등 5가지" 로 줄여 쓰고 있었다. 레시피에서 재료를 생략하면
+        // 읽는 사람이 나머지를 알 길이 없다(QA: "만드는 법이 등록 안 돼 있다"와 같은 체감).
+        // 길어지더라도 전부 적는다.
+        return String.join(", ", use);
     }
 
     private boolean hasFreshCitrus(List<String> parts) {

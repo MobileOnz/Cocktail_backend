@@ -65,7 +65,7 @@ public class CocktailV2Controller implements CocktailV2ControllerDocs {
                             "**페이징 및 정렬:**\n" +
                             "- page와 size 파라미터로 페이지네이션을 제어합니다. (기본값 - page: 0, size: 10)\n" +
                             "- sort는 \"기준,오름/내림차순\" 형식으로 지정 가능합니다. (기본값 - id,asc)\n" +
-                            "  - 기준 - [id | korName | engName] , 오름/내림차순 - [asc | desc]"
+                            "  - 기준 - [id | korName | engName | recommendCount] , 오름/내림차순 - [asc | desc]"
     )
     @SecurityRequirements
     @PostMapping
