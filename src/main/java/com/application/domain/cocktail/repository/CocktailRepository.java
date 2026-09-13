@@ -48,8 +48,12 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
     void incrementRecommend(@Param("id") Long id);
 
     // 추천해요 감소
+    //
+    // 하한이 없어서 취소가 등록보다 많이 들어오면 음수가 된다 — 프로덕션에 -7 인 행이 실제로 있었다.
+    // 응답 DTO 는 음수를 0 으로 보여주므로 화면상 "추천 0" 인데 정렬에서는 0 짜리들보다 뒤로 밀렸다.
+    // 0 에서 멈추게 한다.
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Cocktail c SET c.recommendCount = c.recommendCount - 1 WHERE c.id = :id")
+    @Query("UPDATE Cocktail c SET c.recommendCount = c.recommendCount - 1 WHERE c.id = :id AND c.recommendCount > 0")
     void decrementRecommend(@Param("id") Long id);
 
     // 어려워요 증가
@@ -57,9 +61,9 @@ public interface CocktailRepository extends JpaRepository<Cocktail, Long>, Cockt
     @Query("UPDATE Cocktail c SET c.hardCount = c.hardCount + 1 WHERE c.id = :id")
     void incrementHard(@Param("id") Long id);
 
-    // 어려워요 감소
+    // 어려워요 감소 (recommendCount 와 같은 이유로 하한 0)
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Cocktail c SET c.hardCount = c.hardCount - 1 WHERE c.id = :id")
+    @Query("UPDATE Cocktail c SET c.hardCount = c.hardCount - 1 WHERE c.id = :id AND c.hardCount > 0")
     void decrementHard(@Param("id") Long id);
 
     /**

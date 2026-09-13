@@ -17,6 +17,7 @@ import com.application.domain.cocktail.util.MoodMappingUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
@@ -314,11 +315,15 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
                 case "engName":
                     orderSpecifiers.add(new OrderSpecifier(direction, cocktail.engName));
                     break;
-                // 앱의 '인기순'. 추천 수가 같으면 순서가 흔들리므로 id 로 한 번 더 고정한다
-                // (안 그러면 페이지를 넘길 때 같은 칵테일이 다시 나오거나 빠진다).
+                // 앱의 '인기순'.
+                //
+                // 음수를 0 으로 깎아서 정렬한다. '추천해요' 취소가 하한 없이 감소해 온 탓에
+                // 실제로 recommend_count = -7 인 행이 있는데, 응답 DTO 는 이걸 0 으로 보여준다.
+                // 클램프 없이 정렬하면 "추천 0" 으로 보이는 칵테일이 다른 0 들보다 뒤로 밀려
+                // 설명할 수 없는 순서가 된다.
                 case "recommendCount":
-                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.recommendCount));
-                    orderSpecifiers.add(new OrderSpecifier(Order.DESC, cocktail.id));
+                    orderSpecifiers.add(new OrderSpecifier(direction,
+                            Expressions.numberTemplate(Integer.class, "greatest({0}, 0)", cocktail.recommendCount)));
                     break;
                 default:
                     // 기본 정렬 (ID) 또는 아무 정렬도 적용하지 않음
@@ -328,6 +333,28 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
         }
         // 정렬 조건이 없으면 기본적으로 ID 오름차순 정렬을 추가
         if (orderSpecifiers.isEmpty()) {
+            orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));
+        }
+
+        // 마지막 tiebreaker 는 루프 밖에서 한 번만 붙인다.
+        //
+        // 루프 안에서 붙이면 뒤따르는 정렬 기준이 죽는다 —
+        // sort=recommendCount,desc&sort=korName,asc 가 "recommend DESC, <tie>, kor_name ASC" 가 되어
+        // unique 한 tie 기준 뒤의 kor_name 에는 영영 도달하지 못한다.
+        //
+        // 기준을 kor_name 으로 두는 이유: 인기순은 프로덕션에서 105종 중 98종이 0 으로 동률이다.
+        // id DESC 로 묶으면 동률 구간이 '최신순'과 같은 순서가 되어 두 정렬이 사실상 같은 목록을 낸다
+        // (QA 가 처음 지적한 그 증상). 가나다순으로 묶어야 두 정렬이 실제로 구분된다.
+        // ContentMetricsService 의 "recommend_count DESC, kor_name ASC" 와도 같은 관행이다.
+        boolean sortsById = orderSpecifiers.stream()
+                .anyMatch(o -> cocktail.id.equals(o.getTarget()));
+        if (!sortsById) {
+            boolean sortsByName = orderSpecifiers.stream()
+                    .anyMatch(o -> cocktail.korName.equals(o.getTarget()));
+            if (!sortsByName) {
+                orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.korName));
+            }
+            // id 는 unique 라 여기서 순서가 완전히 결정된다(같은 스냅샷 안에서의 재현성).
             orderSpecifiers.add(new OrderSpecifier(Order.ASC, cocktail.id));
         }
         return orderSpecifiers;
