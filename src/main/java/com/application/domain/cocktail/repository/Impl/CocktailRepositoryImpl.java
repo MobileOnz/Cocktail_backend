@@ -17,7 +17,6 @@ import com.application.domain.cocktail.util.MoodMappingUtil;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.JPAExpressions;
@@ -317,13 +316,13 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
                     break;
                 // 앱의 '인기순'.
                 //
-                // 음수를 0 으로 깎아서 정렬한다. '추천해요' 취소가 하한 없이 감소해 온 탓에
-                // 실제로 recommend_count = -7 인 행이 있는데, 응답 DTO 는 이걸 0 으로 보여준다.
-                // 클램프 없이 정렬하면 "추천 0" 으로 보이는 칵테일이 다른 0 들보다 뒤로 밀려
-                // 설명할 수 없는 순서가 된다.
+                // 컬럼을 그대로 정렬한다. 한때 greatest(recommend_count, 0) 으로 음수를 깎았는데,
+                // 이 쿼리는 SELECT DISTINCT 라서 ORDER BY 에 쓰는 식이 select 목록에 없으면
+                // 포스트그레스가 거부한다("for SELECT DISTINCT, ORDER BY expressions must appear
+                // in select list"). 음수는 감소 쿼리의 하한(WHERE ... > 0)과 V15 정규화로
+                // 데이터 단계에서 막았으므로 정렬에서 또 깎을 필요가 없다.
                 case "recommendCount":
-                    orderSpecifiers.add(new OrderSpecifier(direction,
-                            Expressions.numberTemplate(Integer.class, "greatest({0}, 0)", cocktail.recommendCount)));
+                    orderSpecifiers.add(new OrderSpecifier(direction, cocktail.recommendCount));
                     break;
                 default:
                     // 기본 정렬 (ID) 또는 아무 정렬도 적용하지 않음
