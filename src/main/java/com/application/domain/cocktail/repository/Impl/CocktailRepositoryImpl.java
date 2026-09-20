@@ -72,7 +72,13 @@ public class CocktailRepositoryImpl implements CocktailRepositoryCustom {
                     }
                     builder.and(etcOrBuilder);
                 } else {
-                    builder.and(cocktail.base.contains(baseStr));
+                    // 표기가 갈린 라벨(데킬라/테킬라)은 별칭 전체를 OR 로 묶는다.
+                    // 별칭이 없는 라벨이면 자기 자신 하나짜리 리스트라 동작이 이전과 같다.
+                    BooleanBuilder aliasOrBuilder = new BooleanBuilder();
+                    for (String alias : BaseMappingUtil.aliasesOf(baseStr)) {
+                        aliasOrBuilder.or(cocktail.base.contains(alias));
+                    }
+                    builder.and(aliasOrBuilder);
                 }
             }
         }
