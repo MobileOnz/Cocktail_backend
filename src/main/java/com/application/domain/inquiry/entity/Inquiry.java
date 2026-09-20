@@ -25,6 +25,10 @@ public class Inquiry {
     @Column(name = "member_id")
     private Long memberId;
 
+    /** 비로그인 문의의 기기 식별자. 로그인 문의는 null. 연락처가 비어 있을 때 유일한 단서다. */
+    @Column(name = "device_number", length = 100)
+    private String deviceNumber;
+
     @Column(length = 120)
     private String email;
 
@@ -47,8 +51,10 @@ public class Inquiry {
     private LocalDateTime createdAt;
 
     @Builder
-    public Inquiry(Long memberId, String email, String title, String content, String status) {
+    public Inquiry(Long memberId, String deviceNumber, String email,
+                   String title, String content, String status) {
         this.memberId = memberId;
+        this.deviceNumber = deviceNumber;
         this.email = email;
         this.title = title;
         this.content = content;

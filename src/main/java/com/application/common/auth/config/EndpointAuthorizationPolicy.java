@@ -106,6 +106,11 @@ public final class EndpointAuthorizationPolicy {
             "^/api/v2/cocktails/search/history/all$",
             "^/api/v2/cocktails/search/history/[0-9]+$",
 
+            // 1:1 문의 접수 — 로그인이 안 돼서 문의하는 경우가 있다. 토큰을 요구하면
+            // 정작 가장 도움이 필요한 사람이 못 보낸다. 토큰이 있으면 회원 문의로 기록한다.
+            // 무인증 쓰기 경로이므로 남용 방어는 InquiryService 의 레이트리밋이 맡는다.
+            "^/api/v2/inquiry$",
+
             // 바 조회 — 로그인 시 isVisited/가격 게이팅 반영(OPTIONAL 필수. PUBLIC이면 로그인 개인화 깨짐)
             "^/api/v2/bars$",
             "^/api/v2/bars/nearby$",

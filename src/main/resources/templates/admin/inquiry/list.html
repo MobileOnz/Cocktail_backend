@@ -47,6 +47,9 @@
                 <br/>
                 <span class="muted" th:if="${q.memberId != null}"
                       th:text="'회원 #' + ${q.memberId}">회원 #1</span>
+                <!-- 비로그인 문의는 기기 식별자가 유일한 단서다. -->
+                <span class="muted" th:if="${q.memberId == null and q.deviceNumber != null}"
+                      th:text="'기기 ' + ${q.deviceNumber}">기기 abc</span>
             </td>
             <td>
                 <strong th:text="${q.title}">제목</strong>
