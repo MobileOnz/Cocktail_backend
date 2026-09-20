@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/head :: head('1:1 문의 관리 · ONZ Admin')}"></head>
+<body>
+<div class="wrap">
+    <nav>
+        <a th:href="@{/admin/dashboard}">← 대시보드</a>
+        <a th:href="@{/admin/inquiries}">1:1 문의</a>
+        <a th:href="@{/admin/reports}">신고 큐</a>
+    </nav>
+
+    <h1>1:1 문의 관리</h1>
+
+    <p class="muted">
+        미답변 <strong th:text="${countNew}">0</strong> ·
+        읽음 <strong th:text="${countRead}">0</strong> ·
+        답변완료 <strong th:text="${countReplied}">0</strong>
+    </p>
+
+    <p th:if="${error}" th:text="${error}" style="color:#e03131"></p>
+
+    <p th:if="${#lists.isEmpty(inquiries)}" class="muted">아직 들어온 문의가 없습니다.</p>
+
+    <table th:unless="${#lists.isEmpty(inquiries)}">
+        <thead>
+        <tr>
+            <th style="width:60px">ID</th>
+            <th style="width:90px">상태</th>
+            <th style="width:160px">보낸 사람</th>
+            <th>제목 / 내용</th>
+            <th style="width:150px">접수일</th>
+            <th style="width:320px">처리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="q : ${inquiries}">
+            <td th:text="${q.id}">1</td>
+            <td>
+                <!-- 미답변은 눈에 띄어야 한다. 나머지는 담담하게. -->
+                <span th:text="${q.status}"
+                      th:style="${q.status == 'NEW'}
+                                ? 'color:#e03131;font-weight:700'
+                                : (${q.status == 'REPLIED'} ? 'color:#1b9e4b' : 'color:#697077')">NEW</span>
+            </td>
+            <td>
+                <span th:text="${q.email} ?: '(이메일 없음)'">a@b.c</span>
+                <br/>
+                <span class="muted" th:if="${q.memberId != null}"
+                      th:text="'회원 #' + ${q.memberId}">회원 #1</span>
+            </td>
+            <td>
+                <strong th:text="${q.title}">제목</strong>
+                <div style="white-space:pre-wrap" th:text="${q.content}">내용</div>
+                <div th:if="${q.reply != null}"
+                     style="margin-top:8px;padding:8px;background:#f1f3f5;border-radius:6px;white-space:pre-wrap">
+                    <span class="muted">답변</span><br/>
+                    <span th:text="${q.reply}">답변 내용</span>
+                </div>
+            </td>
+            <td th:text="${#temporals.format(q.createdAt, 'yyyy-MM-dd HH:mm')}">2026-09-20</td>
+            <td>
+                <form th:action="@{'/admin/inquiries/' + ${q.id} + '/read'}" method="post"
+                      th:if="${q.status == 'NEW'}" style="display:inline">
+                    <button type="submit">읽음 처리</button>
+                </form>
+
+                <form th:action="@{'/admin/inquiries/' + ${q.id} + '/reply'}" method="post"
+                      style="margin-top:6px">
+                    <textarea name="reply" rows="2" style="width:100%"
+                              th:text="${q.reply}"
+                              placeholder="답변 내용을 입력하세요"></textarea>
+                    <button type="submit" th:text="${q.reply != null} ? '답변 수정' : '답변 저장'">답변 저장</button>
+                </form>
+
+                <!-- 메일 발송 경로가 아직 없다. 저장은 기록용이고 회신은 사람이 직접 한다. -->
+                <div class="muted" style="margin-top:4px">
+                    저장해도 메일은 자동 발송되지 않습니다. 위 주소로 직접 회신해 주세요.
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
