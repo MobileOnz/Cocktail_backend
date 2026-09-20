@@ -130,7 +130,9 @@
             const page = 0;
             const size = 100;
             const name = document.getElementById("searchKr").value;
-            const res = await axios.get("/admin/search/cocktail", { params: { page, size, cocktailName: name } });
+            // CONTEXT_PATH(/onz) 를 빼먹으면 404 가 나고 catch 로 빠져 "조회 실패" 만 뜬다.
+            // 이 파일의 다른 호출들은 전부 CONTEXT_PATH 를 붙이고 있었다.
+            const res = await axios.get(CONTEXT_PATH + "/admin/search/cocktail", { params: { page, size, cocktailName: name } });
             const rows = (res.data && res.data.code === 1 && Array.isArray(res.data.data)) ? res.data.data : [];
             // v31+ 방식
             if (window.gridApi && typeof window.gridApi.setGridOption === 'function') {
@@ -152,7 +154,7 @@
     async function deleteCocktail(id) {
         if (!confirm("정말 삭제하시겠습니까?")) return;
         try {
-            const res = await axios.get(`/admin/cocktails/delete?cocktailId=${id}`);
+            const res = await axios.get(`${CONTEXT_PATH}/admin/cocktails/delete?cocktailId=${id}`);
             if (res.data.code === 1) {
                 alert("삭제되었습니다.");
                 loadCocktails();
