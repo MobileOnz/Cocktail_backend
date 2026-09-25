@@ -26,8 +26,22 @@ public class BaseMappingUtil {
         return BASE_ALIASES.getOrDefault(uiLabel, List.of(uiLabel));
     }
 
-    // UI에 '기타'로 표시될 베이스들의 실제 DB 값 목록
+    /**
+     * UI 라벨 '기타'로 도달해야 하는 DB 베이스 값 목록.
+     *
+     * <p>'기타'는 다른 라벨과 달리 라벨 자신으로 매칭하지 않고 이 목록을 OR 로 순회한다
+     * (CocktailRepositoryImpl 참고). 그래서 DB 값이 문자 그대로 '기타'인 행도
+     * 여기에 있어야 걸린다 — 없으면 어느 라벨로도 도달할 수 없다.</p>
+     *
+     * <p>소주·사케·맥주는 신규 데이터와 함께 들어온 베이스인데 앱에 대응 라벨이 없다.
+     * 라벨을 새로 파려면 앱 배포가 필요하므로 우선 '기타' 아래로 모은다.</p>
+     *
+     * <p>[주의] '무알코올'은 여기 넣지 않는다. 앱이 독립 라벨로 노출하며,
+     * {@link #aliasesOf(String)} 이 등록 없는 라벨은 라벨 자신을 반환하므로 그대로 동작한다.
+     * 여기 추가하면 같은 칵테일이 '무알코올'과 '기타' 양쪽에 중복 노출된다.</p>
+     */
     public static final List<String> ETC_BASES = List.of(
+            "기타",
             "셰리",
             "그라파",
             "앙고스투라 비터스",
@@ -36,6 +50,9 @@ public class BaseMappingUtil {
             "메스칼",
             "피스코",
             "메즈칼",
-            "코냑"
+            "코냑",
+            "소주",
+            "사케",
+            "맥주"
     );
 }

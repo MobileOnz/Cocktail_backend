@@ -92,6 +92,9 @@ class EndpointAuthorizationContractTest {
         m.put("/api/v2/bars/nearby", Tier.OPTIONAL);
         m.put("/api/v2/bars/1", Tier.OPTIONAL);
         m.put("/api/v2/bars/1/menu", Tier.OPTIONAL);            // 세션헤더로 가격 게이팅
+        // 1:1 문의 접수. 로그인이 막혀서 문의하는 경우가 있어 토큰을 요구하지 않는다(정책에 이미 OPTIONAL
+        // 로 등록돼 있었는데 이 표에만 빠져 있었다). 토큰이 있으면 회원 문의로 기록한다.
+        m.put("/api/v2/inquiry", Tier.OPTIONAL);
         // ── AUTH_REQUIRED (JWT, 화이트리스트 비등록 = 기본 차단) ──
         m.put("/api/v2/members/get/member", Tier.AUTH_REQUIRED);
         m.put("/api/v2/members/update/member", Tier.AUTH_REQUIRED);
