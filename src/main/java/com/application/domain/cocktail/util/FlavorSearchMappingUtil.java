@@ -7,6 +7,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 검색 필터의 맛 카테고리(9종)를 DB 태그(cocktail_flavor.flavor_name) 목록으로 매핑한다.
+ *
+ * <p>완전일치 IN 검색이라 여기 없는 태그는 어느 카테고리로도 걸리지 않는다.
+ * 데이터에 새 맛 태그가 생기면 반드시 등록할 것. 한 태그는 한 카테고리에만 둔다.</p>
+ */
 public class FlavorSearchMappingUtil {
 
     private static final Map<FlavorSearchType, List<String>> FLAVOR_TAG_MAP;
@@ -36,7 +42,9 @@ public class FlavorSearchMappingUtil {
         // 4. 부드러움 (CREAMY)
         map.put(FlavorSearchType.CREAMY, List.of(
                 "부드러운", "크리미", "거품", "부드러운 거품", "바닐라", "코코아", "커피",
-                "너티", "아몬드"
+                "너티", "아몬드",
+                // 신규 데이터는 커피와 초콜릿을 한 토큰으로 묶어서 들어온다. 기존 '커피'/'코코아' 옆자리.
+                "커피·초콜릿"
         ));
 
         // 5. 복합적인 맛 (COMPLEX)
@@ -59,7 +67,9 @@ public class FlavorSearchMappingUtil {
         // 8. 개성 강한 맛 (STRONG_UNIQUE)
         map.put(FlavorSearchType.STRONG_UNIQUE, List.of(
                 "개성있는", "독특한", "강한", "매우 강함", "묵직함", "묵직한", "스모키",
-                "짭짤한", "짭짤함", "소금 림", "위스키", "레드와인", "와인", "셰리", "토마토"
+                "짭짤한", "짭짤함", "소금 림", "위스키", "레드와인", "와인", "셰리", "토마토",
+                // 오크통 숙성에서 오는 맛. 기존 '위스키'/'스모키'/'묵직한'과 같은 계열이라 여기 둔다.
+                "오크·캐러멜"
         ));
 
         // 9. 기타 & 특별한 맛 (ETC_SPECIAL)
