@@ -29,6 +29,9 @@ HEALTH=http://localhost/onz/api/v2/magazine?size=1
 
 log() { echo "$(date -Is) $*" >> "$LOG"; }
 
+# flock 이 없으면 겹쳐 도는 것을 막을 수 없다. 조용히 아무것도 안 하는 것보다
+# 시끄럽게 실패하는 편이 낫다 — 로그가 없으면 "돌고 있는 줄 알았는데 안 돌았다" 가 된다.
+command -v flock >/dev/null || { log "FAIL flock 없음 (util-linux 설치 필요)"; exit 1; }
 exec 9>"$LOCK"
 flock -n 9 || exit 0
 
