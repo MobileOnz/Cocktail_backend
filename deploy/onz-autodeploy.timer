@@ -1,0 +1,11 @@
+[Unit]
+Description=ONZ 백엔드 자동 배포 타이머
+
+[Timer]
+# 부팅 2분 뒤 첫 실행, 이후 3분 간격.
+OnBootSec=2min
+OnUnitActiveSec=3min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target
