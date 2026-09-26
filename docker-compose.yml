@@ -5,8 +5,10 @@ services:
   api-server:
     build: . # 현재 디렉토리의 Dockerfile을 사용해 이미지를 빌드
     container_name: cocktail-api
-    ports:
-      - "80:8080" # 외부 80 -> 내부 8080
+    # 호스트 포트를 잡지 않는다. 80 은 nginx 가 소유하고, 여기로는 프록시로만 들어온다.
+    # 예전처럼 "80:8080" 으로 되돌리면 nginx 와 포트를 다퉈 기동 자체가 실패한다.
+    expose:
+      - "8080" # 내부 전용. nginx가 프록시
     environment:
       # 🚨 API 서버가 도커 내부의 'db' 서비스에 접속하도록 설정
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB}
@@ -37,15 +39,39 @@ services:
       - APPLE_PUBLIC_KEY_URL=${APPLE_PUBLIC_KEY_URL}
       - APPLE_TOKEN_URL=${APPLE_TOKEN_URL}
 
+    restart: unless-stopped
     depends_on:
       - db # 'db' 서비스가 먼저 실행된 후에 실행됨
+
+  # 1.5. Nginx (reverse proxy + static /uploads/* 서빙 + TLS 종단)
+  #
+  # [주의] 아래 정의는 **실제로 돌고 있는 컨테이너와 반드시 같아야 한다.**
+  # 한동안 이 블록에 443 과 인증서 마운트가 빠져 있었는데, 그 상태로
+  # `docker compose up -d` 를 돌리면 nginx 가 인증서 없이 80 만 열고 다시 떠서
+  # HTTPS 가 통째로 끊긴다. 컨테이너는 2026-09-13 에 만들어졌고 파일은 그 뒤로
+  # 수정돼 둘이 어긋나 있었다.
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-onz
+    ports:
+      - "80:80"
+      - "443:443" # Let's Encrypt 로 발급한 onz-cocktail.kr 인증서
+    volumes:
+      - /root/cocktail-api/nginx-onz.conf:/etc/nginx/conf.d/default.conf:ro
+      - /var/onz/uploads:/var/onz/uploads:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro # 인증서. 갱신은 호스트의 certbot 이 한다
+      - /var/www/certbot:/var/www/certbot:ro # ACME http-01 웹루트
+    depends_on:
+      - api-server
+    restart: unless-stopped
 
   # 2. PostgreSQL 서비스
   db:
     image: postgres
     container_name: postgres-cocktail
+    restart: unless-stopped
     ports:
-      - "5433:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

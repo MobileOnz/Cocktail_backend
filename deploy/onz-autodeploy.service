@@ -1,0 +1,8 @@
+[Unit]
+Description=ONZ 백엔드 자동 배포 (origin/dev 를 따라간다)
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/onz-autodeploy.sh
