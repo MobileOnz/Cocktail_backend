@@ -58,3 +58,5 @@ sudo systemctl disable --now onz-autodeploy.timer
 특히 `nginx` 서비스 정의는 실제 컨테이너와 같아야 한다. 443 과 `/etc/letsencrypt`
 마운트가 빠진 채로 `docker compose up -d` 를 돌리면 nginx 가 인증서 없이 다시 떠서
 HTTPS 가 통째로 끊긴다.
+
+<!-- 자동 배포 동작 확인: 2026-09-26 -->
