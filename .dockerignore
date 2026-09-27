@@ -1,0 +1,15 @@
+.git
+.gradle
+.idea
+build
+out
+
+# 로컬 비밀값이 들어 있는 Git 제외 설정 파일은 Docker 이미지에 넣지 않는다.
+.env
+.env.*
+src/main/resources/application.properties
+src/main/resources/application-local.properties
+
+# 로컬 산출물과 운영 백업은 애플리케이션 이미지에 필요하지 않다.
+uploads
+backups

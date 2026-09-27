@@ -1,9 +1,25 @@
 server:
+  # Render가 주입하는 PORT를 사용하고, 로컬에서는 기존 8080을 기본값으로 쓴다.
+  port: ${PORT:8080}
+  tomcat:
+    threads:
+      max: 50
+      min-spare: 5
   servlet:
     context-path: /onz
 
 spring:
   # (DB 접속 정보는 docker-compose.yml에서 주입되므로 여기엔 불필요)
+
+  datasource:
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 1
+
+  data:
+    redis:
+      repositories:
+        enabled: false
 
   jpa:
     hibernate:
@@ -12,6 +28,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# V20까지 모든 칵테일의 제조 단계가 포함되어 있으므로 배포 부팅 때 530개를 다시 검사하지 않는다.
+cocktail:
+  steps:
+    autofill: false
 
 #  datasource:
 #    url: ${POSTGRE_url}
