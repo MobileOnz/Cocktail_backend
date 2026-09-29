@@ -1,5 +1,6 @@
 package com.application.common.logging;
 
+import java.lang.reflect.Proxy;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -7,8 +8,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ClassUtils;
 
 /**
  * 각 메서드에 로깅 코드를 반복하지 않도록 AOP로 Controller → Service → Repository 흐름을 추적한다.
@@ -26,11 +32,16 @@ import org.springframework.stereotype.Component;
         matchIfMissing = true)
 public class MethodTraceLoggingAspect {
 
+    private static final String APPLICATION_PACKAGE = "com.application.";
+
+    // save/findById처럼 Spring Data 부모 인터페이스에 선언된 메서드는 패키지·어노테이션 조건에
+    // 걸리지 않으므로 target()으로 Repository Bean 자체를 대상으로 삼는다.
     @Around(
             "(@within(org.springframework.web.bind.annotation.RestController)"
                     + " || @within(org.springframework.stereotype.Service)"
                     + " || @within(org.springframework.stereotype.Repository)"
                     + " || execution(public * com.application..repository..*(..))"
+                    + " || target(org.springframework.data.repository.Repository)"
                     + " || @within(com.application.common.logging.TraceOperation)"
                     + " || @annotation(com.application.common.logging.TraceOperation))"
                     + " && !within(com.application.common.logging..*)")
@@ -42,9 +53,10 @@ public class MethodTraceLoggingAspect {
         }
 
         MethodTraceContext.Span span = MethodTraceContext.open();
-        String className = joinPoint.getTarget().getClass().getSimpleName();
+        Class<?> targetType = resolveTargetType(joinPoint);
+        String className = targetType.getSimpleName();
         String methodName = joinPoint.getSignature().getName();
-        String layer = resolveLayer(joinPoint);
+        String layer = resolveLayer(targetType, joinPoint);
         long startedAt = System.nanoTime();
 
         log.info(
@@ -92,7 +104,36 @@ public class MethodTraceLoggingAspect {
         return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startedAt);
     }
 
-    private static String resolveLayer(ProceedingJoinPoint joinPoint) {
+    private static Class<?> resolveTargetType(ProceedingJoinPoint joinPoint) {
+        Object target = joinPoint.getTarget();
+        if (target == null) {
+            return joinPoint.getSignature().getDeclaringType();
+        }
+        Class<?> targetClass = target.getClass();
+        // Spring Data Repository는 JDK 프록시($ProxyNNN)라 실제로 선언한 우리 인터페이스 이름을 찾는다.
+        if (Proxy.isProxyClass(targetClass)) {
+            for (Class<?> type : targetClass.getInterfaces()) {
+                if (type.getName().startsWith(APPLICATION_PACKAGE)) {
+                    return type;
+                }
+            }
+        }
+        return ClassUtils.getUserClass(targetClass);
+    }
+
+    private static String resolveLayer(Class<?> targetType, ProceedingJoinPoint joinPoint) {
+        // 패키지 위치와 무관하게 분류되도록 Bean에 붙은 스테레오타입을 먼저 본다.
+        if (AnnotatedElementUtils.hasAnnotation(targetType, Controller.class)) {
+            return "CONTROLLER";
+        }
+        if (AnnotatedElementUtils.hasAnnotation(targetType, Service.class)) {
+            return "SERVICE";
+        }
+        if (AnnotatedElementUtils.hasAnnotation(targetType, Repository.class)
+                || org.springframework.data.repository.Repository.class.isAssignableFrom(targetType)) {
+            return "REPOSITORY";
+        }
+
         String packageName = joinPoint.getSignature().getDeclaringType().getPackageName();
         if (packageName.contains(".controller")) {
             return "CONTROLLER";
