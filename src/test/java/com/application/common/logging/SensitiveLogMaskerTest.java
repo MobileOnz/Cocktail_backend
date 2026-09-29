@@ -13,7 +13,6 @@ class SensitiveLogMaskerTest {
     void masksPersonalInformationWithoutRemovingOperationalContext() {
         // given: 실제 회원정보가 아닌 테스트 전용 가짜 데이터다.
         String credentialId = "google-123456789";
-        long memberId = 12345L;
         String name = "홍길동";
         String shortName = "소원";
         String email = "tester@example.com";
@@ -21,7 +20,6 @@ class SensitiveLogMaskerTest {
 
         // when
         String maskedCredentialId = SensitiveLogMasker.maskIdentifier(credentialId);
-        String maskedMemberId = SensitiveLogMasker.maskMemberId(memberId);
         String maskedName = SensitiveLogMasker.maskName(name);
         String maskedShortName = SensitiveLogMasker.maskName(shortName);
         String maskedEmail = SensitiveLogMasker.maskEmail(email);
@@ -29,7 +27,6 @@ class SensitiveLogMaskerTest {
 
         // then
         assertThat(maskedCredentialId).isEqualTo("go***89");
-        assertThat(maskedMemberId).isEqualTo("***45");
         assertThat(maskedName).isEqualTo("홍*동");
         assertThat(maskedShortName).isEqualTo("소*");
         assertThat(maskedEmail).isEqualTo("t***@example.com");

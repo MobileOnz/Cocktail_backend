@@ -24,15 +24,6 @@ public final class SensitiveLogMasker {
                 + new String(characters, characters.length - 2, 2);
     }
 
-    public static String maskMemberId(Long memberId) {
-        if (memberId == null) {
-            return EMPTY_VALUE;
-        }
-        String value = Long.toString(memberId);
-        int visibleLength = Math.min(2, value.length());
-        return "***" + value.substring(value.length() - visibleLength);
-    }
-
     public static String maskName(String value) {
         if (value == null || value.isBlank()) {
             return EMPTY_VALUE;

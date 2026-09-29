@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 class CocktailBookmarkControllerLoggingTest {
 
     @Test
-    @DisplayName("가짜 회원정보는 마스킹해 기록하고 원문은 로그에 남기지 않는다")
-    void logsMaskedMemberInformationWithoutRawPersonalInformation() {
+    @DisplayName("회원은 memberId로만 식별하고 이름·이메일·전화번호는 로그에 남기지 않는다")
+    void logsMemberIdWithoutPersonalInformation() {
         // given: Service는 Mockito로 대체하고 Member도 메모리의 가짜 데이터만 사용한다.
         CocktailBookmarkService bookmarkService = mock(CocktailBookmarkService.class);
         MemberService memberService = mock(MemberService.class);
@@ -65,16 +65,15 @@ class CocktailBookmarkControllerLoggingTest {
         assertThat(message)
                 .contains(
                         "credentialId=go***89",
-                        "memberId=***45",
-                        "memberName=홍*동",
-                        "nickname=칵***사",
-                        "email=t***@example.com",
-                        "phone=010-****-5678",
+                        "memberId=12345",
                         "cocktailIds=[1, 2, 3]",
                         "cocktailCount=3")
                 .doesNotContain(
                         credentialId,
-                        "memberId=12345",
+                        "memberName=",
+                        "nickname=",
+                        "email=",
+                        "phone=",
                         "홍길동",
                         "칵테일박사",
                         "tester@example.com",
