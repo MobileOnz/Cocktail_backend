@@ -16,6 +16,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.DispatcherServlet;
 
 /**
  * Controller 이전의 인증·파싱 실패까지 놓치지 않기 위해 가장 앞단의 Filter에서 요청을 추적한다.
@@ -80,11 +81,11 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
                             streaming ? "STREAM" : "ASYNC");
                 } else {
                     completeRequest(
-                            response, traceId, method, uri, clientIp, startedAt, null, "COMPLETED");
+                            request, response, traceId, method, uri, clientIp, startedAt, null, "COMPLETED");
                 }
             } else {
                 completeRequest(
-                        response, traceId, method, uri, clientIp, startedAt, failure, "COMPLETED");
+                        request, response, traceId, method, uri, clientIp, startedAt, failure, "COMPLETED");
             }
             // Tomcat 스레드는 재사용되므로 다음 요청에 MDC/호출 스택이 섞이지 않게 반드시 비운다.
             MethodTraceContext.clear();
@@ -104,7 +105,7 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
             request.getAsyncContext()
                     .addListener(
                             new RequestAsyncListener(
-                                    response, traceId, method, uri, clientIp, startedAt));
+                                    request, response, traceId, method, uri, clientIp, startedAt));
             return true;
         } catch (IllegalStateException ignored) {
             return false;
@@ -112,6 +113,7 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
     }
 
     private void completeRequest(
+            HttpServletRequest request,
             HttpServletResponse response,
             String traceId,
             String method,
@@ -131,7 +133,9 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
             } else if (!"COMPLETED".equals(terminalEvent) && status < 400) {
                 status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
             }
-            writeCompletionLog(method, uri, clientIp, status, durationMs, failure, terminalEvent);
+            String errorType = resolveErrorType(request, failure);
+            writeCompletionLog(
+                    method, uri, clientIp, status, durationMs, errorType, failure, terminalEvent);
         } finally {
             TraceIdContext.clear();
         }
@@ -143,30 +147,34 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
             String clientIp,
             int status,
             long durationMs,
+            String errorType,
             Throwable failure,
             String terminalEvent) {
         String message =
                 "HTTP_REQUEST_"
                         + terminalEvent
-                        + " method={} uri={} status={} durationMs={} clientIp={}";
+                        + " method={} uri={} status={} durationMs={} clientIp={} errorType={}";
 
         if (failure != null) {
-            log.error(
-                    message + " failureType={}",
-                    method,
-                    uri,
-                    status,
-                    durationMs,
-                    clientIp,
-                    failure.getClass().getSimpleName(),
-                    failure);
+            log.error(message, method, uri, status, durationMs, clientIp, errorType, failure);
         } else if (status >= 500 || !"COMPLETED".equals(terminalEvent)) {
-            log.error(message, method, uri, status, durationMs, clientIp);
+            log.error(message, method, uri, status, durationMs, clientIp, errorType);
         } else if (durationMs >= slowRequestThresholdMs) {
-            log.warn(message, method, uri, status, durationMs, clientIp);
+            log.warn(message, method, uri, status, durationMs, clientIp, errorType);
         } else {
-            log.info(message, method, uri, status, durationMs, clientIp);
+            log.info(message, method, uri, status, durationMs, clientIp, errorType);
         }
+    }
+
+    /**
+     * 완료 로그 한 줄만 보고도 원인을 알 수 있게 예외 종류를 남긴다.
+     * Filter 밖으로 전파된 예외가 없으면 @ExceptionHandler가 처리한 예외를 DispatcherServlet이
+     * 요청 속성에 남겨두므로 그 값을 사용한다.
+     */
+    private static String resolveErrorType(HttpServletRequest request, Throwable failure) {
+        Object handled = request.getAttribute(DispatcherServlet.EXCEPTION_ATTRIBUTE);
+        Throwable error = failure != null ? failure : handled instanceof Throwable t ? t : null;
+        return error == null ? "-" : error.getClass().getSimpleName();
     }
 
     private static int effectiveFailureStatus(int responseStatus) {
@@ -189,6 +197,7 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
 
     private final class RequestAsyncListener implements AsyncListener {
 
+        private final HttpServletRequest request;
         private final HttpServletResponse response;
         private final String traceId;
         private final String method;
@@ -198,12 +207,14 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
         private final AtomicBoolean finished = new AtomicBoolean();
 
         private RequestAsyncListener(
+                HttpServletRequest request,
                 HttpServletResponse response,
                 String traceId,
                 String method,
                 String uri,
                 String clientIp,
                 long startedAt) {
+            this.request = request;
             this.response = response;
             this.traceId = traceId;
             this.method = method;
@@ -236,6 +247,7 @@ public class HttpRequestLoggingFilter extends OncePerRequestFilter {
             // 완료·타임아웃·오류 callback이 경쟁해도 종료 로그는 한 번만 남긴다.
             if (finished.compareAndSet(false, true)) {
                 completeRequest(
+                        request,
                         response,
                         traceId,
                         method,

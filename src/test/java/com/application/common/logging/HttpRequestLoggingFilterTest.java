@@ -3,14 +3,21 @@ package com.application.common.logging;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import jakarta.servlet.ServletException;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @DisplayName("HTTP 요청 로깅 필터")
 class HttpRequestLoggingFilterTest {
@@ -99,5 +106,76 @@ class HttpRequestLoggingFilterTest {
         // then
         assertThat(MDC.get(TraceIdContext.MDC_KEY)).isNull();
         assertThat(response.getHeader(TraceIdContext.HEADER_NAME)).isNotBlank();
+    }
+
+    @Test
+    @DisplayName("예외 핸들러가 처리한 오류도 완료 로그 한 줄에 예외 종류를 남긴다")
+    void logsHandledExceptionTypeOnCompletionLine() throws Exception {
+        // given: @ExceptionHandler 처리 후 DispatcherServlet이 남기는 요청 속성을 재현한다.
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/v2/cocktails");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // when
+        List<ILoggingEvent> events =
+                captureEvents(
+                        () ->
+                                filter.doFilter(
+                                        request,
+                                        response,
+                                        (req, res) -> {
+                                            req.setAttribute(
+                                                    DispatcherServlet.EXCEPTION_ATTRIBUTE,
+                                                    new IllegalArgumentException("bad input"));
+                                            ((MockHttpServletResponse) res).setStatus(500);
+                                        }));
+
+        // then
+        ILoggingEvent completed = completionEvent(events);
+        assertThat(completed.getLevel()).isEqualTo(Level.ERROR);
+        assertThat(completed.getFormattedMessage())
+                .contains("status=500", "errorType=IllegalArgumentException")
+                .doesNotContain("bad input");
+    }
+
+    @Test
+    @DisplayName("오류가 없으면 완료 로그의 예외 종류를 '-'로 남긴다")
+    void logsDashWhenNoErrorOccurred() throws Exception {
+        // given
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/v2/cocktails");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        // when
+        List<ILoggingEvent> events =
+                captureEvents(() -> filter.doFilter(request, response, (req, res) -> {}));
+
+        // then
+        assertThat(completionEvent(events).getFormattedMessage())
+                .contains("status=200", "errorType=-");
+    }
+
+    private static ILoggingEvent completionEvent(List<ILoggingEvent> events) {
+        return events.stream()
+                .filter(event -> event.getFormattedMessage().startsWith("HTTP_REQUEST_COMPLETED"))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private static List<ILoggingEvent> captureEvents(ThrowingRunnable action) throws Exception {
+        Logger logger = (Logger) LoggerFactory.getLogger(HttpRequestLoggingFilter.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            action.run();
+        } finally {
+            logger.detachAppender(appender);
+            appender.stop();
+        }
+        return appender.list;
+    }
+
+    @FunctionalInterface
+    private interface ThrowingRunnable {
+        void run() throws Exception;
     }
 }

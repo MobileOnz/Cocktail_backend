@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * 요청 처리 스레드를 막지 않고 별도 스케줄러에서 Registry를 조회해 장기 실행 요청을 경고한다.
+ * 요청 처리 스레드를 막지 않고 별도 스케줄러에서 Registry를 조회해 장기 실행 요청을 ERROR로 보고한다.
  * 같은 요청은 설정된 반복 간격으로만 다시 보고해 로그 폭주를 막는다.
  */
 @Slf4j
@@ -39,7 +39,8 @@ public class StuckRequestWatchdog {
             // 감시 스레드의 경고도 원래 요청 traceId로 검색되도록 잠시 MDC에 연결한다.
             MDC.put(TraceIdContext.MDC_KEY, request.traceId());
             try {
-                log.warn(
+                // 임계 시간을 넘긴 요청은 DB 락·외부 API 대기 같은 장애 징후이므로 ERROR 파일에서 바로 보이게 한다.
+                log.error(
                         "HTTP_REQUEST_STILL_RUNNING method={} uri={} kind={} elapsedMs={} clientIp={}",
                         request.method(),
                         request.uri(),
