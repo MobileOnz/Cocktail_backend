@@ -4,6 +4,7 @@ import com.application.common.Constant;
 import com.application.common.exception.custom.CustomApiException;
 import com.application.common.exception.custom.CustomValidException;
 import com.application.common.exception.custom.TokenInvalidException;
+import com.application.common.logging.TraceIdContext;
 import com.application.common.response.ResponseDto;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -25,7 +26,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 /**
  * 전역 예외 핸들러.
@@ -49,7 +49,8 @@ import java.util.UUID;
 public class CustomExceptionHandler {
 
     private static String newErrorId() {
-        return UUID.randomUUID().toString().substring(0, 8);
+        // 사용자가 전달한 오류 ID 하나로 같은 요청의 전체 로그를 찾을 수 있게 traceId를 재사용한다.
+        return TraceIdContext.getOrCreate();
     }
 
     // ── 프레임워크 상태 예외: 상태코드는 보존하되 메시지는 일반화 ──────────────

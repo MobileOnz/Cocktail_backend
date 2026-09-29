@@ -1,22 +1,61 @@
 <configuration>
-    <springProperty name="LOG_PATH" source="log.path"/>
+    <!-- Spring 설정 하나로 수집 Bean과 파일 Appender를 함께 켜고 끄기 위해 같은 값을 읽는다. -->
+    <springProperty scope="context" name="LOG_PATH" source="log.path" defaultValue="./logs"/>
+    <springProperty scope="context" name="LOG_COLLECTION_ENABLED" source="app.logging.enabled" defaultValue="true"/>
+    <springProperty scope="context" name="LOG_MAX_HISTORY" source="app.logging.max-history-days" defaultValue="30"/>
+    <springProperty scope="context" name="LOG_TOTAL_SIZE_CAP" source="app.logging.total-size-cap" defaultValue="2GB"/>
+    <springProperty scope="context" name="ERROR_LOG_TOTAL_SIZE_CAP" source="app.logging.error-total-size-cap" defaultValue="512MB"/>
+
+    <property name="LOG_PATTERN"
+              value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [traceId=%X{traceId:-none} depth=%X{depth:-none} spanId=%X{spanId:-none}] [%thread] %logger{36} - %msg%n"/>
+
+    <!-- 날짜와 크기를 함께 제한해 트래픽 급증 시에도 한 파일과 디스크가 무한히 커지지 않게 한다. -->
     <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/Onz.log</file>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/Onz-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>1GB</totalSizeCap>
+        <filter class="com.application.common.logging.LogCollectionEnabledFilter">
+            <enabled>${LOG_COLLECTION_ENABLED}</enabled>
+        </filter>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/Onz-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
         </rollingPolicy>
 
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
+    <!-- 전체 로그와 별도로 ERROR만 모아 장애 시 우선 확인할 파일을 제공한다. -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/Onz-error.log</file>
+        <filter class="com.application.common.logging.LogCollectionEnabledFilter">
+            <enabled>${LOG_COLLECTION_ENABLED}</enabled>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/archive/Onz-error-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${ERROR_LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 파일 수집 OFF나 파일 쓰기 실패 시에도 컨테이너 로그로 기동 문제를 확인할 수 있게 유지한다. -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
 
@@ -24,5 +63,6 @@
     <root level="info">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="ROLLING_FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </root>
 </configuration>

@@ -73,12 +73,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 3) 그 외 전부 — 토큰 필수 (fail-closed 기본값)
         if (accessToken == null) {
+            logRejected("TOKEN_MISSING");
             sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_UNAUTHORIZED,
                     "인증이 필요합니다.");
             return;
         }
 
         if (jwtUtil.isAccessExpired(accessToken)) {
+            logRejected("TOKEN_" + jwtUtil.getAccessTokenFailureReason(accessToken));
             sendErrorResponse(response, Constant.NEED_REFRESH_TOKEN_CODE, HttpServletResponse.SC_UNAUTHORIZED,
                     "Access Token Expired");
             return;
@@ -86,6 +88,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
         String blackListToken = jwtAccessTokenBlackListService.getAccessTokenFromBlackList(jwtUtil.getUUID(accessToken));
         if (blackListToken != null) {
+            logRejected("TOKEN_LOGGED_OUT");
             sendErrorResponse(response, Constant.ERROR_CODE, HttpServletResponse.SC_UNAUTHORIZED,
                     "이미 로그아웃된 사용자입니다.");
             return;
@@ -93,6 +96,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         setSecurityContext(jwtUtil, accessToken);
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * 필터가 직접 401을 응답하면 예외 핸들러를 거치지 않으므로 거부 사유를 여기서 남긴다.
+     * 만료는 앱이 갱신하는 정상 흐름이라 INFO로 두고, 토큰 값은 기록하지 않는다.
+     */
+    private void logRejected(String reason) {
+        log.info("AUTH_REJECTED reason={}", reason);
     }
 
     private void sendErrorResponse(HttpServletResponse response, int code, int status, String message) throws IOException {

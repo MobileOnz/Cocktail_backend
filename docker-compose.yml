@@ -15,6 +15,10 @@ services:
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
+      - LOG_PATH=/var/log/onz
+      # .env 값만 바꿔 운영 로그 전체 또는 메서드 상세 추적만 독립적으로 제어한다.
+      - APP_LOGGING_ENABLED=${APP_LOGGING_ENABLED:-true}
+      - APP_LOGGING_METHOD_TRACE_ENABLED=${APP_LOGGING_METHOD_TRACE_ENABLED:-true}
 
       # --- JWT 설정 ---
       - JWT_SECRET=${JWT_SECRET}
@@ -38,6 +42,16 @@ services:
       - APPLE_AUDIENCE=${APPLE_AUDIENCE}
       - APPLE_PUBLIC_KEY_URL=${APPLE_PUBLIC_KEY_URL}
       - APPLE_TOKEN_URL=${APPLE_TOKEN_URL}
+
+    volumes:
+      # 컨테이너를 재생성해도 운영 로그가 호스트에 남도록 보존한다.
+      - /var/log/onz:/var/log/onz
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
 
     restart: unless-stopped
     depends_on:

@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
+import com.application.common.logging.SensitiveLogMasker;
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.request.BookmarkBatchRequest;
 import com.application.domain.cocktail.dto.response.BookmarkBatchResponse;
@@ -51,24 +52,25 @@ public class CocktailBookmarkController {
             @RequestBody BookmarkBatchRequest request,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        // Request 내용 확인
-        log.info("[배치 즐겨찾기] 받은 Request: {}", request);
-        log.info("[배치 즐겨찾기] cocktailIds: {}", request.getCocktailIds());
-
         // credentialId로 Member PK 조회
         String credentialId = customOAuth2User.getCredentialId();
-        log.info("[배치 즐겨찾기] credentialId: {}", credentialId);
-
         Member member = memberService.getMemberByCredentialId(credentialId);
-        log.info("[배치 즐겨찾기] Member 조회 결과: {}", member);
 
         if (member == null) {
-            throw new IllegalArgumentException("User not found with credentialId: " + credentialId);
+            throw new IllegalArgumentException("User not found");
         }
 
         Long memberId = member.getId();
+        List<Long> cocktailIds = request.getCocktailIds();
+        // 회원 추적은 내부 PK인 memberId로 충분하므로 이름·이메일·전화번호 같은 개인정보는 남기지 않는다.
+        log.info(
+                "BOOKMARK_BATCH_REQUEST credentialId={} memberId={} cocktailIds={} cocktailCount={}",
+                SensitiveLogMasker.maskIdentifier(credentialId),
+                memberId,
+                cocktailIds,
+                cocktailIds == null ? 0 : cocktailIds.size());
 
-        List<Long> processedCocktailIds = bookmarkService.toggleBookmarkBatch(memberId, request.getCocktailIds());
+        List<Long> processedCocktailIds = bookmarkService.toggleBookmarkBatch(memberId, cocktailIds);
 
         BookmarkBatchResponse response = BookmarkBatchResponse.builder()
                 .cocktailIds(processedCocktailIds)
