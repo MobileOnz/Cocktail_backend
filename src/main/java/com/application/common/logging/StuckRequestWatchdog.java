@@ -3,12 +3,17 @@ package com.application.common.logging;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /** 응답이 임계시간 안에 끝나지 않은 요청을 주기적으로 경고한다. */
 @Slf4j
 @Component
+@ConditionalOnProperty(
+        name = "app.logging.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class StuckRequestWatchdog {
 
     private final ActiveRequestRegistry registry;

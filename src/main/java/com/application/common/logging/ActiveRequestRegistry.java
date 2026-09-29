@@ -6,10 +6,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 /** 완료되지 않은 HTTP 요청을 추적한다. */
 @Component
+@ConditionalOnProperty(
+        name = "app.logging.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class ActiveRequestRegistry {
 
     private final ConcurrentMap<String, ActiveRequest> activeRequests = new ConcurrentHashMap<>();

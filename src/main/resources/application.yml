@@ -118,3 +118,6 @@ app:
   admin:
     username: ${ADMIN_USERNAME}
     password: ${ADMIN_PASSWORD}
+  logging:
+    enabled: ${APP_LOGGING_ENABLED:true}
+    method-trace-enabled: ${APP_LOGGING_METHOD_TRACE_ENABLED:true}

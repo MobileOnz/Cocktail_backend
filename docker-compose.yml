@@ -16,6 +16,8 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
       - LOG_PATH=/var/log/onz
+      - APP_LOGGING_ENABLED=${APP_LOGGING_ENABLED:-true}
+      - APP_LOGGING_METHOD_TRACE_ENABLED=${APP_LOGGING_METHOD_TRACE_ENABLED:-true}
 
       # --- JWT 설정 ---
       - JWT_SECRET=${JWT_SECRET}

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE + 100)
 @ConditionalOnProperty(
-        name = "app.logging.method-trace-enabled",
+        name = {"app.logging.enabled", "app.logging.method-trace-enabled"},
         havingValue = "true",
         matchIfMissing = true)
 public class MethodTraceLoggingAspect {
