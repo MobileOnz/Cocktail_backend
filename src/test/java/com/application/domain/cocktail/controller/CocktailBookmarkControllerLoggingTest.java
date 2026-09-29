@@ -14,13 +14,17 @@ import com.application.domain.cocktail.service.CocktailBookmarkService;
 import com.application.domain.member.entity.Member;
 import com.application.domain.member.service.MemberService;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
+@DisplayName("북마크 요청 개인정보 로그")
 class CocktailBookmarkControllerLoggingTest {
 
     @Test
+    @DisplayName("가짜 회원정보는 마스킹해 기록하고 원문은 로그에 남기지 않는다")
     void logsMaskedMemberInformationWithoutRawPersonalInformation() {
+        // given: Service는 Mockito로 대체하고 Member도 메모리의 가짜 데이터만 사용한다.
         CocktailBookmarkService bookmarkService = mock(CocktailBookmarkService.class);
         MemberService memberService = mock(MemberService.class);
         CocktailArchiveService archiveService = mock(CocktailArchiveService.class);
@@ -46,6 +50,8 @@ class CocktailBookmarkControllerLoggingTest {
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
+
+        // when
         try {
             controller.toggleBookmarkBatch(new BookmarkBatchRequest(cocktailIds), user);
         } finally {
@@ -53,6 +59,7 @@ class CocktailBookmarkControllerLoggingTest {
             appender.stop();
         }
 
+        // then
         assertThat(appender.list).hasSize(1);
         String message = appender.list.get(0).getFormattedMessage();
         assertThat(message)

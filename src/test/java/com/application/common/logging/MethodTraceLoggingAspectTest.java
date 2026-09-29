@@ -14,10 +14,12 @@ import java.util.List;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+@DisplayName("메서드 호출 추적 AOP")
 class MethodTraceLoggingAspectTest {
 
     @AfterEach
@@ -27,7 +29,9 @@ class MethodTraceLoggingAspectTest {
     }
 
     @Test
+    @DisplayName("Mock 호출을 Controller-Service-Repository 순서와 하나의 TRACE_ID로 기록한다")
     void logsControllerServiceRepositoryAsOneNestedTrace() throws Throwable {
+        // given: 실제 Bean과 DB 대신 Mockito로 가짜 호출 체인을 구성한다.
         MethodTraceLoggingAspect aspect = new MethodTraceLoggingAspect();
         ProceedingJoinPoint repository =
                 joinPoint(CocktailBookmarkRepository.class, "findById", () -> "result");
@@ -46,6 +50,8 @@ class MethodTraceLoggingAspectTest {
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
+
+        // when
         try {
             assertThat(aspect.trace(controller)).isEqualTo("result");
         } finally {
@@ -53,6 +59,7 @@ class MethodTraceLoggingAspectTest {
             appender.stop();
         }
 
+        // then
         List<String> messages =
                 appender.list.stream().map(ILoggingEvent::getFormattedMessage).toList();
         assertThat(messages)
