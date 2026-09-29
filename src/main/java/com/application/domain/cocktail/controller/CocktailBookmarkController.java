@@ -51,22 +51,19 @@ public class CocktailBookmarkController {
             @RequestBody BookmarkBatchRequest request,
             @AuthenticationPrincipal CustomOAuth2User customOAuth2User
     ) {
-        // Request 내용 확인
-        log.info("[배치 즐겨찾기] 받은 Request: {}", request);
-        log.info("[배치 즐겨찾기] cocktailIds: {}", request.getCocktailIds());
-
         // credentialId로 Member PK 조회
         String credentialId = customOAuth2User.getCredentialId();
-        log.info("[배치 즐겨찾기] credentialId: {}", credentialId);
-
         Member member = memberService.getMemberByCredentialId(credentialId);
-        log.info("[배치 즐겨찾기] Member 조회 결과: {}", member);
 
         if (member == null) {
-            throw new IllegalArgumentException("User not found with credentialId: " + credentialId);
+            throw new IllegalArgumentException("User not found");
         }
 
         Long memberId = member.getId();
+        log.info(
+                "BOOKMARK_BATCH_REQUEST memberId={} cocktailCount={}",
+                memberId,
+                request.getCocktailIds().size());
 
         List<Long> processedCocktailIds = bookmarkService.toggleBookmarkBatch(memberId, request.getCocktailIds());
 
