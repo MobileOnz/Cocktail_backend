@@ -1,4 +1,5 @@
 <configuration>
+    <!-- Spring 설정 하나로 수집 Bean과 파일 Appender를 함께 켜고 끄기 위해 같은 값을 읽는다. -->
     <springProperty scope="context" name="LOG_PATH" source="log.path" defaultValue="./logs"/>
     <springProperty scope="context" name="LOG_COLLECTION_ENABLED" source="app.logging.enabled" defaultValue="true"/>
     <springProperty scope="context" name="LOG_MAX_HISTORY" source="app.logging.max-history-days" defaultValue="30"/>
@@ -8,6 +9,7 @@
     <property name="LOG_PATTERN"
               value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [traceId=%X{traceId:-none} depth=%X{depth:-none} spanId=%X{spanId:-none}] [%thread] %logger{36} - %msg%n"/>
 
+    <!-- 날짜와 크기를 함께 제한해 트래픽 급증 시에도 한 파일과 디스크가 무한히 커지지 않게 한다. -->
     <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/Onz.log</file>
 
@@ -28,6 +30,7 @@
         </encoder>
     </appender>
 
+    <!-- 전체 로그와 별도로 ERROR만 모아 장애 시 우선 확인할 파일을 제공한다. -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/Onz-error.log</file>
         <filter class="com.application.common.logging.LogCollectionEnabledFilter">
@@ -48,6 +51,7 @@
         </encoder>
     </appender>
 
+    <!-- 파일 수집 OFF나 파일 쓰기 실패 시에도 컨테이너 로그로 기동 문제를 확인할 수 있게 유지한다. -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>

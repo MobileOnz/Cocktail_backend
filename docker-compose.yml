@@ -16,6 +16,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_PROFILES_ACTIVE=docker # Dockerfile의 ENV와 일치
       - LOG_PATH=/var/log/onz
+      # .env 값만 바꿔 운영 로그 전체 또는 메서드 상세 추적만 독립적으로 제어한다.
       - APP_LOGGING_ENABLED=${APP_LOGGING_ENABLED:-true}
       - APP_LOGGING_METHOD_TRACE_ENABLED=${APP_LOGGING_METHOD_TRACE_ENABLED:-true}
 

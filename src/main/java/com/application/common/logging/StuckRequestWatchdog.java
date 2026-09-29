@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/** 응답이 임계시간 안에 끝나지 않은 요청을 주기적으로 경고한다. */
+/**
+ * 요청 처리 스레드를 막지 않고 별도 스케줄러에서 Registry를 조회해 장기 실행 요청을 경고한다.
+ * 같은 요청은 설정된 반복 간격으로만 다시 보고해 로그 폭주를 막는다.
+ */
 @Slf4j
 @Component
 @ConditionalOnProperty(
@@ -33,6 +36,7 @@ public class StuckRequestWatchdog {
     public void reportStuckRequests() {
         for (ActiveRequestRegistry.StuckRequest request :
                 registry.claimStuckRequests(System.nanoTime(), thresholdMs, repeatIntervalMs)) {
+            // 감시 스레드의 경고도 원래 요청 traceId로 검색되도록 잠시 MDC에 연결한다.
             MDC.put(TraceIdContext.MDC_KEY, request.traceId());
             try {
                 log.warn(

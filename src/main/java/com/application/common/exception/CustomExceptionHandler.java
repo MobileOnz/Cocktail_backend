@@ -49,6 +49,7 @@ import java.util.NoSuchElementException;
 public class CustomExceptionHandler {
 
     private static String newErrorId() {
+        // 사용자가 전달한 오류 ID 하나로 같은 요청의 전체 로그를 찾을 수 있게 traceId를 재사용한다.
         return TraceIdContext.getOrCreate();
     }
 

@@ -1,6 +1,9 @@
 package com.application.common.logging;
 
-/** 운영 로그에 남기는 개인정보와 사용자 식별자를 일관된 형식으로 마스킹한다. */
+/**
+ * 장애 분석에 필요한 최소 식별 단서는 남기되 원문 개인정보가 파일에 저장되지 않도록 마스킹한다.
+ * Entity 전체를 출력하지 않고 허용된 필드에만 명시적으로 적용한다.
+ */
 public final class SensitiveLogMasker {
 
     private static final String EMPTY_VALUE = "-";
@@ -11,6 +14,7 @@ public final class SensitiveLogMasker {
         if (value == null || value.isBlank()) {
             return EMPTY_VALUE;
         }
+        // 한글·이모지 같은 문자가 중간에서 잘리지 않도록 UTF-16 char가 아닌 code point로 계산한다.
         int[] characters = value.codePoints().toArray();
         if (characters.length <= 4) {
             return "*".repeat(characters.length);

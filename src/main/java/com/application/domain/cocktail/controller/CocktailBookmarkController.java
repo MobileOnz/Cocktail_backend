@@ -62,6 +62,7 @@ public class CocktailBookmarkController {
 
         Long memberId = member.getId();
         List<Long> cocktailIds = request.getCocktailIds();
+        // Entity 전체 출력은 미래에 추가될 개인정보까지 노출하므로 필요한 필드만 골라 마스킹한다.
         log.info(
                 "BOOKMARK_BATCH_REQUEST credentialId={} memberId={} memberName={} nickname={} email={} phone={} cocktailIds={} cocktailCount={}",
                 SensitiveLogMasker.maskIdentifier(credentialId),

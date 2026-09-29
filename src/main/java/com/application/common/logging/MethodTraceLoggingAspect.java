@@ -11,11 +11,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
- * Controller → Service → Repository 호출을 depth와 span 관계로 추적한다.
+ * 각 메서드에 로깅 코드를 반복하지 않도록 AOP로 Controller → Service → Repository 흐름을 추적한다.
  *
- * <p>Spring AOP 프록시 경계를 추적하므로 같은 객체 안의 private 메서드나 self-invocation은
- * 자동 추적하지 않는다. 그런 지점이 운영상 중요하면 별도 Bean으로 분리하거나
- * {@link TraceOperation}을 Spring Bean의 public 메서드에 사용한다.</p>
+ * <p>ThreadLocal 스택으로 depth와 부모 span을 만들고 MDC에 반영한다. Spring 프록시 경계만
+ * 추적하므로 private 메서드나 self-invocation이 중요하면 별도 Bean으로 분리한다.</p>
  */
 @Slf4j
 @Aspect
@@ -36,6 +35,7 @@ public class MethodTraceLoggingAspect {
                     + " || @annotation(com.application.common.logging.TraceOperation))"
                     + " && !within(com.application.common.logging..*)")
     public Object trace(ProceedingJoinPoint joinPoint) throws Throwable {
+        // HTTP 요청 밖의 스케줄러·직접 호출도 독립적인 추적 단위로 검색할 수 있게 한다.
         boolean ownsTraceId = TraceIdContext.get() == null;
         if (ownsTraceId) {
             TraceIdContext.set(TraceIdContext.create());
@@ -68,6 +68,7 @@ public class MethodTraceLoggingAspect {
                     elapsedMs(startedAt));
             return result;
         } catch (Throwable failure) {
+            // 같은 예외의 스택을 레이어마다 중복 출력하지 않고 최종 예외 핸들러에 맡긴다.
             log.warn(
                     "METHOD_FAILED layer={} class={} method={} depth={} spanId={} durationMs={} failureType={}",
                     layer,
@@ -79,6 +80,7 @@ public class MethodTraceLoggingAspect {
                     failure.getClass().getSimpleName());
             throw failure;
         } finally {
+            // 예외가 발생해도 부모 span을 복원해 이후 로그의 depth가 오염되지 않게 한다.
             MethodTraceContext.close(span);
             if (ownsTraceId) {
                 TraceIdContext.clear();

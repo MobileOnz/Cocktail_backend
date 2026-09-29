@@ -9,7 +9,10 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-/** 완료되지 않은 HTTP 요청을 추적한다. */
+/**
+ * 아직 끝나지 않은 요청을 메모리에 보관해 응답이 없는 상황을 DB 장애와 무관하게 탐지한다.
+ * 여러 요청·감시 스레드가 동시에 접근하므로 ConcurrentMap과 원자 연산을 사용한다.
+ */
 @Component
 @ConditionalOnProperty(
         name = "app.logging.enabled",
@@ -42,6 +45,7 @@ public class ActiveRequestRegistry {
         List<StuckRequest> result = new ArrayList<>();
 
         for (ActiveRequest request : activeRequests.values()) {
+            // SSE는 의도적으로 오래 열려 있으므로 장애성 지연 요청으로 판단하지 않는다.
             if (request.kind == RequestKind.STREAM) {
                 continue;
             }
@@ -94,6 +98,7 @@ public class ActiveRequestRegistry {
         }
 
         private boolean claimWarning(long nowNanos, long repeatNanos) {
+            // 감시 주기가 겹쳐도 동일 요청의 경고가 반복 폭주하지 않게 CAS로 발행권을 선점한다.
             while (true) {
                 long last = lastWarningAtNanos.get();
                 if (last != 0 && nowNanos - last < repeatNanos) {
