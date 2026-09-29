@@ -1,6 +1,7 @@
 package com.application.domain.cocktail.controller;
 
 import com.application.common.auth.dto.oauth2Dto.CustomOAuth2User;
+import com.application.common.logging.SensitiveLogMasker;
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.request.BookmarkBatchRequest;
 import com.application.domain.cocktail.dto.response.BookmarkBatchResponse;
@@ -60,12 +61,19 @@ public class CocktailBookmarkController {
         }
 
         Long memberId = member.getId();
+        List<Long> cocktailIds = request.getCocktailIds();
         log.info(
-                "BOOKMARK_BATCH_REQUEST memberId={} cocktailCount={}",
-                memberId,
-                request.getCocktailIds().size());
+                "BOOKMARK_BATCH_REQUEST credentialId={} memberId={} memberName={} nickname={} email={} phone={} cocktailIds={} cocktailCount={}",
+                SensitiveLogMasker.maskIdentifier(credentialId),
+                SensitiveLogMasker.maskMemberId(memberId),
+                SensitiveLogMasker.maskName(member.getName()),
+                SensitiveLogMasker.maskName(member.getNickname()),
+                SensitiveLogMasker.maskEmail(member.getEmail()),
+                SensitiveLogMasker.maskPhone(member.getPhone()),
+                cocktailIds,
+                cocktailIds == null ? 0 : cocktailIds.size());
 
-        List<Long> processedCocktailIds = bookmarkService.toggleBookmarkBatch(memberId, request.getCocktailIds());
+        List<Long> processedCocktailIds = bookmarkService.toggleBookmarkBatch(memberId, cocktailIds);
 
         BookmarkBatchResponse response = BookmarkBatchResponse.builder()
                 .cocktailIds(processedCocktailIds)
