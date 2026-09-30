@@ -1,6 +1,6 @@
 package com.application.domain.admin.controller;
 
-import com.application.domain.admin.service.AdminContentService;
+import com.application.domain.magazine.service.AdminStoryService;
 import com.application.domain.admin.service.AuditLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * 뉴스 CRUD (T-18). 마크다운 본문 + 예약 발행(published_at 미래값).
+ * 저장은 magazine_article(STORY) 로 간다 — 앱 상세가 매거진에서 읽기 때문(#147). news 테이블은 더 쓰지 않는다.
  * htmx: 목록 테이블을 fragment(admin/news/rows :: rows)로 부분 갱신.
  * 모든 쓰기는 CSRF(admin 체인) + ROLE_ADMIN + 감사 로그.
  */
@@ -21,13 +22,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminNewsController {
 
-    private final AdminContentService content;
+    private final AdminStoryService content;
     private final AuditLogService audit;
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("newsAvailable", content.newsAvailable());
-        model.addAttribute("newsList", content.newsAvailable() ? content.listNews() : java.util.List.of());
+        model.addAttribute("newsAvailable", true);
+        model.addAttribute("newsList", content.list());
         return "admin/news/list";
     }
 
@@ -40,7 +41,7 @@ public class AdminNewsController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable long id, Model model) {
-        model.addAttribute("news", content.getNews(id));
+        model.addAttribute("news", content.get(id));
         model.addAttribute("mode", "edit");
         return "admin/news/form";
     }
@@ -54,8 +55,8 @@ public class AdminNewsController {
                          @RequestParam(required = false) String publishedAt,
                          Model model) {
         LocalDateTime pub = parseDateTime(publishedAt);
-        long id = content.createNews(title, summary, content_, category, source, pub);
-        audit.log("CREATE", "news", id, null,
+        long id = content.create(title, summary, content_, category, source, pub);
+        audit.log("CREATE", "magazine", id, null,
                 Map.of("title", title, "category", category, "publishedAt", String.valueOf(pub)));
         return rowsFragment(model);
     }
@@ -69,24 +70,24 @@ public class AdminNewsController {
                          @RequestParam(required = false) String source,
                          @RequestParam(required = false) String publishedAt,
                          Model model) {
-        Map<String, Object> before = content.getNews(id);
+        Map<String, Object> before = content.get(id);
         LocalDateTime pub = parseDateTime(publishedAt);
-        content.updateNews(id, title, summary, content_, category, source, pub);
-        audit.log("UPDATE", "news", id, before,
+        content.update(id, title, summary, content_, category, source, pub);
+        audit.log("UPDATE", "magazine", id, before,
                 Map.of("title", title, "category", category, "publishedAt", String.valueOf(pub)));
         return rowsFragment(model);
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable long id, Model model) {
-        Map<String, Object> before = content.getNews(id);
-        content.deleteNews(id);
-        audit.log("DELETE", "news", id, before, null);
+        Map<String, Object> before = content.get(id);
+        content.delete(id);
+        audit.log("DELETE", "magazine", id, before, null);
         return rowsFragment(model);
     }
 
     private String rowsFragment(Model model) {
-        model.addAttribute("newsList", content.listNews());
+        model.addAttribute("newsList", content.list());
         return "admin/news/rows :: rows";
     }
 

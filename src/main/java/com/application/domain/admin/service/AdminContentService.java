@@ -8,14 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 /**
- * 관리자 CRUD 데이터 접근 (T-18). s1(뉴스)·s1(cocktail_step) 엔티티와의 소유권 충돌을 피하려고
+ * 관리자 CRUD 데이터 접근 (T-18). cocktail_step·가이드 등 엔티티와의 소유권 충돌을 피하려고
  * 전부 네이티브 SQL(JdbcTemplate)로 느슨하게 결합한다. 테이블 부재 시 안전하게 빈 결과/무시.
  */
 @Service
@@ -28,51 +25,6 @@ public class AdminContentService {
         Integer c = jdbc.queryForObject(
                 "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = ?", Integer.class, name);
         return c != null && c > 0;
-    }
-
-    // ─────────────────────────── 뉴스 (news, s1 V4) ───────────────────────────
-
-    public boolean newsAvailable() { return tableExists("news"); }
-
-    public List<Map<String, Object>> listNews() {
-        if (!newsAvailable()) return List.of();
-        return jdbc.queryForList(
-                "SELECT id, title, category, featured, view_count, published_at, created_at " +
-                "FROM news ORDER BY published_at DESC NULLS LAST, id DESC");
-    }
-
-    public Map<String, Object> getNews(long id) {
-        return jdbc.queryForMap("SELECT * FROM news WHERE id = ?", id);
-    }
-
-    public long createNews(String title, String summary, String content, String category,
-                           String source, LocalDateTime publishedAt) {
-        KeyHolder kh = new GeneratedKeyHolder();
-        jdbc.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO news (title, summary, content, category, source, published_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)", new String[]{"id"});
-            ps.setString(1, title);
-            ps.setString(2, summary);
-            ps.setString(3, content);
-            ps.setString(4, category);
-            ps.setString(5, source);
-            ps.setTimestamp(6, publishedAt == null ? null : Timestamp.valueOf(publishedAt));
-            return ps;
-        }, kh);
-        Number key = kh.getKey();
-        return key == null ? -1 : key.longValue();
-    }
-
-    public void updateNews(long id, String title, String summary, String content, String category,
-                           String source, LocalDateTime publishedAt) {
-        jdbc.update("UPDATE news SET title=?, summary=?, content=?, category=?, source=?, published_at=? WHERE id=?",
-                title, summary, content, category, source,
-                publishedAt == null ? null : Timestamp.valueOf(publishedAt), id);
-    }
-
-    public void deleteNews(long id) {
-        jdbc.update("DELETE FROM news WHERE id = ?", id);
     }
 
     // ─────────────────────────── 가이드 (guide / guide_detail, V1) ───────────────────────────

@@ -1,7 +1,7 @@
 package com.application.domain.main.dto;
 
 import com.application.domain.news.dto.NewsCategory;
-import com.application.domain.news.entity.News;
+import com.application.domain.magazine.dto.MagazineCard;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
@@ -24,9 +24,10 @@ public record FeedItem(
         String imageUrl,
         LocalDateTime publishedAt
 ) {
-    public static FeedItem news(News n) {
-        return new FeedItem("news", n.getId(), null, n.getTitle(), n.getSummary(),
-                n.getCategory(), NewsCategory.labelOf(n.getCategory()), n.getImageUrl(), n.getPublishedAt());
+    /** type 은 앱 호환을 위해 "news" 그대로. id 는 magazine_article.id — 앱이 /api/v2/magazine/{id} 로 연다. */
+    public static FeedItem news(MagazineCard c) {
+        return new FeedItem("news", c.id(), null, c.title(), c.summary(),
+                NewsCategory.codeOf(c.categoryLabel()), c.categoryLabel(), c.imageUrl(), c.publishedAt());
     }
 
     public static FeedItem guide(Integer part, String title, String imageUrl) {
