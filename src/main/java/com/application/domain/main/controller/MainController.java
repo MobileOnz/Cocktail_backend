@@ -28,7 +28,7 @@ public class MainController {
     @GetMapping
     public ResponseEntity<ResponseDto<MainResponse>> main(
             @AuthenticationPrincipal(errorOnInvalidType = false) CustomOAuth2User user,
-            @RequestParam(required = false) Long cursor,
+            @RequestParam(required = false) String cursor,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
 
         String credentialId = (user == null) ? null : user.getCredentialId();

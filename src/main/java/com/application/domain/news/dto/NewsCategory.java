@@ -23,6 +23,16 @@ public final class NewsCategory {
         return LABELS.getOrDefault(code, code);
     }
 
+    /** 라벨 → 코드. 매거진 subcategory(라벨)를 어드민 선택지(코드)로 되돌릴 때. 모르는 라벨은 그대로. */
+    public static String codeOf(String label) {
+        if (label == null) return null;
+        return LABELS.entrySet().stream()
+                .filter(e -> e.getValue().equals(label))
+                .map(Map.Entry::getKey)
+                .findFirst()
+                .orElse(label);
+    }
+
     /** "ALL" 또는 null 은 전체(필터 없음)를 의미. 유효 코드가 아니면 null 반환. */
     public static String normalizeFilter(String code) {
         if (code == null || code.isBlank() || "ALL".equalsIgnoreCase(code)) return null;
