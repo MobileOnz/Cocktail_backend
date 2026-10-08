@@ -54,6 +54,7 @@ class EndpointAuthorizationContractTest {
         m.put("/login/oauth2/code/naver", Tier.PUBLIC);
         m.put("/login/oauth2/code/google", Tier.PUBLIC);
         m.put("/login/oauth2/code/kakao", Tier.PUBLIC);
+        m.put("/api/public/cocktail", Tier.PUBLIC);              // 구 앱 레시피북 호환
         m.put("/api/v2/cocktails/all", Tier.PUBLIC);
         m.put("/api/v2/cocktails/random", Tier.PUBLIC);
         m.put("/api/v2/cocktails/recommendation", Tier.PUBLIC);
