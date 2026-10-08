@@ -57,6 +57,7 @@ public final class EndpointAuthorizationPolicy {
             "^/login/oauth2/code/[a-zA-Z]+$",           // OAuth2 콜백
 
             // 칵테일 — 개인화 없는 순수 공개 조회
+            "^/api/public/cocktail$",                   // 구 앱 레시피북 호환 상세 조회
             "^/api/v2/cocktails/all$",
             "^/api/v2/cocktails/random$",
             "^/api/v2/cocktails/recommendation$",

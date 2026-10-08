@@ -284,6 +284,7 @@ public class CocktailService {
         return GuideResponseDto.from(guide);
     }
 
+    @Transactional(readOnly = true)
     public CocktailDto getCocktailInfo(Long cocktailId) {
         Cocktail cocktail = cocktailRepository.findById(cocktailId).orElseThrow(
                 // QA P3-1: 리소스 부재는 404. NoSuchElementException 는 전역 핸들러가 404 로 매핑한다.
