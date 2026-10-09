@@ -2,6 +2,7 @@ package com.application.domain.cocktail.controller;
 
 import com.application.common.response.ResponseDto;
 import com.application.domain.cocktail.dto.CocktailDto;
+import com.application.domain.cocktail.dto.IngredientDto;
 import com.application.domain.cocktail.service.CocktailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +41,30 @@ public class LegacyCocktailController {
         cocktail.put("id", dto.getId());
         cocktail.put("cocktail_name", dto.getCocktailKR());
         cocktail.put("cocktail_name_en", dto.getCocktailEN());
+        cocktail.put("introduce", dto.getOriginText());
+        cocktail.put("cocktail_size", 0);
+        cocktail.put("min_alchol", dto.getMinAlcohol());
+        cocktail.put("max_alchol", dto.getMaxAlcohol());
         cocktail.put("image_url", dto.getImageUrl());
+
+        List<Map<String, String>> ingredients = safeList(dto.getIngredients()).stream()
+                .map(ingredient -> Map.of(
+                        "ingredient", ingredient.getName(),
+                        "quantity", ingredient.getAmount() == null ? "" : ingredient.getAmount(),
+                        "unit", ""
+                ))
+                .toList();
+
+        List<Map<String, String>> tastes = safeList(dto.getFlavors()).stream()
+                .map(flavor -> Map.of(
+                        "tasteDetail", flavor,
+                        "category", ""
+                ))
+                .toList();
+
+        List<Map<String, String>> recommends = safeList(dto.getMoods()).stream()
+                .map(mood -> Map.of("mood", mood))
+                .toList();
 
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("id", dto.getId());
@@ -51,11 +76,16 @@ public class LegacyCocktailController {
         data.put("imageUrl", dto.getImageUrl());
         data.put("abvBand", dto.getAbvBand());
         data.put("tasteLevel", dto.getTasteLevel());
-        data.put("seasons", dto.getSeasons());
-        data.put("ingredients", dto.getIngredients());
-        data.put("tags", dto.getTags());
+        data.put("seasons", safeList(dto.getSeasons()));
+        data.put("ingredients", ingredients);
+        data.put("tastes", tastes);
+        data.put("recommends", recommends);
         data.put("cocktail", cocktail);
 
         return ResponseEntity.ok(ResponseDto.onSuccess("cocktail info", data));
+    }
+
+    private static <T> List<T> safeList(List<T> values) {
+        return values == null ? List.of() : values;
     }
 }
