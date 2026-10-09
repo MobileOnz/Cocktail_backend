@@ -44,6 +44,21 @@ public class JWTUtil {
         }
     }
 
+    /**
+     * Access Token 검증 실패를 만료와 형식·서명 오류로 구분한다.
+     * 운영 로그에는 토큰 값 대신 이 결과만 기록한다.
+     */
+    public String getAccessTokenFailureReason(String token){
+        try {
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            return "VALID";
+        } catch (ExpiredJwtException e) {
+            return "EXPIRED";
+        } catch (Exception e) {
+            return "INVALID";
+        }
+    }
+
     public Boolean isRefreshExpired(String token){
         try {
             return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
