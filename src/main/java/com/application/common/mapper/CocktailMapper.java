@@ -23,7 +23,7 @@ public class CocktailMapper {
         dto.setImageUrl(cocktail.getImageUrl());
         dto.setAbvBand(cocktail.getAbvBand() == null ? null : cocktail.getAbvBand().name());
         dto.setTasteLevel(cocktail.getTasteLevel() == null ? null : cocktail.getTasteLevel().name());
-        dto.setSeasons(cocktail.getSeasons());
+        dto.setSeasons(new ArrayList<>(cocktail.getSeasons()));
 
         List<IngredientDto> ingredientDtos = new ArrayList<>();
         for(Ingredient ingredient : cocktail.getIngredients()){
