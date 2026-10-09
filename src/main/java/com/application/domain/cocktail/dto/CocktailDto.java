@@ -47,4 +47,10 @@ public class CocktailDto {
 
     @Schema(description = "태그 그룹 목록 (FLAVOR, MOOD, BASE, GLASS)")
     private List<TagGroupDto> tags;
+
+    @Schema(description = "구 앱 호환용 맛 목록")
+    private List<String> flavors;
+
+    @Schema(description = "구 앱 호환용 분위기 목록")
+    private List<String> moods;
 }

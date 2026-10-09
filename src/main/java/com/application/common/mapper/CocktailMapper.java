@@ -15,14 +15,14 @@ public class CocktailMapper {
     public static CocktailDto toDto(Cocktail cocktail){
         CocktailDto dto = new CocktailDto();
         dto.setId(cocktail.getId());
-        dto.setCocktailEN(cocktail.getCocktailEN());
-        dto.setCocktailKR(cocktail.getCocktailKR());
+        dto.setCocktailEN(firstNonBlank(cocktail.getCocktailEN(), cocktail.getEngName()));
+        dto.setCocktailKR(firstNonBlank(cocktail.getCocktailKR(), cocktail.getKorName()));
         dto.setMaxAlcohol(cocktail.getMaxAlcohol());
         dto.setMinAlcohol(cocktail.getMinAlcohol());
         dto.setOriginText(cocktail.getOriginText());
         dto.setImageUrl(cocktail.getImageUrl());
-        dto.setAbvBand(cocktail.getAbvBand().name());
-        dto.setTasteLevel(cocktail.getTasteLevel().name());
+        dto.setAbvBand(cocktail.getAbvBand() == null ? null : cocktail.getAbvBand().name());
+        dto.setTasteLevel(cocktail.getTasteLevel() == null ? null : cocktail.getTasteLevel().name());
         dto.setSeasons(cocktail.getSeasons());
 
         List<IngredientDto> ingredientDtos = new ArrayList<>();
@@ -30,7 +30,23 @@ public class CocktailMapper {
             IngredientDto ingredientDto = new IngredientDto(ingredient.getName(), ingredient.getAmount());
             ingredientDtos.add(ingredientDto);
         }
+        if (ingredientDtos.isEmpty()
+                && cocktail.getIngredientsText() != null
+                && !cocktail.getIngredientsText().isBlank()) {
+            Arrays.stream(cocktail.getIngredientsText().split(","))
+                    .map(String::trim)
+                    .filter(value -> !value.isEmpty())
+                    .map(value -> new IngredientDto(value, ""))
+                    .forEach(ingredientDtos::add);
+        }
         dto.setIngredients(ingredientDtos);
+
+        dto.setFlavors(cocktail.getFlavors().stream()
+                .map(flavor -> flavor.getFlavorName())
+                .toList());
+        dto.setMoods(cocktail.getMoods().stream()
+                .map(mood -> mood.getMoodName())
+                .toList());
 
         // [ {type : flavor, tags : [ "id" : "SWEET" ]} ]
         //TODO: stream() 사용
@@ -50,5 +66,9 @@ public class CocktailMapper {
         dto.setTags(new ArrayList<>(tagGroupMaps.values()));
 
         return dto;
+    }
+
+    private static String firstNonBlank(String preferred, String fallback) {
+        return preferred == null || preferred.isBlank() ? fallback : preferred;
     }
 }
