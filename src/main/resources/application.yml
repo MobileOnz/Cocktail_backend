@@ -118,3 +118,18 @@ app:
   admin:
     username: ${ADMIN_USERNAME}
     password: ${ADMIN_PASSWORD}
+
+# --- 앱 업데이트 안내 / 강제 업데이트 (GET /api/v2/app/version) ---
+# 앱이 실행할 때 비교한다: 현재 < min 이면 강제 업데이트, < latest 이면 닫을 수 있는 안내.
+# 출시 절차: 스토어 승인 뒤 *_LATEST_VERSION 을 올린다. 옛 버전을 막아야 할 때만 *_MIN_VERSION 을 올린다.
+# 0.0.0 은 '안내 안 함'.
+onz:
+  app-version:
+    ios:
+      latest: ${ONZ_IOS_LATEST_VERSION:2.0.5}
+      min: ${ONZ_IOS_MIN_VERSION:0.0.0}
+      store-url: ${ONZ_IOS_STORE_URL:https://apps.apple.com/kr/app/onz/id6744957084}
+    android:
+      latest: ${ONZ_ANDROID_LATEST_VERSION:0.0.0}
+      min: ${ONZ_ANDROID_MIN_VERSION:0.0.0}
+      store-url: ${ONZ_ANDROID_STORE_URL:https://play.google.com/store/apps/details?id=com.cocktail_front}
