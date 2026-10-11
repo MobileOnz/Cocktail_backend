@@ -80,6 +80,9 @@ public final class EndpointAuthorizationPolicy {
             "^/api/v2/magazine/[0-9]+$",
             "^/api/v2/magazine/[0-9]+/read$",
 
+            // 앱 버전 확인 (실행 직후, 로그인 전 호출)
+            "^/api/v2/app/version$",
+
             // 온보딩 / 모니터링 (로그인 전 호출)
             "^/api/v2/monitoring/track$",
             "^/api/v2/monitoring/onboarding$",

@@ -74,6 +74,7 @@ class EndpointAuthorizationContractTest {
         m.put("/api/v2/magazine/tags", Tier.PUBLIC);
         m.put("/api/v2/magazine/1", Tier.PUBLIC);
         m.put("/api/v2/magazine/1/read", Tier.PUBLIC);          // POST, 조회수
+        m.put("/api/v2/app/version", Tier.PUBLIC);
         m.put("/api/v2/monitoring/track", Tier.PUBLIC);
         m.put("/api/v2/monitoring/onboarding", Tier.PUBLIC);
         m.put("/api/v2/monitoring/onboarding/status", Tier.PUBLIC);
