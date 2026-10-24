@@ -1,5 +1,7 @@
 # 🥃 BE_ONZ (Onz Cocktail Backend)
 
+[CSV 기반 하이브리드 검색 구현·실행 가이드](docs/hybrid-search/README.md) · [실제 검색/테스트 결과](docs/hybrid-search/RESULTS.md)
+
 > ONZ 칵테일 서비스의 **백엔드 서버**입니다.  
 칵테일을 **태그 기반으로 관리**하고, **관리자 페이지에서 칵테일/태그를 등록**하며,  
 앱/프론트에서 **소셜 로그인 → 토큰 발급 → 칵테일 목록/검색** 흐름으로 사용하는 구조입니다.

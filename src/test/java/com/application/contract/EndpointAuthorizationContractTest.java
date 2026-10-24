@@ -60,6 +60,7 @@ class EndpointAuthorizationContractTest {
         m.put("/api/v2/cocktails/recommendation", Tier.PUBLIC);
         m.put("/api/v2/cocktails/suggestions", Tier.PUBLIC);
         m.put("/api/v2/cocktails/names", Tier.PUBLIC);
+        m.put("/api/v2/cocktails/search/hybrid", Tier.PUBLIC);
         m.put("/api/v2/cocktails/guide", Tier.PUBLIC);
         m.put("/api/v2/cocktails/guide/list", Tier.PUBLIC);
         m.put("/api/v2/cocktails/1/steps", Tier.PUBLIC);        // T-07
