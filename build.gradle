@@ -116,3 +116,16 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Explicit offline indexing/migration command; does not boot or modify the main application.
+tasks.register('hybridSearch', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.application.domain.cocktail.search.SearchIndexCli'
+}
+
+// Loopback-only browser harness; test fixtures and launcher are never packaged in the production jar.
+tasks.register('hybridSearchLocal', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'localharness.HybridSearchLocalServer'
+}

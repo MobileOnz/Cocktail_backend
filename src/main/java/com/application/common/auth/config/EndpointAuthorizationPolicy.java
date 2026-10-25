@@ -63,6 +63,7 @@ public final class EndpointAuthorizationPolicy {
             "^/api/v2/cocktails/recommendation$",
             "^/api/v2/cocktails/suggestions$",
             "^/api/v2/cocktails/names$",
+            "^/api/v2/cocktails/search/hybrid$",
             "^/api/v2/cocktails/guide$",
             "^/api/v2/cocktails/guide/list$",
             "^/api/v2/cocktails/[0-9]+/steps$",         // T-07 제조 단계 조회

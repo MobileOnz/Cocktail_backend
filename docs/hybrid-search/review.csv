@@ -1,0 +1,10 @@
+﻿cocktail_id,name,original,reason
+29,셰리 코블러,오렌지/레몬/베리 장식,ambiguous slash-separated ingredient
+52,스파이시 피프티,레드 칠리,unmeasured ingredient; core/garnish uncertain
+61,불바디에,스위트 베르 30ml (1 oz),abbreviated source ingredient; verify vermouth
+64,드라이 마티니,드라이 베르무트ml (⅓ oz),unparsed quantity or descriptor
+78,마이타이,파인애플,unmeasured fruit may be garnish; unmeasured ingredient; core/garnish uncertain
+78,마이타이,민트 잎,unmeasured leaves may be garnish; unmeasured ingredient; core/garnish uncertain
+89,돈스 스페셜 다이키리,다크 럼 130ml (1 oz),source ml/oz quantities disagree; original preserved
+94,페니실린,싱글몰트 위스키 (라가불린 16년) 7.5ml (¼ oz),unparsed quantity or descriptor
+100,샤르트뢰즈 스위즐,민트,unmeasured herb may be garnish; unmeasured ingredient; core/garnish uncertain
