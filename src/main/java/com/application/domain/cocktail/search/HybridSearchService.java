@@ -79,13 +79,13 @@ public class HybridSearchService {
                 useVector=false; warnings.add("INDEX_MODEL_MISMATCH_KEYWORD_FALLBACK");
             }
         }
-        boolean exactName=Boolean.TRUE.equals(jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM cocktail_search_term WHERE term_type IN ('name','alias') AND term_normalized=:q)",Map.of("q",q.text()),Boolean.class));
+        boolean exactName=Boolean.TRUE.equals(jdbc.queryForObject("SELECT EXISTS(SELECT 1 FROM cocktail_search_term WHERE term_type IN ('name','alias') AND term_normalized=:q)",Map.of("q",q.name()),Boolean.class));
         boolean ingredients=q.terms().stream().anyMatch(entities::contains);
         String type=exactName?"name":ingredients?"ingredient":"flavor";
         if (ingredients && q.text().matches(".*(?:상큼|향|달콤|청량).*")) type="mixed";
         double weight=switch(type) {case "name"->nameWeight; case "ingredient"->ingredientWeight; case "mixed"->mixedWeight; default->flavorWeight;};
         boolean useKeyword=!mode.equals("vector") || !useVector;
-        var p=new MapSqlParameterSource().addValue("raw",r.query().trim()).addValue("query",q.text())
+        var p=new MapSqlParameterSource().addValue("raw",r.query().trim()).addValue("query",q.name())
                 .addValue("bases",json(q.bases())).addValue("excludedBases",json(q.excludedBases()))
                 .addValue("required",json(q.required())).addValue("excluded",json(q.excluded()))
                 .addValue("terms",json(q.terms())).addValue("abvMin",q.abvMin()).addValue("abvMax",q.abvMax()).addValue("season",q.season())
@@ -103,7 +103,7 @@ public class HybridSearchService {
             Set<String> reasons=new LinkedHashSet<>();
             for (JsonNode term:doc.path("terms")) {
                 String normalized=term.path("normalized").asText();
-                if (normalized.equals(q.text()) || q.terms().contains(normalized)) reasons.add(term.path("source").asText()+": "+term.path("original").asText());
+                if (normalized.equals(q.name()) || q.terms().contains(normalized)) reasons.add(term.path("source").asText()+": "+term.path("original").asText());
             }
             for (JsonNode tag:doc.path("taste_tags")) if (q.terms().contains(SearchDictionary.normalize(tag.asText()))) reasons.add("맛: "+tag.asText());
             if (reasons.isEmpty() && rs.getObject("vector_rank")!=null) reasons.add("원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)");

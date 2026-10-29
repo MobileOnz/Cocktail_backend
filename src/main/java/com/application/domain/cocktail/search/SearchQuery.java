@@ -3,7 +3,8 @@ package com.application.domain.cocktail.search;
 import java.util.*;
 import java.util.regex.*;
 
-record SearchQuery(String text, List<String> terms, Set<String> bases, Set<String> excludedBases,
+// text: aliases canonicalised for ingredient/base analysis. name: normalised only, for name matching ("whiskey sour" must not become "위스키 sour").
+record SearchQuery(String text, String name, List<String> terms, Set<String> bases, Set<String> excludedBases,
         Set<String> required, Set<String> excluded, Integer abvMin, Integer abvMax, String season, boolean filterOnly) {
     static SearchQuery analyze(HybridSearchRequest r, Set<String> entities, Set<String> knownBases) {
         String q = SearchDictionary.query(r.query());
@@ -44,7 +45,7 @@ record SearchQuery(String text, List<String> terms, Set<String> bases, Set<Strin
             else min=min==null?value:Math.max(min,value);
         }
         boolean filters = !bases.isEmpty() || !noBases.isEmpty() || !required.isEmpty() || !excluded.isEmpty() || min!=null || max!=null || r.season()!=null;
-        return new SearchQuery(q,List.copyOf(terms),bases,noBases,required,excluded,min,max,
+        return new SearchQuery(q,SearchDictionary.normalize(r.query()),List.copyOf(terms),bases,noBases,required,excluded,min,max,
                 r.season()==null?null:SearchDictionary.normalize(r.season()),filters && hits.isEmpty());
     }
     private static Set<String> normalized(List<String> values, boolean base) {

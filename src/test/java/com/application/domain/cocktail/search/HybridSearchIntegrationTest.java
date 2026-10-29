@@ -68,6 +68,18 @@ class HybridSearchIntegrationTest {
         assertThat(items(service.search(request("진 피"),true)).get(0).get("cocktailId")).isEqualTo(8L);
         for(String q:List.of("Piña Colada","Pina Colada","피나 콜라다")) assertThat(items(service.search(request(q),true)).get(0).get("cocktailId")).isEqualTo(18L);
     }
+    @Test void aliasWordsInsideNamesKeepNameMatching() {
+        // Lowercase so the raw-original match (priority 4) cannot hide a broken normalized match.
+        for(var c:Map.of("whiskey sour",24L,"gin fizz",8L,"lemon drop martini",11L,"tequila sunrise",23L).entrySet())
+            assertThat(items(service.search(request(c.getKey()),true)).get(0).get("cocktailId")).as(c.getKey()).isEqualTo(c.getValue());
+        var prefix=new HybridSearchRequest("데킬라 선",null,null,null,null,null,null,null,100,0,true);
+        var sunrise=items(service.search(prefix,true)).stream().filter(i->i.get("cocktailId").equals(23L)).findFirst().orElseThrow();
+        assertThat(((Map<?,?>)sunrise.get("debug")).get("keywordRank")).isEqualTo(1L);
+        assertThat(SearchDictionary.query("라이 위스키")).isEqualTo("라이 위스키");
+        assertThat(SearchDictionary.query("버번 위스키가 들어간")).isEqualTo("버번 위스키가 들어간");
+        assertThat(SearchDictionary.query("라이")).isEqualTo("라이 위스키");
+        assertThat(SearchDictionary.query("진 베이스 상큼한 칵테일")).isEqualTo("진 베이스 상큼 칵테일");
+    }
     @Test void strictFiltersCannotBeResurrectedByVectorAndGingerIsNotGin() {
         for(var item:items(service.search(request("진 베이스 상큼한 칵테일"),true))) assertThat(item.get("bases").toString()).contains("\"진\"");
         for(var item:items(service.search(request("럼 없이 상큼한 칵테일"),true))) assertThat(item.get("bases").toString()).doesNotContain("\"럼\"");

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.text.Normalizer;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Same editable dictionary used by CSV normalization and query analysis. */
@@ -30,9 +31,16 @@ public final class SearchDictionary {
         for (String group : List.of("base_aliases", "ingredient_aliases", "query_terms")) {
             List<String> keys = new ArrayList<>(); DATA.path(group).fieldNames().forEachRemaining(keys::add);
             keys.sort(Comparator.comparingInt(String::length).reversed());
-            for (String key : keys) q = q.replaceAll("(?<![\\p{L}])" + Pattern.quote(key)
-                    + "(?=$|[^\\p{L}]|(?:과|와|이|가|을|를|은|는)(?:\\s|$))",
-                    java.util.regex.Matcher.quoteReplacement(DATA.path(group).path(key).asText()));
+            for (String key : keys) {
+                String canonical = DATA.path(group).path(key).asText();
+                Matcher m = Pattern.compile("(?<![\\p{L}])" + Pattern.quote(key)
+                        + "(?=$|[^\\p{L}]|(?:과|와|이|가|을|를|은|는)(?:\\s|$))").matcher(q);
+                StringBuilder out = new StringBuilder();
+                // Skip spots already in canonical form, so "라이 위스키" never becomes "라이 위스키 위스키".
+                boolean expands = canonical.startsWith(key);
+                while (m.find()) m.appendReplacement(out, Matcher.quoteReplacement(expands && q.startsWith(canonical, m.start()) ? m.group() : canonical));
+                q = m.appendTail(out).toString();
+            }
         }
         return q;
     }
