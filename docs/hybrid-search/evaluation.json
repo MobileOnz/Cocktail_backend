@@ -1,0 +1,6842 @@
+{
+  "model": "qwen3-embedding:0.6b",
+  "dimension": 1024,
+  "evaluationScope": "25 manually specified smoke queries; top5 hit=any labelled relevant ID, not independent human relevance assessment. Sweetness is not labelled/guaranteed.",
+  "indexing": {
+    "examined": 105,
+    "changed": 105,
+    "unchanged": 0,
+    "indexed": 105
+  },
+  "tests": {
+    "tests": 54,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "pythonTests": 6,
+  "sourceSha256": "35dc6404be139bdef03d2c075ce82a18ee78871aba23c297856a5ee87e59fe84",
+  "modes": [
+    {
+      "p50Ms": 20.259375,
+      "top5Hits": 25,
+      "degradedQueries": 0,
+      "filterViolations": 0,
+      "mode": "keyword",
+      "nameTop1Hits": 7,
+      "p95Ms": 26.16025,
+      "nameQueries": 7,
+      "queries": 25,
+      "results": [
+        {
+          "query": "모히또",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: 모히또"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "모히토",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "dictionary:name_aliases: 모히토"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "Mojito",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: Mojito"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "Piña Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "이름: Piña Colada"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "Pina Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "dictionary:name_aliases: Pina Colada"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "네그로니",
+          "relevantIds": [
+            70
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "이름: 네그로니"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            }
+          ]
+        },
+        {
+          "query": "Espresso Martini",
+          "relevantIds": [
+            44
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "이름: Espresso Martini"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 64,
+              "nameKo": "드라이 마티니",
+              "nameEn": "Dry Martini",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 68,
+              "nameKo": "마르티네스",
+              "nameEn": "Martinez",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            }
+          ]
+        },
+        {
+          "query": "화이트 럼 라임",
+          "relevantIds": [
+            42,
+            5,
+            6,
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 라임 주스 10ml (⅓ oz)",
+                "재료_원문/dictionary: 라임 웨지"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 6,
+              "nameKo": "다이키리",
+              "nameEn": "Daiquiri",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 라임 주스 25ml (⅚ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 45ml (1½ oz)",
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 42,
+              "nameKo": "헤밍웨이 스페셜",
+              "nameEn": "Hemingway Special",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 60ml (2 oz)",
+                "재료_원문/dictionary: 라임 주스 15ml (½ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 86,
+              "nameKo": "옐로 버드",
+              "nameEn": "Yellow Bird",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 30ml (1 oz)",
+                "재료_원문/dictionary: 라임 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진 베이스 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            8,
+            9,
+            32,
+            46,
+            25
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "진"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 40ml (1⅓ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 52.5ml (1¾ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 38,
+              "nameKo": "프렌치 75",
+              "nameEn": "French 75",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 30ml (1 oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진저 비어",
+          "relevantIds": [
+            27,
+            16,
+            96
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저 비어 120ml (4 oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 27,
+              "nameKo": "다크 앤 스토미",
+              "nameEn": "Dark ’n’ Stormy",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저 비어 100ml (3⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 96,
+              "nameKo": "서퍼링 바스타드",
+              "nameEn": "Suffering Bastard",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저비어"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            }
+          ]
+        },
+        {
+          "query": "럼 없이 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            28,
+            8,
+            9,
+            46,
+            12
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [
+              "럼"
+            ],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "럼"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 2,
+              "nameKo": "벨리니",
+              "nameEn": "Bellini",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 4,
+              "nameKo": "샴페인 칵테일",
+              "nameEn": "Champagne Cocktail",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "달지 않고 허브 향이 있는 칵테일",
+          "relevantIds": [
+            65,
+            70,
+            87,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "맛: 쌉싸름",
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "맛: 쌉싸름"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "맛: 쌉싸름"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 4,
+              "nameKo": "샴페인 칵테일",
+              "nameEn": "Champagne Cocktail",
+              "matchReasons": [
+                "맛: 쌉싸름"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "맛: 쌉싸름"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "도수 10도 이하",
+          "relevantIds": [
+            2,
+            14,
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 2,
+              "nameKo": "벨리니",
+              "nameEn": "Bellini",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 20,
+              "nameKo": "시 브리즈",
+              "nameEn": "Sea Breeze",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진과 레몬이 들어간",
+          "relevantIds": [
+            32,
+            25,
+            46,
+            8,
+            9
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "레몬",
+              "진"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 슬라이스",
+                "재료_원문/dictionary: 레몬 제스트"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 40ml (1⅓ oz)",
+                "재료_원문/dictionary: 레몬 주스 20ml (⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 52.5ml (1¾ oz)",
+                "재료_원문/dictionary: 레몬 주스 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 올드 톰 진 40ml (1⅓ oz)",
+                "재료_원문/dictionary: 레몬 주스 10ml (⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "민트 라임",
+          "relevantIds": [
+            15,
+            51,
+            48
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 민트 잎 6장",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 민트",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 48,
+              "nameKo": "올드 쿠반",
+              "nameEn": "Old Cuban",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 22.5ml (¾ oz)",
+                "재료_원문/dictionary: 민트 잎 6-8개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 51,
+              "nameKo": "사우스 사이드",
+              "nameEn": "South Side",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트 잎 5-6개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트 잎",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 92,
+              "nameKo": "미셔너리즈 다운폴",
+              "nameEn": "Missionary's Downfall",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트잎 10장",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "커피",
+          "relevantIds": [
+            44,
+            3,
+            43
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 43,
+              "nameKo": "아이리시 커피",
+              "nameEn": "Irish Coffee",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            }
+          ]
+        },
+        {
+          "query": "코코넛 파인애플",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 코코넛 크림 30ml (1 oz)",
+                "맛: 코코넛",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 101,
+              "nameKo": "IBA 티키",
+              "nameEn": "IBA Tiki",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 90ml (3 oz)",
+                "맛: 코코넛"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 13,
+              "nameKo": "메리 픽포드",
+              "nameEn": "Mary Pickford",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 45ml (1½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 15ml (½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "테킬라 베이스",
+          "relevantIds": [
+            12,
+            23,
+            53,
+            47,
+            28
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "테킬라"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 12,
+              "nameKo": "마가리타",
+              "nameEn": "Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 23,
+              "nameKo": "데킬라 선라이즈",
+              "nameEn": "Tequila Sunrise",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 28,
+              "nameKo": "팔로마",
+              "nameEn": "Paloma",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 47,
+              "nameKo": "그랑 마가리타",
+              "nameEn": "Grand Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 데킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 53,
+              "nameKo": "토미스 마가리타",
+              "nameEn": "Tommy’s Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "메스칼 베이스",
+          "relevantIds": [
+            90,
+            57
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "메즈칼"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 57,
+              "nameKo": "네이키드 앤 페이머스",
+              "nameEn": "Naked and Famous",
+              "matchReasons": [
+                "베이스: 메즈칼",
+                "재료_원문/dictionary: 메즈칼 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 90,
+              "nameKo": "일레갈",
+              "nameEn": "Illegal",
+              "matchReasons": [
+                "베이스: 메스칼",
+                "재료_원문/dictionary: 메스칼 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            }
+          ]
+        },
+        {
+          "query": "카샤샤 베이스",
+          "relevantIds": [
+            81,
+            35
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "카샤사"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 35,
+              "nameKo": "카이피리냐",
+              "nameEn": "Caipirinha",
+              "matchReasons": [
+                "베이스: 리큐르/카샤샤",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 81,
+              "nameKo": "하부 지 갈루",
+              "nameEn": "Rabo de Galo",
+              "matchReasons": [
+                "베이스: 카샤사",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            }
+          ]
+        },
+        {
+          "query": "계란 흰자가 들어간",
+          "relevantIds": [
+            58,
+            63,
+            80,
+            73
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "계란 흰자"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 58,
+              "nameKo": "뉴욕 사워",
+              "nameEn": "New York Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 달걀 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 63,
+              "nameKo": "클로버 클럽",
+              "nameEn": "Clover Club",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 73,
+              "nameKo": "라모스 피즈",
+              "nameEn": "Ramos Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 80,
+              "nameKo": "피스코 사워",
+              "nameEn": "Pisco Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 1개"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            }
+          ]
+        },
+        {
+          "query": "레몬 주스",
+          "relevantIds": [
+            22,
+            24,
+            8,
+            9,
+            11
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 슬라이스",
+                "재료_원문/dictionary: 레몬 제스트"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 11,
+              "nameKo": "레몬 드롭 마티니",
+              "nameEn": "Lemon Drop Martini",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 22,
+              "nameKo": "사이드카",
+              "nameEn": "Sidecar",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 20ml (⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 24,
+              "nameKo": "위스키 사워",
+              "nameEn": "Whiskey Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 25ml (⅚ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "보드카 베이스 커피",
+          "relevantIds": [
+            44,
+            3
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "보드카"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 11,
+              "nameKo": "레몬 드롭 마티니",
+              "nameEn": "Lemon Drop Martini",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 시트론 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 20,
+              "nameKo": "시 브리즈",
+              "nameEn": "Sea Breeze",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "라임 없이",
+          "relevantIds": [
+            2,
+            3,
+            4,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "라임"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 2,
+              "nameKo": "벨리니",
+              "nameEn": "Bellini",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 4,
+              "nameKo": "샴페인 칵테일",
+              "nameEn": "Champagne Cocktail",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "오렌지 탄산",
+          "relevantIds": [
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 슬라이스",
+                "맛: 탄산"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스(신선) 120ml (4 oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": null,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "맛: 탄산"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": null,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 75ml (2½ oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": null,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "맛: 탄산"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": null,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "p50Ms": 135.204333,
+      "top5Hits": 23,
+      "degradedQueries": 0,
+      "filterViolations": 0,
+      "mode": "vector",
+      "nameTop1Hits": 7,
+      "p95Ms": 151.12125,
+      "nameQueries": 7,
+      "queries": 25,
+      "results": [
+        {
+          "query": "모히또",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: 모히또"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 69,
+              "nameKo": "몽키 글랜드",
+              "nameEn": "Monkey Gland",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 41,
+              "nameKo": "그래스 호퍼",
+              "nameEn": "Grasshopper",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "모히토",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "dictionary:name_aliases: 모히토"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 53,
+              "nameKo": "토미스 마가리타",
+              "nameEn": "Tommy’s Margarita",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 41,
+              "nameKo": "그래스 호퍼",
+              "nameEn": "Grasshopper",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "Mojito",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: Mojito"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 69,
+              "nameKo": "몽키 글랜드",
+              "nameEn": "Monkey Gland",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "Piña Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "이름: Piña Colada"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 77,
+              "nameKo": "롱 아일랜드 아이스티",
+              "nameEn": "Long Island Iced Tea",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 95,
+              "nameKo": "피스코 펀치",
+              "nameEn": "Pisco Punch",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 45,
+              "nameKo": "페르난디토",
+              "nameEn": "Fernandito",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "Pina Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "dictionary:name_aliases: Pina Colada"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 77,
+              "nameKo": "롱 아일랜드 아이스티",
+              "nameEn": "Long Island Iced Tea",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 95,
+              "nameKo": "피스코 펀치",
+              "nameEn": "Pisco Punch",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "네그로니",
+          "relevantIds": [
+            70
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "이름: 네그로니"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 74,
+              "nameKo": "러스티 네일",
+              "nameEn": "Rusty Nail",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 26,
+              "nameKo": "홀시스 넥",
+              "nameEn": "Horse’s Neck",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 72,
+              "nameKo": "포르토 플립",
+              "nameEn": "Porto Flip",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "Espresso Martini",
+          "relevantIds": [
+            44
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "이름: Espresso Martini"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 64,
+              "nameKo": "드라이 마티니",
+              "nameEn": "Dry Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 68,
+              "nameKo": "마르티네스",
+              "nameEn": "Martinez",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 49,
+              "nameKo": "폰스타 마티니",
+              "nameEn": "Porn Star Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "화이트 럼 라임",
+          "relevantIds": [
+            42,
+            5,
+            6,
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 42,
+              "nameKo": "헤밍웨이 스페셜",
+              "nameEn": "Hemingway Special",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 60ml (2 oz)",
+                "재료_원문/dictionary: 라임 주스 15ml (½ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 6,
+              "nameKo": "다이키리",
+              "nameEn": "Daiquiri",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 라임 주스 25ml (⅚ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 45ml (1½ oz)",
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 27,
+              "nameKo": "다크 앤 스토미",
+              "nameEn": "Dark ’n’ Stormy",
+              "matchReasons": [
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진 베이스 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            8,
+            9,
+            32,
+            46,
+            25
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "진"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 52.5ml (1¾ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 올드 톰 진 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 60ml (2 oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 65,
+              "nameKo": "행키팽키",
+              "nameEn": "Hanky Panky",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 런던 드라이 진 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진저 비어",
+          "relevantIds": [
+            27,
+            16,
+            96
+          ],
+          "top5Hit": false,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 64,
+              "nameKo": "드라이 마티니",
+              "nameEn": "Dry Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 76,
+              "nameKo": "턱시도",
+              "nameEn": "Tuxedo",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "럼 없이 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            28,
+            8,
+            9,
+            46,
+            12
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [
+              "럼"
+            ],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "럼"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 74,
+              "nameKo": "러스티 네일",
+              "nameEn": "Rusty Nail",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 100,
+              "nameKo": "샤르트뢰즈 스위즐",
+              "nameEn": "Chartreuse Swizzle",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 50,
+              "nameKo": "러시안 스프링 펀치",
+              "nameEn": "Russian Spring Punch",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 26,
+              "nameKo": "홀시스 넥",
+              "nameEn": "Horse’s Neck",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "달지 않고 허브 향이 있는 칵테일",
+          "relevantIds": [
+            65,
+            70,
+            87,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 65,
+              "nameKo": "행키팽키",
+              "nameEn": "Hanky Panky",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 100,
+              "nameKo": "샤르트뢰즈 스위즐",
+              "nameEn": "Chartreuse Swizzle",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 88,
+              "nameKo": "콥스 리바이버 No.2",
+              "nameEn": "Corpse Reviver No,2",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "도수 10도 이하",
+          "relevantIds": [
+            2,
+            14,
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 20,
+              "nameKo": "시 브리즈",
+              "nameEn": "Sea Breeze",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 2,
+              "nameKo": "벨리니",
+              "nameEn": "Bellini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "진과 레몬이 들어간",
+          "relevantIds": [
+            32,
+            25,
+            46,
+            8,
+            9
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "레몬",
+              "진"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 54,
+              "nameKo": "브램블",
+              "nameEn": "Bramble",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 레몬 주스 25ml (⅘ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 73,
+              "nameKo": "라모스 피즈",
+              "nameEn": "Ramos Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 슬라이스",
+                "재료_원문/dictionary: 레몬 제스트"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 60ml (2 oz)",
+                "재료_원문/dictionary: 레몬 주스 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "민트 라임",
+          "relevantIds": [
+            15,
+            51,
+            48
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 민트 잎 6장",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 민트",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 79,
+              "nameKo": "민트 줄렙",
+              "nameEn": "Mint Julep",
+              "matchReasons": [
+                "재료_원문/dictionary: 민트 잎 4-5개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트 잎",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 92,
+              "nameKo": "미셔너리즈 다운폴",
+              "nameEn": "Missionary's Downfall",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트잎 10장",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 48,
+              "nameKo": "올드 쿠반",
+              "nameEn": "Old Cuban",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 22.5ml (¾ oz)",
+                "재료_원문/dictionary: 민트 잎 6-8개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "커피",
+          "relevantIds": [
+            44,
+            3,
+            43
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 43,
+              "nameKo": "아이리시 커피",
+              "nameEn": "Irish Coffee",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 37,
+              "nameKo": "코스모폴리탄",
+              "nameEn": "Cosmopolitan",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "코코넛 파인애플",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 코코넛 크림 30ml (1 oz)",
+                "맛: 코코넛",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 95,
+              "nameKo": "피스코 펀치",
+              "nameEn": "Pisco Punch",
+              "matchReasons": [
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 91,
+              "nameKo": "정글 버드",
+              "nameEn": "Jungle Bird",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 45ml (1½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 15ml (½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 104,
+              "nameKo": "바라쿠다",
+              "nameEn": "Barracuda",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 60ml (2 oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "테킬라 베이스",
+          "relevantIds": [
+            12,
+            23,
+            53,
+            47,
+            28
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "테킬라"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 23,
+              "nameKo": "데킬라 선라이즈",
+              "nameEn": "Tequila Sunrise",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 53,
+              "nameKo": "토미스 마가리타",
+              "nameEn": "Tommy’s Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 12,
+              "nameKo": "마가리타",
+              "nameEn": "Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 47,
+              "nameKo": "그랑 마가리타",
+              "nameEn": "Grand Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 데킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 28,
+              "nameKo": "팔로마",
+              "nameEn": "Paloma",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "메스칼 베이스",
+          "relevantIds": [
+            90,
+            57
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "메즈칼"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 90,
+              "nameKo": "일레갈",
+              "nameEn": "Illegal",
+              "matchReasons": [
+                "베이스: 메스칼",
+                "재료_원문/dictionary: 메스칼 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 57,
+              "nameKo": "네이키드 앤 페이머스",
+              "nameEn": "Naked and Famous",
+              "matchReasons": [
+                "베이스: 메즈칼",
+                "재료_원문/dictionary: 메즈칼 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            }
+          ]
+        },
+        {
+          "query": "카샤샤 베이스",
+          "relevantIds": [
+            81,
+            35
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "카샤사"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 81,
+              "nameKo": "하부 지 갈루",
+              "nameEn": "Rabo de Galo",
+              "matchReasons": [
+                "베이스: 카샤사",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 35,
+              "nameKo": "카이피리냐",
+              "nameEn": "Caipirinha",
+              "matchReasons": [
+                "베이스: 리큐르/카샤샤",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            }
+          ]
+        },
+        {
+          "query": "계란 흰자가 들어간",
+          "relevantIds": [
+            58,
+            63,
+            80,
+            73
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "계란 흰자"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 58,
+              "nameKo": "뉴욕 사워",
+              "nameEn": "New York Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 달걀 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 63,
+              "nameKo": "클로버 클럽",
+              "nameEn": "Clover Club",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 73,
+              "nameKo": "라모스 피즈",
+              "nameEn": "Ramos Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 80,
+              "nameKo": "피스코 사워",
+              "nameEn": "Pisco Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 1개"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            }
+          ]
+        },
+        {
+          "query": "레몬 주스",
+          "relevantIds": [
+            22,
+            24,
+            8,
+            9,
+            11
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 54,
+              "nameKo": "브램블",
+              "nameEn": "Bramble",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 25ml (⅘ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 73,
+              "nameKo": "라모스 피즈",
+              "nameEn": "Ramos Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 42,
+              "nameKo": "헤밍웨이 스페셜",
+              "nameEn": "Hemingway Special",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "보드카 베이스 커피",
+          "relevantIds": [
+            44,
+            3
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "보드카"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 37,
+              "nameKo": "코스모폴리탄",
+              "nameEn": "Cosmopolitan",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 시트론 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 21,
+              "nameKo": "섹스 온 더 비치",
+              "nameEn": "Sex on the Beach",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 85,
+              "nameKo": "베스퍼",
+              "nameEn": "Vesper",
+              "matchReasons": [
+                "베이스: 진, 보드카",
+                "재료_원문/dictionary: 보드카 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "라임 없이",
+          "relevantIds": [
+            2,
+            3,
+            4,
+            1
+          ],
+          "top5Hit": false,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "라임"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 27,
+              "nameKo": "다크 앤 스토미",
+              "nameEn": "Dark ’n’ Stormy",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 54,
+              "nameKo": "브램블",
+              "nameEn": "Bramble",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 97,
+              "nameKo": "쓰리 닷츠 앤 어 대시",
+              "nameEn": "Three Dots and a Dash",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 63,
+              "nameKo": "클로버 클럽",
+              "nameEn": "Clover Club",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        },
+        {
+          "query": "오렌지 탄산",
+          "relevantIds": [
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 23,
+              "nameKo": "데킬라 선라이즈",
+              "nameEn": "Tequila Sunrise",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 90ml (3 oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 75ml (2½ oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 12,
+              "nameKo": "마가리타",
+              "nameEn": "Margarita",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 30,
+              "nameKo": "아페롤 스프리츠",
+              "nameEn": "Aperol Spritz",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 슬라이스",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 69,
+              "nameKo": "몽키 글랜드",
+              "nameEn": "Monkey Gland",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 45ml (1½ oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.015384615384615385
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "p50Ms": 133.119792,
+      "top5Hits": 24,
+      "degradedQueries": 0,
+      "filterViolations": 0,
+      "mode": "hybrid",
+      "nameTop1Hits": 7,
+      "p95Ms": 155.424458,
+      "nameQueries": 7,
+      "queries": 25,
+      "results": [
+        {
+          "query": "모히또",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: 모히또"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 69,
+              "nameKo": "몽키 글랜드",
+              "nameEn": "Monkey Gland",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 41,
+              "nameKo": "그래스 호퍼",
+              "nameEn": "Grasshopper",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "모히토",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "dictionary:name_aliases: 모히토"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 53,
+              "nameKo": "토미스 마가리타",
+              "nameEn": "Tommy’s Margarita",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 41,
+              "nameKo": "그래스 호퍼",
+              "nameEn": "Grasshopper",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "Mojito",
+          "relevantIds": [
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "이름: Mojito"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 69,
+              "nameKo": "몽키 글랜드",
+              "nameEn": "Monkey Gland",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "Piña Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "이름: Piña Colada"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 77,
+              "nameKo": "롱 아일랜드 아이스티",
+              "nameEn": "Long Island Iced Tea",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 95,
+              "nameKo": "피스코 펀치",
+              "nameEn": "Pisco Punch",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 45,
+              "nameKo": "페르난디토",
+              "nameEn": "Fernandito",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "Pina Colada",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "dictionary:name_aliases: Pina Colada"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 77,
+              "nameKo": "롱 아일랜드 아이스티",
+              "nameEn": "Long Island Iced Tea",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 95,
+              "nameKo": "피스코 펀치",
+              "nameEn": "Pisco Punch",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "네그로니",
+          "relevantIds": [
+            70
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 70,
+              "nameKo": "네그로니",
+              "nameEn": "Negroni",
+              "matchReasons": [
+                "이름: 네그로니"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 74,
+              "nameKo": "러스티 네일",
+              "nameEn": "Rusty Nail",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.002419354838709678
+              }
+            },
+            {
+              "cocktailId": 26,
+              "nameKo": "홀시스 넥",
+              "nameEn": "Horse’s Neck",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 3,
+                "rrfScore": 0.002380952380952381
+              }
+            },
+            {
+              "cocktailId": 98,
+              "nameKo": "트리니다드 사워",
+              "nameEn": "Trinidad Sour",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 4,
+                "rrfScore": 0.0023437500000000003
+              }
+            },
+            {
+              "cocktailId": 72,
+              "nameKo": "포르토 플립",
+              "nameEn": "Porto Flip",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "Espresso Martini",
+          "relevantIds": [
+            44
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "이름: Espresso Martini"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 64,
+              "nameKo": "드라이 마티니",
+              "nameEn": "Dry Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 68,
+              "nameKo": "마르티네스",
+              "nameEn": "Martinez",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 49,
+              "nameKo": "폰스타 마티니",
+              "nameEn": "Porn Star Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.002307692307692308
+              }
+            }
+          ]
+        },
+        {
+          "query": "화이트 럼 라임",
+          "relevantIds": [
+            42,
+            5,
+            6,
+            15
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 6,
+              "nameKo": "다이키리",
+              "nameEn": "Daiquiri",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 라임 주스 25ml (⅚ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 42,
+              "nameKo": "헤밍웨이 스페셜",
+              "nameEn": "Hemingway Special",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 60ml (2 oz)",
+                "재료_원문/dictionary: 라임 주스 15ml (½ oz)",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 1,
+                "rrfScore": 0.015817110655737706
+              }
+            },
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 45ml (1½ oz)",
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 4,
+                "rrfScore": 0.015811011904761904
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 라임 주스 10ml (⅓ oz)",
+                "재료_원문/dictionary: 라임 웨지"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 18,
+                "rrfScore": 0.015500210172341319
+              }
+            },
+            {
+              "cocktailId": 86,
+              "nameKo": "옐로 버드",
+              "nameEn": "Yellow Bird",
+              "matchReasons": [
+                "재료_원문/dictionary: 화이트 럼 30ml (1 oz)",
+                "재료_원문/dictionary: 라임 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": 7,
+                "rrfScore": 0.015269804822043629
+              }
+            }
+          ]
+        },
+        {
+          "query": "진 베이스 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            8,
+            9,
+            32,
+            46,
+            25
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "진"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 52.5ml (1¾ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 1,
+                "rrfScore": 0.016009221311475412
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 6,
+                "rrfScore": 0.015640273704789834
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 60ml (2 oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 6,
+                "vectorRank": 4,
+                "rrfScore": 0.015388257575757576
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 올드 톰 진 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 10,
+                "vectorRank": 2,
+                "rrfScore": 0.0152073732718894
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 13,
+                "rrfScore": 0.01504603637996856
+              }
+            }
+          ]
+        },
+        {
+          "query": "진저 비어",
+          "relevantIds": [
+            27,
+            16,
+            96
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 27,
+              "nameKo": "다크 앤 스토미",
+              "nameEn": "Dark ’n’ Stormy",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저 비어 100ml (3⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 27,
+                "rrfScore": 0.014970337411939191
+              }
+            },
+            {
+              "cocktailId": 96,
+              "nameKo": "서퍼링 바스타드",
+              "nameEn": "Suffering Bastard",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저비어"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 26,
+                "rrfScore": 0.01481173864894795
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "재료_원문/dictionary: 진저 비어 120ml (4 oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": null,
+                "rrfScore": 0.012295081967213115
+              }
+            },
+            {
+              "cocktailId": 64,
+              "nameKo": "드라이 마티니",
+              "nameEn": "Dry Martini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 1,
+                "rrfScore": 0.004098360655737705
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.004032258064516129
+              }
+            }
+          ]
+        },
+        {
+          "query": "럼 없이 상큼한 칵테일",
+          "relevantIds": [
+            51,
+            28,
+            8,
+            9,
+            46,
+            12
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [
+              "럼"
+            ],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "럼"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 11,
+                "vectorRank": 6,
+                "rrfScore": 0.014884763124199745
+              }
+            },
+            {
+              "cocktailId": 50,
+              "nameKo": "러시안 스프링 펀치",
+              "nameEn": "Russian Spring Punch",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 24,
+                "vectorRank": 3,
+                "rrfScore": 0.01488095238095238
+              }
+            },
+            {
+              "cocktailId": 46,
+              "nameKo": "진 바질 스매시",
+              "nameEn": "Gin Basil Smash",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 23,
+                "vectorRank": 4,
+                "rrfScore": 0.014730798192771084
+              }
+            },
+            {
+              "cocktailId": 11,
+              "nameKo": "레몬 드롭 마티니",
+              "nameEn": "Lemon Drop Martini",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 8,
+                "vectorRank": 9,
+                "rrfScore": 0.014546035805626599
+              }
+            },
+            {
+              "cocktailId": 4,
+              "nameKo": "샴페인 칵테일",
+              "nameEn": "Champagne Cocktail",
+              "matchReasons": [
+                "맛: 상큼"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 12,
+                "rrfScore": 0.014384920634920634
+              }
+            }
+          ]
+        },
+        {
+          "query": "달지 않고 허브 향이 있는 칵테일",
+          "relevantIds": [
+            65,
+            70,
+            87,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": 7,
+                "vectorRank": 5,
+                "rrfScore": 0.015269804822043629
+              }
+            },
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "맛: 쌉싸름"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 10,
+                "rrfScore": 0.014746543778801843
+              }
+            },
+            {
+              "cocktailId": 51,
+              "nameKo": "사우스 사이드",
+              "nameEn": "South Side",
+              "matchReasons": [
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": 11,
+                "vectorRank": 14,
+                "rrfScore": 0.013656261895698516
+              }
+            },
+            {
+              "cocktailId": 59,
+              "nameKo": "애비에이션",
+              "nameEn": "Aviation",
+              "matchReasons": [
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": 13,
+                "vectorRank": 24,
+                "rrfScore": 0.012353228962818003
+              }
+            },
+            {
+              "cocktailId": 85,
+              "nameKo": "베스퍼",
+              "nameEn": "Vesper",
+              "matchReasons": [
+                "맛: 드라이"
+              ],
+              "debug": {
+                "keywordRank": 16,
+                "vectorRank": 23,
+                "rrfScore": 0.012325618262523779
+              }
+            }
+          ]
+        },
+        {
+          "query": "도수 10도 이하",
+          "relevantIds": [
+            2,
+            14,
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 2,
+                "rrfScore": 0.016195134849286093
+              }
+            },
+            {
+              "cocktailId": 20,
+              "nameKo": "시 브리즈",
+              "nameEn": "Sea Breeze",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": 1,
+                "rrfScore": 0.01614123581336696
+              }
+            },
+            {
+              "cocktailId": 2,
+              "nameKo": "벨리니",
+              "nameEn": "Bellini",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 3,
+                "rrfScore": 0.015937019969278033
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 5,
+                "rrfScore": 0.015506715506715507
+              }
+            }
+          ]
+        },
+        {
+          "query": "진과 레몬이 들어간",
+          "relevantIds": [
+            32,
+            25,
+            46,
+            8,
+            9
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "레몬",
+              "진"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 슬라이스",
+                "재료_원문/dictionary: 레몬 제스트"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 4,
+                "rrfScore": 0.016201331967213115
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 45ml (1½ oz)",
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 1,
+                "rrfScore": 0.016195134849286093
+              }
+            },
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 52.5ml (1¾ oz)",
+                "재료_원문/dictionary: 레몬 주스 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 6,
+                "rrfScore": 0.015506628787878788
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 진 40ml (1⅓ oz)",
+                "재료_원문/dictionary: 레몬 주스 20ml (⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 11,
+                "rrfScore": 0.015425888665325285
+              }
+            },
+            {
+              "cocktailId": 36,
+              "nameKo": "카지노",
+              "nameEn": "Casino",
+              "matchReasons": [
+                "베이스: 진",
+                "재료_원문/dictionary: 올드 톰 진 40ml (1⅓ oz)",
+                "재료_원문/dictionary: 레몬 주스 10ml (⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": 8,
+                "rrfScore": 0.015214932126696834
+              }
+            }
+          ]
+        },
+        {
+          "query": "민트 라임",
+          "relevantIds": [
+            15,
+            51,
+            48
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 15,
+              "nameKo": "모히또",
+              "nameEn": "Mojito",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 20ml (⅔ oz)",
+                "재료_원문/dictionary: 민트 잎 6장",
+                "재료_원문/dictionary: 라임 슬라이스",
+                "맛: 민트",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 48,
+              "nameKo": "올드 쿠반",
+              "nameEn": "Old Cuban",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 22.5ml (¾ oz)",
+                "재료_원문/dictionary: 민트 잎 6-8개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 5,
+                "rrfScore": 0.015942928039702233
+              }
+            },
+            {
+              "cocktailId": 78,
+              "nameKo": "마이타이",
+              "nameEn": "Mai Tai",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트 잎",
+                "맛: 라임"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 3,
+                "rrfScore": 0.015687003968253968
+              }
+            },
+            {
+              "cocktailId": 51,
+              "nameKo": "사우스 사이드",
+              "nameEn": "South Side",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트 잎 5-6개",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 7,
+                "rrfScore": 0.015636105188343994
+              }
+            },
+            {
+              "cocktailId": 92,
+              "nameKo": "미셔너리즈 다운폴",
+              "nameEn": "Missionary's Downfall",
+              "matchReasons": [
+                "재료_원문/dictionary: 라임 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 민트잎 10장",
+                "맛: 민트"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": 4,
+                "rrfScore": 0.015444711538461539
+              }
+            }
+          ]
+        },
+        {
+          "query": "커피",
+          "relevantIds": [
+            44,
+            3,
+            43
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 1,
+                "rrfScore": 0.016263335935467083
+              }
+            },
+            {
+              "cocktailId": 43,
+              "nameKo": "아이리시 커피",
+              "nameEn": "Irish Coffee",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 3,
+                "rrfScore": 0.01600312256049961
+              }
+            },
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 4,
+                "rrfScore": 0.01575100806451613
+              }
+            },
+            {
+              "cocktailId": 5,
+              "nameKo": "쿠바 리브레",
+              "nameEn": "Cuba Libre",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 2,
+                "rrfScore": 0.012096774193548387
+              }
+            },
+            {
+              "cocktailId": 37,
+              "nameKo": "코스모폴리탄",
+              "nameEn": "Cosmopolitan",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": null,
+                "vectorRank": 5,
+                "rrfScore": 0.011538461538461539
+              }
+            }
+          ]
+        },
+        {
+          "query": "코코넛 파인애플",
+          "relevantIds": [
+            18
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 50ml (1⅔ oz)",
+                "재료_원문/dictionary: 코코넛 크림 30ml (1 oz)",
+                "맛: 코코넛",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 13,
+              "nameKo": "메리 픽포드",
+              "nameEn": "Mary Pickford",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 45ml (1½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 6,
+                "rrfScore": 0.015692640692640692
+              }
+            },
+            {
+              "cocktailId": 40,
+              "nameKo": "프렌치 마티니",
+              "nameEn": "French Martini",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 15ml (½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 101,
+              "nameKo": "IBA 티키",
+              "nameEn": "IBA Tiki",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 90ml (3 oz)",
+                "맛: 코코넛"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 18,
+                "rrfScore": 0.015301902398676591
+              }
+            },
+            {
+              "cocktailId": 91,
+              "nameKo": "정글 버드",
+              "nameEn": "Jungle Bird",
+              "matchReasons": [
+                "재료_원문/dictionary: 파인애플 주스 45ml (1½ oz)",
+                "맛: 파인애플"
+              ],
+              "debug": {
+                "keywordRank": 7,
+                "vectorRank": 3,
+                "rrfScore": 0.015162283819000236
+              }
+            }
+          ]
+        },
+        {
+          "query": "테킬라 베이스",
+          "relevantIds": [
+            12,
+            23,
+            53,
+            47,
+            28
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "테킬라"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 12,
+              "nameKo": "마가리타",
+              "nameEn": "Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 3,
+                "rrfScore": 0.016263335935467083
+              }
+            },
+            {
+              "cocktailId": 23,
+              "nameKo": "데킬라 선라이즈",
+              "nameEn": "Tequila Sunrise",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 1,
+                "rrfScore": 0.016195134849286093
+              }
+            },
+            {
+              "cocktailId": 28,
+              "nameKo": "팔로마",
+              "nameEn": "Paloma",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 50ml (1⅔ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 5,
+                "rrfScore": 0.01575091575091575
+              }
+            },
+            {
+              "cocktailId": 47,
+              "nameKo": "그랑 마가리타",
+              "nameEn": "Grand Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 데킬라 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            },
+            {
+              "cocktailId": 53,
+              "nameKo": "토미스 마가리타",
+              "nameEn": "Tommy’s Margarita",
+              "matchReasons": [
+                "베이스: 테킬라",
+                "재료_원문/dictionary: 테킬라 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 5,
+                "vectorRank": 2,
+                "rrfScore": 0.015570719602977668
+              }
+            }
+          ]
+        },
+        {
+          "query": "메스칼 베이스",
+          "relevantIds": [
+            90,
+            57
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "메즈칼"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 57,
+              "nameKo": "네이키드 앤 페이머스",
+              "nameEn": "Naked and Famous",
+              "matchReasons": [
+                "베이스: 메즈칼",
+                "재료_원문/dictionary: 메즈칼 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 2,
+                "rrfScore": 0.016327340031729243
+              }
+            },
+            {
+              "cocktailId": 90,
+              "nameKo": "일레갈",
+              "nameEn": "Illegal",
+              "matchReasons": [
+                "베이스: 메스칼",
+                "재료_원문/dictionary: 메스칼 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 1,
+                "rrfScore": 0.016195134849286093
+              }
+            }
+          ]
+        },
+        {
+          "query": "카샤샤 베이스",
+          "relevantIds": [
+            81,
+            35
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "카샤사"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 35,
+              "nameKo": "카이피리냐",
+              "nameEn": "Caipirinha",
+              "matchReasons": [
+                "베이스: 리큐르/카샤샤",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 2,
+                "rrfScore": 0.016327340031729243
+              }
+            },
+            {
+              "cocktailId": 81,
+              "nameKo": "하부 지 갈루",
+              "nameEn": "Rabo de Galo",
+              "matchReasons": [
+                "베이스: 카샤사",
+                "재료_원문/dictionary: 카샤사 60ml (2 oz)"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 1,
+                "rrfScore": 0.016195134849286093
+              }
+            }
+          ]
+        },
+        {
+          "query": "계란 흰자가 들어간",
+          "relevantIds": [
+            58,
+            63,
+            80,
+            73
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [
+              "계란 흰자"
+            ],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 58,
+              "nameKo": "뉴욕 사워",
+              "nameEn": "New York Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 달걀 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 63,
+              "nameKo": "클로버 클럽",
+              "nameEn": "Clover Club",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 몇 방울"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 73,
+              "nameKo": "라모스 피즈",
+              "nameEn": "Ramos Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 3,
+                "rrfScore": 0.015873015873015872
+              }
+            },
+            {
+              "cocktailId": 80,
+              "nameKo": "피스코 사워",
+              "nameEn": "Pisco Sour",
+              "matchReasons": [
+                "재료_원문/dictionary: 계란 흰자 1개"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 4,
+                "rrfScore": 0.015625
+              }
+            }
+          ]
+        },
+        {
+          "query": "레몬 주스",
+          "relevantIds": [
+            22,
+            24,
+            8,
+            9,
+            11
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 웨지",
+                "맛: 레몬"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 1,
+                "rrfScore": 0.016195134849286093
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 30ml (1 oz)",
+                "재료_원문/dictionary: 레몬 슬라이스",
+                "재료_원문/dictionary: 레몬 제스트"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 9,
+                "rrfScore": 0.015918270373010215
+              }
+            },
+            {
+              "cocktailId": 11,
+              "nameKo": "레몬 드롭 마티니",
+              "nameEn": "Lemon Drop Martini",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 7,
+                "rrfScore": 0.015636105188343994
+              }
+            },
+            {
+              "cocktailId": 32,
+              "nameKo": "비스 니즈",
+              "nameEn": "Bee’s Knees",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 22.5ml (¾ oz)"
+              ],
+              "debug": {
+                "keywordRank": 7,
+                "vectorRank": 8,
+                "rrfScore": 0.014870500438981561
+              }
+            },
+            {
+              "cocktailId": 34,
+              "nameKo": "블러디 메리",
+              "nameEn": "Bloody Mary",
+              "matchReasons": [
+                "재료_원문/dictionary: 레몬 주스 15ml (½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 8,
+                "vectorRank": 6,
+                "rrfScore": 0.014817290552584671
+              }
+            }
+          ]
+        },
+        {
+          "query": "보드카 베이스 커피",
+          "relevantIds": [
+            44,
+            3
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": [
+              "보드카"
+            ]
+          },
+          "items": [
+            {
+              "cocktailId": 3,
+              "nameKo": "블랙 러시안",
+              "nameEn": "Black Russian",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 1,
+                "rrfScore": 0.01639344262295082
+              }
+            },
+            {
+              "cocktailId": 44,
+              "nameKo": "에스프레소 마티니",
+              "nameEn": "Espresso Martini",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 50ml (1⅔ oz)",
+                "맛: 커피"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 2,
+                "rrfScore": 0.016129032258064516
+              }
+            },
+            {
+              "cocktailId": 11,
+              "nameKo": "레몬 드롭 마티니",
+              "nameEn": "Lemon Drop Martini",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 시트론 30ml (1 oz)"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 14,
+                "rrfScore": 0.015283140283140283
+              }
+            },
+            {
+              "cocktailId": 21,
+              "nameKo": "섹스 온 더 비치",
+              "nameEn": "Sex on the Beach",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 40ml (1⅓ oz)"
+              ],
+              "debug": {
+                "keywordRank": 6,
+                "vectorRank": 4,
+                "rrfScore": 0.015269886363636364
+              }
+            },
+            {
+              "cocktailId": 16,
+              "nameKo": "모스코 뮬",
+              "nameEn": "Moscow Mule",
+              "matchReasons": [
+                "베이스: 보드카",
+                "재료_원문/dictionary: 보드카 45ml (1½ oz)"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 12,
+                "rrfScore": 0.015190972222222222
+              }
+            }
+          ]
+        },
+        {
+          "query": "라임 없이",
+          "relevantIds": [
+            2,
+            3,
+            4,
+            1
+          ],
+          "top5Hit": false,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [
+              "라임"
+            ],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 27,
+              "nameKo": "다크 앤 스토미",
+              "nameEn": "Dark ’n’ Stormy",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 21,
+                "vectorRank": 1,
+                "rrfScore": 0.015381501720299534
+              }
+            },
+            {
+              "cocktailId": 25,
+              "nameKo": "화이트 레이디",
+              "nameEn": "White Lady",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 19,
+                "vectorRank": 3,
+                "rrfScore": 0.01506931886678722
+              }
+            },
+            {
+              "cocktailId": 54,
+              "nameKo": "브램블",
+              "nameEn": "Bramble",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 38,
+                "vectorRank": 2,
+                "rrfScore": 0.014647794601711651
+              }
+            },
+            {
+              "cocktailId": 18,
+              "nameKo": "피나 콜라다",
+              "nameEn": "Piña Colada",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 13,
+                "vectorRank": 7,
+                "rrfScore": 0.014618687384992843
+              }
+            },
+            {
+              "cocktailId": 9,
+              "nameKo": "존 콜린스",
+              "nameEn": "John Collins",
+              "matchReasons": [
+                "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+              ],
+              "debug": {
+                "keywordRank": 7,
+                "vectorRank": 9,
+                "rrfScore": 0.014600908500973394
+              }
+            }
+          ]
+        },
+        {
+          "query": "오렌지 탄산",
+          "relevantIds": [
+            30,
+            1
+          ],
+          "top5Hit": true,
+          "filters": {
+            "excludedBase": [],
+            "requiredIngredients": [],
+            "excludedIngredients": [],
+            "base": []
+          },
+          "items": [
+            {
+              "cocktailId": 7,
+              "nameKo": "가리발디",
+              "nameEn": "Garibaldi",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스(신선) 120ml (4 oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": 2,
+                "vectorRank": 6,
+                "rrfScore": 0.015884652981427175
+              }
+            },
+            {
+              "cocktailId": 14,
+              "nameKo": "미모사",
+              "nameEn": "Mimosa",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 75ml (2½ oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": 4,
+                "vectorRank": 2,
+                "rrfScore": 0.01575100806451613
+              }
+            },
+            {
+              "cocktailId": 1,
+              "nameKo": "아메리카노",
+              "nameEn": "Americano",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 슬라이스",
+                "맛: 탄산"
+              ],
+              "debug": {
+                "keywordRank": 1,
+                "vectorRank": 29,
+                "rrfScore": 0.015104070731258058
+              }
+            },
+            {
+              "cocktailId": 8,
+              "nameKo": "진 피즈",
+              "nameEn": "Gin Fizz",
+              "matchReasons": [
+                "맛: 탄산"
+              ],
+              "debug": {
+                "keywordRank": 3,
+                "vectorRank": 20,
+                "rrfScore": 0.015029761904761903
+              }
+            },
+            {
+              "cocktailId": 23,
+              "nameKo": "데킬라 선라이즈",
+              "nameEn": "Tequila Sunrise",
+              "matchReasons": [
+                "재료_원문/dictionary: 오렌지 주스 90ml (3 oz)",
+                "맛: 오렌지"
+              ],
+              "debug": {
+                "keywordRank": 9,
+                "vectorRank": 1,
+                "rrfScore": 0.01496792587312901
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "exactScanExplain": {
+    "Plan": {
+      "Node Type": "Limit",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 43.51,
+      "Total Cost": 43.52,
+      "Plan Rows": 5,
+      "Plan Width": 16,
+      "Actual Startup Time": 0.456,
+      "Actual Total Time": 0.458,
+      "Actual Rows": 5,
+      "Actual Loops": 1,
+      "Shared Hit Blocks": 405,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 43.51,
+          "Total Cost": 44.92,
+          "Plan Rows": 567,
+          "Plan Width": 16,
+          "Actual Startup Time": 0.456,
+          "Actual Total Time": 0.456,
+          "Actual Rows": 5,
+          "Actual Loops": 1,
+          "Sort Method": "top-N heapsort",
+          "Sort Space Used": 25,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 405,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "cocktail_search_document",
+              "Alias": "cocktail_search_document",
+              "Startup Cost": 0.0,
+              "Total Cost": 34.09,
+              "Plan Rows": 567,
+              "Plan Width": 16,
+              "Actual Startup Time": 0.03,
+              "Actual Total Time": 0.441,
+              "Actual Rows": 105,
+              "Actual Loops": 1,
+              "Shared Hit Blocks": 402,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 148,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.846,
+    "Triggers": [],
+    "Execution Time": 0.476
+  },
+  "hnswExplain": {
+    "Plan": {
+      "Node Type": "Limit",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 424.79,
+      "Total Cost": 430.01,
+      "Plan Rows": 5,
+      "Plan Width": 16,
+      "Actual Startup Time": 0.26,
+      "Actual Total Time": 0.284,
+      "Actual Rows": 5,
+      "Actual Loops": 1,
+      "Shared Hit Blocks": 211,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Index Scan",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Scan Direction": "Forward",
+          "Index Name": "evaluation_hnsw",
+          "Relation Name": "cocktail_search_document",
+          "Alias": "cocktail_search_document",
+          "Startup Cost": 424.79,
+          "Total Cost": 534.36,
+          "Plan Rows": 105,
+          "Plan Width": 16,
+          "Actual Startup Time": 0.26,
+          "Actual Total Time": 0.283,
+          "Actual Rows": 5,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 211,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 134,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.304,
+    "Triggers": [],
+    "Execution Time": 0.307
+  },
+  "apiSample": {
+    "code": 1,
+    "msg": "성공",
+    "data": {
+      "items": [
+        {
+          "cocktailId": 15,
+          "nameKo": "모히또",
+          "nameEn": "Mojito",
+          "base_raw": "럼",
+          "bases": [
+            "럼"
+          ],
+          "taste_tags": [
+            "민트",
+            "라임",
+            "상큼",
+            "탄산",
+            "청량"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "화이트 럼 45ml (1½ oz), 라임 주스 20ml (⅔ oz), 설탕 2 tsp, 민트 잎 6장, 탄산수, 라임 슬라이스",
+          "ingredients": [
+            {
+              "name": "화이트 럼",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "화이트 럼",
+                "럼"
+              ],
+              "optional": false,
+              "original": "화이트 럼 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 20ml (⅔ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "설탕",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "설탕"
+              ],
+              "optional": false,
+              "original": "설탕 2 tsp",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "민트 잎",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "민트 잎",
+                "민트"
+              ],
+              "optional": false,
+              "original": "민트 잎 6장",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "탄산수",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "탄산수"
+              ],
+              "optional": false,
+              "original": "탄산수",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 슬라이스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": true,
+              "entities": [
+                "라임 슬라이스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 슬라이스",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Mojito.webp",
+          "abv_min": 15,
+          "abv_max": 18,
+          "matchReasons": [
+            "dictionary:name_aliases: 모히토"
+          ]
+        },
+        {
+          "cocktailId": 16,
+          "nameKo": "모스코 뮬",
+          "nameEn": "Moscow Mule",
+          "base_raw": "보드카",
+          "bases": [
+            "보드카"
+          ],
+          "taste_tags": [
+            "생강",
+            "상큼",
+            "톡쏘는",
+            "라임"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "보드카 45ml (1½ oz), 진저 비어 120ml (4 oz), 라임 주스 5ml (⅙ oz), 라임 웨지",
+          "ingredients": [
+            {
+              "name": "보드카",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "보드카"
+              ],
+              "optional": false,
+              "original": "보드카 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "진저 비어",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "진저 비어"
+              ],
+              "optional": false,
+              "original": "진저 비어 120ml (4 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 5ml (⅙ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 웨지",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": true,
+              "entities": [
+                "라임 웨지",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 웨지",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Moscow_Mule.webp",
+          "abv_min": 12,
+          "abv_max": 14,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 53,
+          "nameKo": "토미스 마가리타",
+          "nameEn": "Tommy’s Margarita",
+          "base_raw": "테킬라",
+          "bases": [
+            "테킬라"
+          ],
+          "taste_tags": [
+            "라임",
+            "아가베",
+            "밸런스",
+            "프레시"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "테킬라 60ml (2 oz), 라임 주스 30ml (1 oz), 아가베 시럽 30ml (1 oz)",
+          "ingredients": [
+            {
+              "name": "테킬라",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "테킬라"
+              ],
+              "optional": false,
+              "original": "테킬라 60ml (2 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "아가베 시럽",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "아가베 시럽"
+              ],
+              "optional": false,
+              "original": "아가베 시럽 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Tommys_Margarita.webp",
+          "abv_min": 18,
+          "abv_max": 20,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 98,
+          "nameKo": "트리니다드 사워",
+          "nameEn": "Trinidad Sour",
+          "base_raw": "앙고스투라 비터스",
+          "bases": [
+            "앙고스투라 비터스"
+          ],
+          "taste_tags": [
+            "쌉쌀한",
+            "허브",
+            "스파이시",
+            "독특한"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "앙고스투라 비터스 45ml (1½ oz), 오르쟈 시럽 30ml (1 oz), 레몬 주스 22.5ml (¾ oz), 라이 위스키 15ml (½ oz)",
+          "ingredients": [
+            {
+              "name": "앙고스투라 비터스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "앙고스투라 비터스"
+              ],
+              "optional": false,
+              "original": "앙고스투라 비터스 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "오르쟈 시럽",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "오르쟈 시럽"
+              ],
+              "optional": false,
+              "original": "오르쟈 시럽 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "레몬 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "레몬 주스",
+                "레몬"
+              ],
+              "optional": false,
+              "original": "레몬 주스 22.5ml (¾ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라이 위스키",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라이 위스키",
+                "위스키"
+              ],
+              "optional": false,
+              "original": "라이 위스키 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Trinidad_Sour.webp",
+          "abv_min": 18,
+          "abv_max": 20,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 41,
+          "nameKo": "그래스 호퍼",
+          "nameEn": "Grasshopper",
+          "base_raw": "리큐르",
+          "bases": [
+            "리큐르"
+          ],
+          "taste_tags": [
+            "민트",
+            "크리미",
+            "달콤",
+            "가벼움"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "크렘 드 멘트(그린) 20ml (⅔ oz), 크렘 드 카카오(화이트)20ml (⅔ oz), 크림 20ml (⅔ oz)",
+          "ingredients": [
+            {
+              "name": "크렘 드 멘트(그린)",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "크렘 드 멘트(그린)"
+              ],
+              "optional": false,
+              "original": "크렘 드 멘트(그린) 20ml (⅔ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "크렘 드 카카오(화이트)",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "크렘 드 카카오(화이트)"
+              ],
+              "optional": false,
+              "original": "크렘 드 카카오(화이트)20ml (⅔ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "크림",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "크림"
+              ],
+              "optional": false,
+              "original": "크림 20ml (⅔ oz)",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Grasshopper.webp",
+          "abv_min": 16,
+          "abv_max": 20,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 78,
+          "nameKo": "마이타이",
+          "nameEn": "Mai Tai",
+          "base_raw": "럼",
+          "bases": [
+            "럼"
+          ],
+          "taste_tags": [
+            "아몬드",
+            "오렌지",
+            "라임",
+            "열대과일"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "자메이카 럼 30ml (1 oz), 마르티니크 럼 30ml (1 oz), 오렌지 큐라소 15ml (½ oz), 오르쟈 시럽 15ml (½ oz), 라임 주스 30ml (1 oz), 심플 시럽 7.5ml (¼ oz), 파인애플, 민트 잎, 라임 필",
+          "ingredients": [
+            {
+              "name": "자메이카 럼",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "자메이카 럼",
+                "럼"
+              ],
+              "optional": false,
+              "original": "자메이카 럼 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "마르티니크 럼",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "마르티니크 럼",
+                "럼"
+              ],
+              "optional": false,
+              "original": "마르티니크 럼 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "오렌지 큐라소",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "오렌지 큐라소"
+              ],
+              "optional": false,
+              "original": "오렌지 큐라소 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "오르쟈 시럽",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "오르쟈 시럽"
+              ],
+              "optional": false,
+              "original": "오르쟈 시럽 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "심플 시럽",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "심플 시럽"
+              ],
+              "optional": false,
+              "original": "심플 시럽 7.5ml (¼ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "파인애플",
+              "review": "unmeasured fruit may be garnish; unmeasured ingredient; core/garnish uncertain",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "파인애플"
+              ],
+              "optional": false,
+              "original": "파인애플",
+              "alternative": false,
+              "needs_review": true
+            },
+            {
+              "name": "민트 잎",
+              "review": "unmeasured leaves may be garnish; unmeasured ingredient; core/garnish uncertain",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "민트 잎",
+                "민트"
+              ],
+              "optional": false,
+              "original": "민트 잎",
+              "alternative": false,
+              "needs_review": true
+            },
+            {
+              "name": "라임 필",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": true,
+              "entities": [
+                "라임 필"
+              ],
+              "optional": false,
+              "original": "라임 필",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Mai_Tai.webp",
+          "abv_min": 24,
+          "abv_max": 27,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 69,
+          "nameKo": "몽키 글랜드",
+          "nameEn": "Monkey Gland",
+          "base_raw": "진",
+          "bases": [
+            "진"
+          ],
+          "taste_tags": [
+            "오렌지",
+            "아니스",
+            "새콤",
+            "독특한"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "진 45ml (1½ oz), 오렌지 주스 45ml (1½ oz), 압생트 1 tbsp, 그레나딘 시럽 1 tbsp",
+          "ingredients": [
+            {
+              "name": "진",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "진"
+              ],
+              "optional": false,
+              "original": "진 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "오렌지 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "오렌지 주스",
+                "오렌지"
+              ],
+              "optional": false,
+              "original": "오렌지 주스 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "압생트",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "압생트"
+              ],
+              "optional": false,
+              "original": "압생트 1 tbsp",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "그레나딘 시럽",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "그레나딘 시럽"
+              ],
+              "optional": false,
+              "original": "그레나딘 시럽 1 tbsp",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Monkey_Gland.webp",
+          "abv_min": 26,
+          "abv_max": 28,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 37,
+          "nameKo": "코스모폴리탄",
+          "nameEn": "Cosmopolitan",
+          "base_raw": "보드카",
+          "bases": [
+            "보드카"
+          ],
+          "taste_tags": [
+            "크랜베리",
+            "상큼",
+            "달콤",
+            "트렌디"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "보드카 시트론 40ml (1⅓ oz), 코앵트로 15ml (½ oz), 라임 주스 15ml (½ oz), 크랜베리 주스 30ml (1 oz), 레몬 필 트위스트",
+          "ingredients": [
+            {
+              "name": "보드카 시트론",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "보드카 시트론",
+                "보드카"
+              ],
+              "optional": false,
+              "original": "보드카 시트론 40ml (1⅓ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "쿠앵트로",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "쿠앵트로"
+              ],
+              "optional": false,
+              "original": "코앵트로 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "크랜베리 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "크랜베리 주스",
+                "크랜베리"
+              ],
+              "optional": false,
+              "original": "크랜베리 주스 30ml (1 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "레몬 필 트위스트",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": true,
+              "entities": [
+                "레몬 필 트위스트"
+              ],
+              "optional": false,
+              "original": "레몬 필 트위스트",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Cosmopolitan.webp",
+          "abv_min": 22,
+          "abv_max": 25,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 74,
+          "nameKo": "러스티 네일",
+          "nameEn": "Rusty Nail",
+          "base_raw": "위스키",
+          "bases": [
+            "위스키"
+          ],
+          "taste_tags": [
+            "꿀",
+            "허브",
+            "스모키",
+            "달콤한"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "스카치 위스키 45ml (1½ oz), 드람뷔 25ml (⅘ oz)",
+          "ingredients": [
+            {
+              "name": "스카치 위스키",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "스카치 위스키",
+                "위스키"
+              ],
+              "optional": false,
+              "original": "스카치 위스키 45ml (1½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "드람뷔",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "드람뷔"
+              ],
+              "optional": false,
+              "original": "드람뷔 25ml (⅘ oz)",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Rusty_Nail.webp",
+          "abv_min": 32,
+          "abv_max": 35,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        },
+        {
+          "cocktailId": 42,
+          "nameKo": "헤밍웨이 스페셜",
+          "nameEn": "Hemingway Special",
+          "base_raw": "럼",
+          "bases": [
+            "럼"
+          ],
+          "taste_tags": [
+            "라임",
+            "자몽",
+            "상큼",
+            "드라이"
+          ],
+          "aroma_tags": [],
+          "ingredients_raw": "화이트 럼 60ml (2 oz), 라임 주스 15ml (½ oz), 자몽 주스 40ml (1⅓ oz), 마라스키노 리큐르 15ml (½ oz)",
+          "ingredients": [
+            {
+              "name": "화이트 럼",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "화이트 럼",
+                "럼"
+              ],
+              "optional": false,
+              "original": "화이트 럼 60ml (2 oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "라임 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "라임 주스",
+                "라임"
+              ],
+              "optional": false,
+              "original": "라임 주스 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "자몽 주스",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "자몽 주스",
+                "자몽"
+              ],
+              "optional": false,
+              "original": "자몽 주스 40ml (1⅓ oz)",
+              "alternative": false,
+              "needs_review": false
+            },
+            {
+              "name": "마라스키노 리큐르",
+              "review": "",
+              "source": "재료_원문",
+              "garnish": false,
+              "entities": [
+                "마라스키노 리큐르"
+              ],
+              "optional": false,
+              "original": "마라스키노 리큐르 15ml (½ oz)",
+              "alternative": false,
+              "needs_review": false
+            }
+          ],
+          "image_url": "http://onz-cocktail.kr/uploads/cocktails/onz_cocktail_Hemingway_Special.webp",
+          "abv_min": 16,
+          "abv_max": 18,
+          "matchReasons": [
+            "원본 프로필과 의미 유사 (재료 포함·단맛을 보장하지 않음)"
+          ]
+        }
+      ],
+      "searchType": "name",
+      "mode": "hybrid",
+      "degraded": false,
+      "warnings": [],
+      "offset": 0,
+      "limit": 10,
+      "totalCandidates": 50,
+      "hasMore": true,
+      "abvPolicy": "abv_min >= requested minimum AND abv_max <= requested maximum; entire source range must fit",
+      "sweetnessPolicy": "맛단계 없음: 단맛 수치 필터 및 무가당 보장 없음",
+      "filters": {
+        "excludedBase": [],
+        "requiredIngredients": [],
+        "excludedIngredients": [],
+        "base": []
+      }
+    }
+  }
+}
