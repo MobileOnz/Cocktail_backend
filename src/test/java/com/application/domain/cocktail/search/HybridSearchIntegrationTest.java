@@ -70,8 +70,13 @@ class HybridSearchIntegrationTest {
     }
     @Test void aliasWordsInsideNamesKeepNameMatching() {
         // Lowercase so the raw-original match (priority 4) cannot hide a broken normalized match.
-        for(var c:Map.of("whiskey sour",24L,"gin fizz",8L,"lemon drop martini",11L,"tequila sunrise",23L).entrySet())
-            assertThat(items(service.search(request(c.getKey()),true)).get(0).get("cocktailId")).as(c.getKey()).isEqualTo(c.getValue());
+        for (var cocktail : Map.of("whiskey sour",24L,"gin fizz",8L,"lemon drop martini",11L,"tequila sunrise",23L).entrySet()) {
+            for (String mode : List.of("hybrid", "keyword")) {
+                var response = service.search(request(cocktail.getKey()), true, mode);
+                assertThat(items(response).get(0).get("cocktailId"))
+                        .as("%s in %s mode", cocktail.getKey(), mode).isEqualTo(cocktail.getValue());
+            }
+        }
         var prefix=new HybridSearchRequest("데킬라 선",null,null,null,null,null,null,null,100,0,true);
         var sunrise=items(service.search(prefix,true)).stream().filter(i->i.get("cocktailId").equals(23L)).findFirst().orElseThrow();
         assertThat(((Map<?,?>)sunrise.get("debug")).get("keywordRank")).isEqualTo(1L);

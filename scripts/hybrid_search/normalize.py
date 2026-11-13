@@ -16,7 +16,7 @@ def norm(value):
     return re.sub(r'\s+', ' ', unicodedata.normalize('NFKC', value).casefold().replace('’', "'").replace('‘', "'")).strip()
 
 def load_dictionary():
-    return json.loads(DICTIONARY.read_text())
+    return json.loads(DICTIONARY.read_text(encoding='utf-8'))
 
 def ingredients(raw, dictionary):
     clean = html.unescape(re.sub(r'<br\s*/?>', ',', raw, flags=re.I))
@@ -118,7 +118,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     docs = documents(args.csv)
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(docs, ensure_ascii=False, indent=2))
+    args.output.write_text(json.dumps(docs, ensure_ascii=False, indent=2), encoding='utf-8')
     reviews = [dict(cocktail_id=d['id'], name=d['name_ko'], original=p['original'], reason=p['review']) for d in docs for p in d['ingredients'] if p['needs_review']]
     with args.output.with_name('review.csv').open('w', encoding='utf-8-sig', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=['cocktail_id','name','original','reason'])

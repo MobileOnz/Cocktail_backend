@@ -37,10 +37,15 @@ public class OllamaEmbeddingProvider implements EmbeddingProvider {
             if (!vectors.isArray() || vectors.size()!=texts.size()) throw new IllegalStateException("Embedding response count mismatch");
             List<double[]> result = new ArrayList<>();
             for (JsonNode node : vectors) {
-                double[] v = mapper.convertValue(node, double[].class);
-                synchronized (this) { if (dimension==0) dimension=v.length; }
-                EmbeddingProvider.validate(v, dimension);
-                result.add(v);
+                result.add(mapper.convertValue(node, double[].class));
+            }
+            synchronized (this) {
+                int batchDimension = dimension;
+                for (double[] vector : result) {
+                    if (batchDimension == 0) batchDimension = vector.length;
+                    EmbeddingProvider.validate(vector, batchDimension);
+                }
+                dimension = batchDimension;
             }
             return result;
         } catch (InterruptedException e) {

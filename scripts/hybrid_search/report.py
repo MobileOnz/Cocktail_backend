@@ -10,12 +10,12 @@ import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[2]
 build=ROOT/'build/hybrid-search'
 out=ROOT/'docs/hybrid-search'
-r=json.loads((build/'evaluation.json').read_text())
+r=json.loads((build/'evaluation.json').read_text(encoding='utf-8'))
 totals={key:0 for key in ['tests','failures','errors','skipped']}
 for path in (ROOT/'build/test-results/test').glob('TEST-*.xml'):
     suite=ET.parse(path).getroot()
     for key in totals: totals[key]+=int(suite.attrib[key])
-log=(build/'checks.log').read_text()
+log=(build/'checks.log').read_text(encoding='utf-8')
 python_tests=re.search(r'Ran (\d+) tests',log)
 if not python_tests or 'BUILD SUCCESSFUL' not in log or totals['failures'] or totals['errors']:
     raise SystemExit('A complete passing checks.log and JUnit run are required')
@@ -42,14 +42,14 @@ for key in ['exactScanExplain','hnswExplain']:
         return node
     compact[key]=strip_vectors(plan)
 compact['apiSample']=r['apiSample']
-(out/'evaluation.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2))
+(out/'evaluation.json').write_text(json.dumps(compact,ensure_ascii=False,indent=2), encoding='utf-8')
 lines=['# 실제 구현 및 검증 결과','',
     '검증일: 2026-10-23. Java 17 / PostgreSQL 17.11 / pgvector 0.8.7 / 로컬 Ollama Qwen3 0.6B. 실제 모델 응답에서 **1024차원** 확인. 운영 DB/배포 설정은 변경하지 않았으며 임시 PostgreSQL 스키마에서 실제 SQL과 API를 실행했다.','',
     '## 데이터 및 테스트','',
     f'- 원본 CSV: 105행, 26컬럼, 고유 ID 105개. SHA-256 `{compact["sourceSha256"]}`.',
     '- 실제 로컬 모델 색인: 105/105 성공, 오류 0. 재실행 시 변경 없는 문서는 0건 재임베딩. 변경 1건 재색인·강제 재색인·dry-run·임베딩 실패 시 기존 레코드 보존 검증.',
     f'- 정규화 수동 검토: **{len(reviews)}항목 / {len({x["cocktail_id"] for x in reviews})}개 칵테일**. [원문 CSV](review.csv). 원문을 임의 수정하지 않음.',
-    f'- Java 전체 회귀/통합 테스트: **{totals["tests"]} PASS, 0 FAIL, 0 SKIP**. Python 정규화 테스트: **{python_tests[1]} PASS**.',
+    f'- Java 전체 회귀/통합 테스트: **{totals["tests"] - totals["skipped"]} PASS, 0 FAIL, {totals["skipped"]} SKIP**. Python 정규화 테스트: **{python_tests[1]} PASS**.',
     '- 실제 DB 마이그레이션, 키워드/코사인/RRF SQL, 이름/별칭, 정확 이름 우선, 접두 검색, 복수 베이스, 필수 재료 AND, 제외/도수 필터, 후보 절단 전 필터링, 페이지 일관성, RRF 기여 0, 모델/차원 불일치, 임베딩 장애 fallback, HTTP 타임아웃, API 400/403 계약, SQL 인젝션 입력을 검증했다.',
     '- Spring MockMvc로 실제 컨트롤러/ResponseDto 경로를 호출했다. 실제 로컬 모델과 DB로 `모히토` 요청 HTTP 200 / id=15 / mode=hybrid를 확인했다. 운영 HTTP 배포·실제 모바일 UI는 검증 범위 밖이다.','',
     '## 모드별 실측','',
@@ -90,5 +90,5 @@ lines+=['','기존 사용자 변경 `.gitignore`와 제공된 구현 프롬프�
     '3. 모델 태그 변경을 자동 감지하는 digest 추적은 없다. 운영 모델 digest와 embedding.version을 고정하고 변경 시 전체 재색인해야 한다.',
     '4. 운영 PostgreSQL에 pgvector 설치·권한 확인 → 마이그레이션 → ID/이름 dry-run → 전체 색인 → ONZ_SEARCH_ENABLED=true → 실제 운영 HTTP/앱 호출 순으로 적용한다. 기존 Docker는 디스크 I/O 오류라 이번 실행에 사용하지 못했다.',
     '5. 대규모 데이터·동시 요청 부하·콜드 스타트는 미측정이다. 자연어 규칙은 명시된 패턴에 한정되며 단맛 보장은 없다.','']
-(out/'RESULTS.md').write_text('\n'.join(lines))
+(out/'RESULTS.md').write_text('\n'.join(lines), encoding='utf-8')
 print(json.dumps(dict(java=totals,python_tests=int(python_tests[1]),review_items=len(reviews),report=str(out/'RESULTS.md')),ensure_ascii=False))
